@@ -17,4 +17,34 @@
 * [Управління проєктом у Jira]([посилання](https://edumail220.atlassian.net/jira/software/projects/KAN/boards/2))
 
 ##  Як запустити проєкт
-(Тут пізніше буде інструкція з інсталяції)
+
+Щоб розгорнути та запустити бекенд-частину локально, виконайте наступні кроки:
+
+### 1. Вимоги до середовища (Prerequisites)
+Переконайтеся, що у вас встановлені:
+* [**PostgreSQL**](https://www.postgresql.org/download/) (Сервер бази даних)
+* [**.NET 10.0 SDK**](https://dotnet.microsoft.com/download/dotnet/10.0)
+
+### 2. Клонування репозиторію
+Завантажте код проєкту на свій комп'ютер та перейдіть у його головну папку:
+```bash
+git clone https://github.com/maya1379/Planora_2.0.git
+cd Planora_2.0/Planora_2.0
+```
+
+### 3. Налаштування Бази Даних
+Проект використовує PostgreSQL. 
+1. Відкрийте файл `src/Planora.Web/appsettings.json` (або `appsettings.Development.json`) та перевірте правильність `DefaultConnection` вашим локальним налаштуванням PostgreSQL.
+2. Застосуйте міграції для створення структури бази даних:
+```bash
+dotnet ef database update --project src/Planora.Infrastructure --startup-project src/Planora.Web
+```
+3. Заповніть базу необхідними навчальними даними самостійно (через інтерфейс адміністратора, або шляхом прямих запитів у базу `planora_db`).
+
+### 4. Запуск програми
+Запустіть MVC-додаток (бекенд):
+```bash
+dotnet run --project src/Planora.Web
+```
+
+Після успішного запуску термінал покаже локальну адресу (зазвичай `http://localhost:5000` або `https://localhost:5001`), за якою ви можете отримати доступ до API та адмін-панелі додатку.
