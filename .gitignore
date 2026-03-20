@@ -1,0 +1,38 @@
+# Visual Studio / .NET
+[Oo]bj/
+[Bb]in/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.userosscache
+*.sln.docstates
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local variables
+.env
+.env.local
+
+# Папка скриптів (за вашим проханням)
+scripts/
+
+# Databases
+*.sqlite
+*.sqlite3
+*.db
+*.mdf
+*.ldf
+
+# Logs
+*.log
