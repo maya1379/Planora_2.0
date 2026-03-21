@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Planora</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Planora.Web.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header class="app-header">
+        <nav class="breadcrumbs" style="flex-grow: 1;">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                    <!-- Anti-forgery token is automatically added by ASP.NET Core -->
+                    <button type="submit" style="background: none; border: none; color: var(--accent-color); cursor: pointer; font-size: 1.1rem; font-family: 'Outfit'; margin-right: 10px;">
+                        Вийти (@User.Identity.Name)
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login">Увійти</a>
+                <span class="separator" style="margin: 0 0.2rem;">|</span>
+                <a asp-controller="Account" asp-action="Register">Реєстрація</a>
+            }
+
+            <span class="separator">›</span>
+            <a asp-controller="Home" asp-action="Index">Головна</a>
+            
+            <span class="separator" style="margin: 0 0.5rem;">|</span>
+            <a asp-controller="Classrooms" asp-action="Index" style="color: var(--accent-color); font-weight: 500;">Аудиторії</a>
+            
+            @if (ViewData["Breadcrumb"] != null)
+            {
+                <span class="separator">›</span>
+                <span class="current">@ViewData["Breadcrumb"]</span>
+            }
+        </nav>
+    </header>
+
+    <div class="main-container">
+        @RenderBody()
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

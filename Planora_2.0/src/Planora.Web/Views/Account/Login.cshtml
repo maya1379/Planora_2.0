@@ -1,0 +1,61 @@
+@model Planora.Web.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Увійти";
+    ViewData["Breadcrumb"] = "Авторизація";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account.css" asp-append-version="true" />
+}
+
+<div class="glass-card" style="max-width: 450px; margin: 5rem auto;">
+    <!-- Світіння -->
+    <div class="glow-effect glow-top-right"></div>
+
+    <div class="glass-card-header" style="text-align: center; margin-bottom: 2.5rem;">
+        <h2 style="font-size: 2rem; color: #fff; margin-bottom: 0.5rem; font-weight: 700;">З поверненням</h2>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">Увійдіть, щоб продовжити роботу</p>
+    </div>
+
+    <form asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+        <div asp-validation-summary="ModelOnly" class="auth-validation-summary"></div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label class="auth-label">Ваш Email</label>
+            <input asp-for="Email" class="modern-input" placeholder="name@example.com" style="width: 100%; box-sizing: border-box;" />
+            <span asp-validation-for="Email" style="color: var(--danger-text); font-size: 0.8rem; display: block; margin-top: 0.4rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                <label class="auth-label" style="margin-bottom: 0;">Пароль</label>
+                <a href="#" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; opacity: 0.8;">Забули?</a>
+            </div>
+            <input asp-for="Password" class="modern-input" placeholder="••••••••" style="width: 100%; box-sizing: border-box;" />
+            <span asp-validation-for="Password" style="color: var(--danger-text); font-size: 0.8rem; display: block; margin-top: 0.4rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 2rem; display: flex; align-items: center;">
+            <label style="display: flex; align-items: center; cursor: pointer; color: var(--text-secondary); font-size: 0.95rem; user-select: none;">
+                <input asp-for="RememberMe" class="modern-checkbox" style="margin-right: 0.75rem; width: 1.1rem; height: 1.1rem; cursor: pointer;" />
+                Запам'ятати мене
+            </label>
+        </div>
+
+        <button type="submit" class="btn-modern" style="font-size: 1.1rem; letter-spacing: 0.5px;">
+            Увійти
+        </button>
+        
+        <div class="auth-footer">
+            <p style="color: var(--text-secondary);">
+                Ще не маєте акаунту? 
+                <a asp-action="Register">Створити</a>
+            </p>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -9,6 +9,26 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult Schedule()
+    {
+        return View();
+    }
+
+    public IActionResult RoomSchedule()
+    {
+        return View();
+    }
+
+    public IActionResult FindRoom()
+    {
+        return View();
+    }
+
+    public IActionResult FindPerson()
+    {
+        return View();
+    }
+
     public IActionResult Error()
     {
         return View();

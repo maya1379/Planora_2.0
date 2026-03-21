@@ -18,6 +18,7 @@ public class ClassroomsController : Controller
         _buildingService = buildingService;
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var classrooms = await _classroomService.GetAllAsync();

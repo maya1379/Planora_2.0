@@ -19,29 +19,36 @@ public class LoginViewModel
 
 public class RegisterViewModel
 {
-    [Required(ErrorMessage = "Введіть ПІБ")]
+    [Required(ErrorMessage = "ПІБ є обов'язковим")]
     [Display(Name = "Повне ім'я")]
     public string FullName { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Введіть email")]
-    [EmailAddress]
+    [Required(ErrorMessage = "Email є обов'язковим")]
+    [EmailAddress(ErrorMessage = "Неправильний формат Email")]
+    [Display(Name = "Email")]
     public string Email { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Введіть пароль")]
+    [Required(ErrorMessage = "Пароль є обов'язковим")]
+    [StringLength(100, ErrorMessage = "{0} має бути мінімум {2} символів.", MinimumLength = 6)]
     [DataType(DataType.Password)]
-    [StringLength(100, MinimumLength = 6, ErrorMessage = "Пароль повинен бути не менше 6 символів")]
+    [Display(Name = "Пароль")]
     public string Password { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Підтвердіть пароль")]
     [DataType(DataType.Password)]
-    [Compare("Password", ErrorMessage = "Паролі не співпадають")]
     [Display(Name = "Підтвердження паролю")]
+    [Compare("Password", ErrorMessage = "Паролі не збігаються.")]
     public string ConfirmPassword { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Роль є обов'язковою")]
     [Display(Name = "Роль")]
     public UserRole Role { get; set; }
 
     [Display(Name = "Факультет")]
     public string? Faculty { get; set; }
+
+    [Display(Name = "Посада (для викладачів)")]
+    public string? Position { get; set; }
+
+    [Display(Name = "Група (для студентів)")]
+    public int? GroupId { get; set; }
 }

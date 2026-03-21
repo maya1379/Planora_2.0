@@ -28,6 +28,7 @@ using (var scope = app.Services.CreateScope())
     var userManager = services.GetRequiredService<UserManager<User>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
+    await SeedData.InitializeAsync(context, userManager, roleManager);
 }
 
 if (!app.Environment.IsDevelopment())

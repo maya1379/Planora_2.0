@@ -1,0 +1,174 @@
+@{
+    ViewData["Title"] = "Schedule";
+    ViewData["Breadcrumb"] = "Schedule";
+}
+
+<div class="glass-card">
+    <div class="controls-bar">
+        <select class="modern-select">
+            <option>By Day</option>
+            <option>By Week</option>
+            <option>By Month</option>
+        </select>
+        
+        <div class="search-wrapper">
+            <input type="text" class="modern-input" placeholder="search" />
+        </div>
+        
+        <a asp-action="RoomSchedule" class="btn-modern" style="margin-bottom: 0; width: auto; margin-left: auto;">Go to Room Details</a>
+    </div>
+
+    <div class="schedule-board" style="margin-top: 1rem;">
+        <!-- MONDAY -->
+        <div class="schedule-day-column">
+            <div class="schedule-day-header">Monday</div>
+            
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge">Lecture</div>
+                <div class="schedule-class-time">08:30 - 09:50</div>
+                <div class="schedule-class-title">Math</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 122</div>
+                    <div class="schedule-class-detail-item">Prof. Val</div>
+                </div>
+            </div>
+
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Practice</div>
+                <div class="schedule-class-time">10:10 - 11:30</div>
+                <div class="schedule-class-title">Programming</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 166</div>
+                    <div class="schedule-class-detail-item">Prof. Peldi</div>
+                </div>
+            </div>
+
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Practice</div>
+                <div class="schedule-class-time">11:50 - 13:10</div>
+                <div class="schedule-class-title">Programming</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 166</div>
+                    <div class="schedule-class-detail-item">Prof. Peldi</div>
+                </div>
+            </div>
+
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge">Lecture</div>
+                <div class="schedule-class-time">13:30 - 14:50</div>
+                <div class="schedule-class-title">English</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 87</div>
+                    <div class="schedule-class-detail-item">Prof. John</div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- TUESDAY -->
+        <div class="schedule-day-column">
+            <div class="schedule-day-header">Tuesday</div>
+            
+            <div class="schedule-empty-slot">No classes</div>
+            
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Practice</div>
+                <div class="schedule-class-time">10:10 - 11:30</div>
+                <div class="schedule-class-title">English</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 87</div>
+                    <div class="schedule-class-detail-item">Prof. John</div>
+                </div>
+            </div>
+            
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge">Lecture</div>
+                <div class="schedule-class-time">11:50 - 13:10</div>
+                <div class="schedule-class-title">Math</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 122</div>
+                    <div class="schedule-class-detail-item">Prof. Val</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEDNESDAY -->
+        <div class="schedule-day-column">
+            <div class="schedule-day-header">Wednesday</div>
+            
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Practice</div>
+                <div class="schedule-class-time">08:30 - 09:50</div>
+                <div class="schedule-class-title">Math</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 122</div>
+                    <div class="schedule-class-detail-item">Prof. Val</div>
+                </div>
+            </div>
+
+            <div class="schedule-empty-slot" style="margin-bottom: 1rem;">Free slot</div>
+
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge">Lecture</div>
+                <div class="schedule-class-time">11:50 - 13:10</div>
+                <div class="schedule-class-title">English</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 87</div>
+                    <div class="schedule-class-detail-item">Prof. John</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- THURSDAY -->
+        <div class="schedule-day-column">
+            <div class="schedule-day-header">Thursday</div>
+            
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge">Lecture</div>
+                <div class="schedule-class-time">08:30 - 09:50</div>
+                <div class="schedule-class-title">Programming</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 166</div>
+                    <div class="schedule-class-detail-item">Prof. Peldi</div>
+                </div>
+            </div>
+
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Practice</div>
+                <div class="schedule-class-time">10:10 - 11:30</div>
+                <div class="schedule-class-title">Programming</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 166</div>
+                    <div class="schedule-class-detail-item">Prof. Peldi</div>
+                </div>
+            </div>
+            
+            <div class="schedule-empty-slot">Half day off 🎉</div>
+        </div>
+
+        <!-- FRIDAY -->
+        <div class="schedule-day-column">
+            <div class="schedule-day-header">Friday</div>
+            
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge">Lecture</div>
+                <div class="schedule-class-time">08:30 - 09:50</div>
+                <div class="schedule-class-title">Web</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 154</div>
+                    <div class="schedule-class-detail-item">Prof. Patata</div>
+                </div>
+            </div>
+
+            <div class="schedule-class-card">
+                <div class="schedule-class-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Practice</div>
+                <div class="schedule-class-time">10:10 - 11:30</div>
+                <div class="schedule-class-title">Web</div>
+                <div class="schedule-class-details">
+                    <div class="schedule-class-detail-item">Room 154</div>
+                    <div class="schedule-class-detail-item">Prof. Patata</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,183 @@
+@model IEnumerable<Planora.Services.DTOs.ClassroomDto>
+
+@{
+    ViewData["Title"] = "Знайти аудиторію";
+    ViewData["Breadcrumb"] = "Пошук";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/classrooms.css" asp-append-version="true" />
+}
+
+<div class="rooms-app-card">
+    <h1 class="rooms-title">Find a Room</h1>
+    
+    <div class="search-container" style="margin-bottom: 1.5rem;">
+        <div class="search-input-wrapper">
+            <i>🔍</i> <!-- Іконка лупи -->
+            <input type="text" id="searchInput" class="search-input" placeholder="Search..." onkeyup="filterRooms()" />
+        </div>
+    </div>
+
+    <!-- Панель фільтрів -->
+    <div class="filters-container">
+        <select id="facultyFilter" class="filter-select" onchange="filterRooms()">
+            <option value="">Усі факультети</option>
+            @foreach (var faculty in Model.Where(r => !string.IsNullOrEmpty(r.Faculty)).Select(r => r.Faculty).Distinct().OrderBy(f => f))
+            {
+                <option value="@faculty">@faculty</option>
+            }
+        </select>
+
+        <label class="filter-checkbox-label">
+            <input type="checkbox" id="pcFilter" class="filter-checkbox" onchange="filterRooms()" />
+            Комп'ютери (ПК)
+        </label>
+
+        <label class="filter-checkbox-label">
+            <input type="checkbox" id="projectorFilter" class="filter-checkbox" onchange="filterRooms()" />
+            Проектор
+        </label>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div style="text-align: center; color: #64748b; padding: 2rem;">
+            Аудиторій поки немає в базі даних.
+        </div>
+    }
+    else
+    {
+        <div class="rooms-grid-container" id="roomsGrid">
+            @foreach (var room in Model)
+            {
+                // Для демонстрації статусу (EMPTY/WORKING), якщо в майбутньому додамо це в модель
+                // Зараз ми виводимо просто квадрати, як на макеті для більшості кімнат
+                var statusClass = "";
+                var statusText = "";
+                var statusEmoji = "";
+                
+                <!-- Картка однієї кімнати -->
+                <div class="room-box @statusClass" 
+                     data-number="@room.Number.ToLower()"
+                     data-faculty="@room.Faculty"
+                     data-pc="@room.HasComputers.ToString().ToLower()"
+                     data-projector="@room.HasProjector.ToString().ToLower()"
+                     onclick="openDarkModal('@room.Number', '@(room.BuildingName ?? "Без корпусу")', @room.Capacity, '@(room.Faculty ?? "-")', @room.HasComputers.ToString().ToLower(), @room.HasProjector.ToString().ToLower())">
+                    
+                    <div class="room-indicators">
+                        @if (room.HasProjector) { <span title="Проектор">📽️</span> }
+                        @if (room.HasComputers) { <span title="Комп'ютери">💻</span> }
+                    </div>
+                    
+                    @if (!string.IsNullOrEmpty(statusClass))
+                    {
+                        <div class="room-status-icon">@statusEmoji</div>
+                        <div class="room-status-text">@statusText</div>
+                    }
+                    
+                    <div class="room-number">@room.Number</div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Модальне вікно для інформації про кімнату (Dark Theme Popup) -->
+<div id="darkRoomModal" class="dark-modal-overlay" onclick="closeDarkModal(event)">
+    <div class="dark-modal-card">
+        <button class="dark-modal-close" onclick="closeDarkModal(event, true)">&times;</button>
+        
+        <div class="dark-modal-header">
+            <div class="dark-modal-title" id="mTitle">Room 120</div>
+            <div class="dark-modal-subtitle" id="mSubtitle">Корпус: Головний</div>
+        </div>
+
+        <div class="dark-modal-body">
+            <div class="modal-info-row">
+                <span class="modal-info-label">Місткість</span>
+                <span class="modal-info-value" id="mCapacity">30 місць</span>
+            </div>
+            
+            <div class="modal-info-row">
+                <span class="modal-info-label">Факультет</span>
+                <span class="modal-info-value" id="mFaculty">ФКНТ</span>
+            </div>
+
+            <div class="modal-info-row">
+                <span class="modal-info-label">ПК (Комп'ютери)</span>
+                <span class="modal-info-value" id="mPc">Є</span>
+            </div>
+
+            <div class="modal-info-row">
+                <span class="modal-info-label">Проектор</span>
+                <span class="modal-info-value" id="mProjector">Немає</span>
+            </div>
+        </div>
+        
+        @if (User.IsInRole("Admin"))
+        {
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <p style="color: #64748b; font-size: 0.8rem; margin: 0;">Як адміністратор, ви можете керувати кімнатами у відповідному розділі.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Комплексна фільтрація: пошук + факультет + техніка
+        function filterRooms() {
+            const searchInput = document.getElementById("searchInput").value.toLowerCase();
+            const facultyVal = document.getElementById("facultyFilter").value;
+            const needsPc = document.getElementById("pcFilter").checked;
+            const needsProjector = document.getElementById("projectorFilter").checked;
+
+            const boxes = document.getElementsByClassName("room-box");
+
+            for (let i = 0; i < boxes.length; i++) {
+                const box = boxes[i];
+                const number = box.getAttribute("data-number");
+                const faculty = box.getAttribute("data-faculty");
+                const hasPc = box.getAttribute("data-pc") === "true";
+                const hasProjector = box.getAttribute("data-projector") === "true";
+
+                // Умови для показу
+                const matchesSearch = number.includes(searchInput);
+                const matchesFaculty = (facultyVal === "" || faculty === facultyVal);
+                const matchesPc = (!needsPc || hasPc);
+                const matchesProjector = (!needsProjector || hasProjector);
+
+                if (matchesSearch && matchesFaculty && matchesPc && matchesProjector) {
+                    box.style.display = "flex";
+                } else {
+                    box.style.display = "none";
+                }
+            }
+        }
+
+        // Відкрити модальне вікно
+        function openDarkModal(number, building, capacity, faculty, hasPc, hasProjector) {
+            document.getElementById("mTitle").innerText = "Room " + number;
+            document.getElementById("mSubtitle").innerText = building;
+            
+            document.getElementById("mCapacity").innerText = capacity;
+            document.getElementById("mFaculty").innerText = faculty;
+            
+            document.getElementById("mPc").innerText = hasPc ? "Є" : "Немає";
+            document.getElementById("mProjector").innerText = hasProjector ? "Є" : "Немає";
+
+            document.getElementById("darkRoomModal").classList.add("active");
+            document.body.style.overflow = "hidden"; // Блокуємо скролл сайту
+        }
+
+        // Закрити модальне вікно
+        function closeDarkModal(event, force) {
+            const overlay = document.getElementById("darkRoomModal");
+            if (force || event.target === overlay) {
+                overlay.classList.remove("active");
+                document.body.style.overflow = "auto";
+            }
+        }
+    </script>
+}
