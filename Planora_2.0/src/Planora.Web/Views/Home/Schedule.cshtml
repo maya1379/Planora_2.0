@@ -2,8 +2,8 @@
 @using Planora.Domain.Enums
 
 @{
-    ViewData["Title"] = "Schedule";
-    ViewData["Breadcrumb"] = "Schedule";
+    ViewData["Title"] = "Розклад";
+    ViewData["Breadcrumb"] = "Розклад";
     
     var days = new[] { 
         DayOfWeekEnum.Monday, 
@@ -12,36 +12,46 @@
         DayOfWeekEnum.Thursday, 
         DayOfWeekEnum.Friday 
     };
+
+    string GetDayName(DayOfWeekEnum day) => day switch {
+        DayOfWeekEnum.Monday => "Понеділок",
+        DayOfWeekEnum.Tuesday => "Вівторок",
+        DayOfWeekEnum.Wednesday => "Середа",
+        DayOfWeekEnum.Thursday => "Четвер",
+        DayOfWeekEnum.Friday => "П'ятниця",
+        DayOfWeekEnum.Saturday => "Субота",
+        _ => "Неділя"
+    };
 }
 
 <div class="glass-card">
     <div style="text-align: center; margin-bottom: 2rem;">
-        <h2 style="font-size: 2.2rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; margin: 0;">Today (@DateTime.Now.DayOfWeek)</h2>
+        <h2 style="font-size: 2.2rem; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; margin: 0;">Сьогодні (@GetDayName((DayOfWeekEnum)(int)DateTime.Now.DayOfWeek))</h2>
     </div>
 
     <div class="controls-bar">
         <select id="viewModeSelect" class="modern-select" onchange="toggleViewMode()">
-            <option value="day">By Day</option>
-            <option value="week" selected>By Week</option>
-            <option value="month">By Month</option>
+            <option value="day">За днем</option>
+            <option value="week" selected>За тижнем</option>
+            <option value="month">За місяцем</option>
         </select>
         
         <div class="search-wrapper">
-            <input type="text" id="scheduleSearch" class="modern-input" placeholder="Search" onkeyup="filterSchedule()" />
+            <input type="text" id="scheduleSearch" class="modern-input" placeholder="Пошук (предмет, викладач...)" onkeyup="filterSchedule()" />
         </div>
     </div>
 
     @if (User.Identity == null || !User.Identity.IsAuthenticated)
     {
         <div style="text-align: center; padding: 4rem; margin-top: 1rem; color: var(--text-secondary); background: rgba(15, 23, 42, 0.4); border-radius: 16px;">
-            <p style="font-size: 1.1rem; margin-bottom: 2rem;">Please log in to see your personal schedule for today.</p>
-            <a asp-controller="Account" asp-action="Login" class="btn-modern" style="display: inline-block; width: auto; min-width: 280px; padding: 1rem 3rem; margin-bottom: 0;">Login</a>
+            <p style="font-size: 1.1rem; margin-bottom: 2rem;">Будь ласка, увійдіть, щоб побачити свій персональний розклад на сьогодні.</p>
+            <a asp-controller="Account" asp-action="Login" class="btn-modern" style="display: inline-block; width: auto; min-width: 280px; padding: 1rem 3rem; margin-bottom: 0;">Увійти</a>
         </div>
     }
     else if (Model == null || !Model.Any())
     {
         <div style="text-align: center; padding: 4rem; margin-top: 1rem; color: var(--text-secondary); background: rgba(16, 185, 129, 0.05); border: 1px dashed rgba(16, 185, 129, 0.3); border-radius: 16px;">
-            <p style="font-size: 1.2rem; margin: 0; color: #10b981;">No classes scheduled for you this week. 🎉</p>
+            <p style="font-size: 1.2rem; margin: 0; color: #10b981;">На цей тиждень занять не заплановано. 🎉</p>
         </div>
     }
     else
@@ -51,18 +61,17 @@
             {
                 var dayClasses = Model.Where(c => c.DayOfWeek == day).OrderBy(c => c.StartTime).ToList();
                 var currentRealDay = (int)DateTime.Now.DayOfWeek;
-                // Simple logic: if Sunday(0) or Sat(6), set today to 1(Mon)
                 if (currentRealDay == 0 || currentRealDay == 6) currentRealDay = 1;
 
                 var isToday = (int)day == currentRealDay;
                 var todayStyle = isToday ? "border-top: 2px solid #5A6BEE;" : "";
                 
                 <div class="schedule-day-column" data-day="@((int)day)" style="@todayStyle">
-                    <div class="schedule-day-header" style="@(isToday ? "color: #fff; font-weight: 700;" : "")">@day.ToString()</div>
+                    <div class="schedule-day-header" style="@(isToday ? "color: #fff; font-weight: 700;" : "")">@GetDayName(day)</div>
                     
                     @if (!dayClasses.Any())
                     {
-                        <div class="schedule-empty-slot">No classes</div>
+                        <div class="schedule-empty-slot">Немає занять</div>
                     }
                     else
                     {
@@ -70,7 +79,7 @@
                         {
                             var isPractice = item.LessonType.ToString().Contains("Practice") || item.LessonType.ToString().Contains("Lab") || item.LessonType.ToString() == "1";
                             var badgeStyle = isPractice ? "background: rgba(16, 185, 129, 0.15); color: #34d399;" : "background: rgba(59, 130, 246, 0.15); color: #60a5fa;";
-                            var badgeText = isPractice ? "PRACTICE" : "LECTURE";
+                            var badgeText = isPractice ? "ПРАКТИКА" : "ЛЕКЦІЯ";
 
                             <div class="schedule-class-card" 
                                  data-search="@item.SubjectName @item.TeacherName @item.GroupName @item.ClassroomNumber">
@@ -80,14 +89,14 @@
                                 <div class="schedule-class-title">@item.SubjectName</div>
                                 
                                 <div class="schedule-class-details">
-                                    <div class="schedule-class-detail-item">Room @(string.IsNullOrEmpty(item.ClassroomNumber) ? "?" : item.ClassroomNumber)</div>
+                                    <div class="schedule-class-detail-item">Ауд. @(string.IsNullOrEmpty(item.ClassroomNumber) ? "?" : item.ClassroomNumber)</div>
                                     @if (User.IsInRole("Student"))
                                     {
-                                        <div class="schedule-class-detail-item" title="@item.TeacherName">Prof. @item.TeacherName</div>
+                                        <div class="schedule-class-detail-item" title="@item.TeacherName">Викл. @item.TeacherName</div>
                                     }
                                     else if (User.IsInRole("Teacher"))
                                     {
-                                        <div class="schedule-class-detail-item" title="@item.GroupName">Gr. @item.GroupName</div>
+                                        <div class="schedule-class-detail-item" title="@item.GroupName">Гр. @item.GroupName</div>
                                     }
                                 </div>
                             </div>
@@ -141,7 +150,7 @@
                 }
             } 
             else if (mode === "month") {
-                alert("Month view is coming soon! Reverting to Week view.");
+                alert("Перегляд за місяцем буде доступний незабаром! Повертаємося до тижневого вигляду.");
                 document.getElementById("viewModeSelect").value = "week";
                 toggleViewMode();
             }

@@ -1,6 +1,6 @@
 @{
-    ViewData["Title"] = "Schedule Generation Engine";
-    ViewData["Breadcrumb"] = "Admin / Schedule / Generate";
+    ViewData["Title"] = "Двигун генерації розкладу";
+    ViewData["Breadcrumb"] = "Адмін / Розклад / Генерація";
 }
 
 <div class="glass-card" style="max-width: 800px; margin: 0 auto; padding: 3rem; text-align: center;">
@@ -10,32 +10,32 @@
         </svg>
     </div>
 
-    <h2 style="font-size: 2.5rem; color: #fff; margin-bottom: 1rem; font-weight: 800;">Schedule Generation</h2>
+    <h2 style="font-size: 2.5rem; color: #fff; margin-bottom: 1rem; font-weight: 800;">Генерація розкладу</h2>
     <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; margin-bottom: 3rem;">
-        Our engine will analyze all student groups, teacher workloads, and available classrooms to build the most efficient weekly schedule. 
-        <br/><span style="color: #fbbf24; font-weight: 600;">Warning:</span> Generating a new schedule will replace any existing entries.
+        Наш алгоритм проаналізує всі студентські групи, навантаження викладачів та доступні аудиторії, щоб побудувати максимально ефективний тижневий розклад. 
+        <br/><span style="color: #fbbf24; font-weight: 600;">Увага:</span> Генерація нового розкладу замінить усі існуючі записи в системі.
     </p>
 
     <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 2rem; margin-bottom: 3rem; text-align: left;">
-        <h4 style="color: #fff; margin-bottom: 1rem; font-weight: 600;">Generation Checklist:</h4>
+        <h4 style="color: #fff; margin-bottom: 1rem; font-weight: 600;">Чек-лист перед запуском:</h4>
         <ul style="color: var(--text-secondary); margin: 0; padding-left: 1.5rem; line-height: 1.8;">
-            <li>✓ Every group has a discipline list configured</li>
-            <li>✓ Teachers are assigned to all subjects (Workload Planning)</li>
-            <li>✓ Classroom capacities match group sizes</li>
-            <li>✓ Equipment (Projectors/Computers) is ready</li>
+            <li>✓ Для кожної групи налаштований список дисциплін</li>
+            <li>✓ Викладачі призначені на всі предмети (Планування навантаження)</li>
+            <li>✓ Місткість аудиторій відповідає розмірам груп</li>
+            <li>✓ Обладнання (проектори/комп'ютери) готове до використання</li>
         </ul>
     </div>
 
     <form asp-action="Generate" method="post" id="generationForm">
         @Html.AntiForgeryToken()
         <button type="submit" class="btn-modern" style="padding: 1.2rem 4rem; font-size: 1.2rem; background: linear-gradient(135deg, #fbbf24, #f59e0b); box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3); border: none; font-weight: 700;">
-            Start Automated Generation
+            Запустити автоматичну генерацію
         </button>
     </form>
 
     <div id="loader" style="display: none; margin-top: 2rem;">
         <div class="loader-spinner"></div>
-        <p style="color: #fbbf24; margin-top: 1rem; font-weight: 500;">Analyzing requirements and building timetable... Please wait.</p>
+        <p style="color: #fbbf24; margin-top: 1rem; font-weight: 500;">Аналізуємо вимоги та будуємо розклад... Будь ласка, зачекайте.</p>
     </div>
 </div>
 

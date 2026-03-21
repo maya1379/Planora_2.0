@@ -14,12 +14,10 @@
     
     <div class="search-container" style="margin-bottom: 1.5rem;">
         <div class="search-input-wrapper">
-            <i>🔍</i> <!-- Іконка лупи -->
             <input type="text" id="searchInput" class="search-input" placeholder="Search..." onkeyup="filterRooms()" />
         </div>
     </div>
 
-    <!-- Панель фільтрів -->
     <div class="filters-container">
         <select id="facultyFilter" class="filter-select" onchange="filterRooms()">
             <option value="">Усі факультети</option>
@@ -51,13 +49,10 @@
         <div class="rooms-grid-container" id="roomsGrid">
             @foreach (var room in Model)
             {
-                // Для демонстрації статусу (EMPTY/WORKING), якщо в майбутньому додамо це в модель
-                // Зараз ми виводимо просто квадрати, як на макеті для більшості кімнат
                 var statusClass = "";
                 var statusText = "";
                 var statusEmoji = "";
                 
-                <!-- Картка однієї кімнати -->
                 <div class="room-box @statusClass" 
                      data-number="@room.Number.ToLower()"
                      data-faculty="@room.Faculty"
@@ -83,7 +78,6 @@
     }
 </div>
 
-<!-- Модальне вікно для інформації про кімнату (Dark Theme Popup) -->
 <div id="darkRoomModal" class="dark-modal-overlay" onclick="closeDarkModal(event)">
     <div class="dark-modal-card">
         <button class="dark-modal-close" onclick="closeDarkModal(event, true)">&times;</button>
@@ -126,7 +120,6 @@
 
 @section Scripts {
     <script>
-        // Комплексна фільтрація: пошук + факультет + техніка
         function filterRooms() {
             const searchInput = document.getElementById("searchInput").value.toLowerCase();
             const facultyVal = document.getElementById("facultyFilter").value;
@@ -142,7 +135,6 @@
                 const hasPc = box.getAttribute("data-pc") === "true";
                 const hasProjector = box.getAttribute("data-projector") === "true";
 
-                // Умови для показу
                 const matchesSearch = number.includes(searchInput);
                 const matchesFaculty = (facultyVal === "" || faculty === facultyVal);
                 const matchesPc = (!needsPc || hasPc);
@@ -156,7 +148,6 @@
             }
         }
 
-        // Відкрити модальне вікно
         function openDarkModal(number, building, capacity, faculty, hasPc, hasProjector) {
             document.getElementById("mTitle").innerText = "Room " + number;
             document.getElementById("mSubtitle").innerText = building;
@@ -168,10 +159,9 @@
             document.getElementById("mProjector").innerText = hasProjector ? "Є" : "Немає";
 
             document.getElementById("darkRoomModal").classList.add("active");
-            document.body.style.overflow = "hidden"; // Блокуємо скролл сайту
+            document.body.style.overflow = "hidden";
         }
 
-        // Закрити модальне вікно
         function closeDarkModal(event, force) {
             const overlay = document.getElementById("darkRoomModal");
             if (force || event.target === overlay) {

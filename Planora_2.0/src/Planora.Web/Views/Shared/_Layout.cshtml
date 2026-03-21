@@ -10,35 +10,55 @@
 </head>
 <body>
     <header class="app-header">
-        <nav class="breadcrumbs" style="flex-grow: 1;">
+        <div class="header-left">
+            <a asp-controller="Home" asp-action="Index" class="logo-brand">
+                <div class="logo-dot"></div>
+                Planora
+            </a>
+
+            @if (ViewData["Breadcrumb"] != null)
+            {
+                <a href="javascript:history.back()" class="back-link-modern">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Назад
+                </a>
+
+                <nav class="breadcrumbs">
+                    <a asp-controller="Home" asp-action="Index">Головна</a>
+                    <span class="separator">›</span>
+                    <span class="current">@ViewData["Breadcrumb"]</span>
+                </nav>
+            }
+        </div>
+
+        <div class="header-right">
             @if (User.Identity?.IsAuthenticated == true)
             {
-                <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
-                    <!-- Anti-forgery token is automatically added by ASP.NET Core -->
-                    <button type="submit" style="background: none; border: none; color: var(--accent-color); cursor: pointer; font-size: 1.1rem; font-family: 'Outfit'; margin-right: 10px;">
-                        Вийти (@User.Identity.Name)
-                    </button>
-                </form>
+                if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Index" style="color: var(--accent-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; margin-right: 0.5rem;">Панель керування</a>
+                }
+                
+                <a asp-controller="Classrooms" asp-action="Index" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500;">Аудиторії</a>
+
+                <div class="user-display">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #34d399;"></div>
+                    <span>@User.Identity.Name</span>
+                    <span style="color: rgba(255,255,255,0.1);">|</span>
+                    <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                        <button type="submit" class="logout-btn-minimal">Вийти</button>
+                    </form>
+                </div>
             }
             else
             {
-                <a asp-controller="Account" asp-action="Login">Увійти</a>
-                <span class="separator" style="margin: 0 0.2rem;">|</span>
-                <a asp-controller="Account" asp-action="Register">Реєстрація</a>
+                <a asp-controller="Classrooms" asp-action="Index" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500;">Аудиторії</a>
+                <div style="display: flex; gap: 1rem; align-items: center; margin-left: 0.5rem;">
+                    <a asp-controller="Account" asp-action="Login" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;">Увійти</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn-modern" style="margin: 0; padding: 0.5rem 1.25rem; font-size: 0.85rem; width: auto; background: var(--accent-gradient); border: none;">Реєстрація</a>
+                </div>
             }
-
-            <span class="separator">›</span>
-            <a asp-controller="Home" asp-action="Index">Головна</a>
-            
-            <span class="separator" style="margin: 0 0.5rem;">|</span>
-            <a asp-controller="Classrooms" asp-action="Index" style="color: var(--accent-color); font-weight: 500;">Аудиторії</a>
-            
-            @if (ViewData["Breadcrumb"] != null)
-            {
-                <span class="separator">›</span>
-                <span class="current">@ViewData["Breadcrumb"]</span>
-            }
-        </nav>
+        </div>
     </header>
 
     <div class="main-container">

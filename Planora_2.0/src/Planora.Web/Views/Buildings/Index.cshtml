@@ -1,20 +1,20 @@
 @model IEnumerable<Planora.Services.DTOs.BuildingDto>
 
 @{
-    ViewData["Title"] = "Buildings Management";
-    ViewData["Breadcrumb"] = "Admin / Buildings";
+    ViewData["Title"] = "Керування корпусами";
+    ViewData["Breadcrumb"] = "Адмін / Корпуси";
 }
 
 <div class="glass-card" style="max-width: 1000px; margin: 0 auto;">
     <div class="glass-card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 2rem;">
-        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Buildings</h2>
-        <a asp-action="Create" class="btn-modern" style="margin: 0 0 0 40ex">+ New Building</a>
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Корпуси</h2>
+        <a asp-action="Create" class="btn-modern" style="margin: 0; padding: 0.8rem 2rem; width: auto;">+ Новий корпус</a>
     </div>
 
     @if (!Model.Any())
     {
         <div style="text-align: center; padding: 4rem; color: var(--text-secondary); background: rgba(15, 23, 42, 0.4); border-radius: 16px;">
-            <p style="font-size: 1.1rem; margin-bottom: 0;">No buildings found in the system.</p>
+            <p style="font-size: 1.1rem; margin-bottom: 0;">У системі не знайдено жодного корпусу.</p>
         </div>
     }
     else
@@ -23,9 +23,9 @@
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="background: rgba(255,255,255,0.03); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Building Name</th>
-                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Address</th>
-                        <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: right;">Actions</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Назва корпусу</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Адреса</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: right;">Дії</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,12 +36,12 @@
                             <td style="padding: 1rem; color: var(--text-secondary);">@item.Address</td>
                             <td style="padding: 1rem; text-align: right;">
                                 <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                                    <a asp-controller="Classrooms" asp-action="AdminIndex" asp-route-buildingId="@item.Id" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(15, 23, 42, 0.6); color: #fff; text-decoration: none; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.1);">Rooms</a>
+                                    <a asp-controller="Classrooms" asp-action="AdminIndex" asp-route-buildingId="@item.Id" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(15, 23, 42, 0.6); color: #fff; text-decoration: none; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.1);">Аудиторії</a>
                                     
-                                    <a asp-action="Edit" asp-route-id="@item.Id" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(59, 130, 246, 0.1); color: #60a5fa; text-decoration: none; font-size: 0.8rem;">Edit</a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(59, 130, 246, 0.1); color: #60a5fa; text-decoration: none; font-size: 0.8rem;">Редагувати</a>
                                     
-                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline;" onsubmit="return confirm('Delete this building? All rooms inside will be affected.');">
-                                        <button type="submit" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(248, 113, 113, 0.1); color: #f87171; border: none; cursor: pointer; font-size: 0.8rem;">Delete</button>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline;" onsubmit="return confirm('Видалити цей корпус? Усі аудиторії всередині також будуть видалені.');">
+                                        <button type="submit" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(248, 113, 113, 0.1); color: #f87171; border: none; cursor: pointer; font-size: 0.8rem;">Видалити</button>
                                     </form>
                                 </div>
                             </td>

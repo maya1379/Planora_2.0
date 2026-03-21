@@ -1,20 +1,20 @@
 @model IEnumerable<Planora.Services.DTOs.GroupDto>
 
 @{
-    ViewData["Title"] = "Groups Management";
-    ViewData["Breadcrumb"] = "Admin / Groups";
+    ViewData["Title"] = "Керування групами";
+    ViewData["Breadcrumb"] = "Адмін / Групи";
 }
 
 <div class="glass-card" style="max-width: 1000px; margin: 0 auto;">
     <div class="glass-card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 2rem;">
-        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Groups</h2>
-        <a asp-action="Create" class="btn-modern" style="margin: 0 0 0 40ex">+ New Group</a>
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Групи</h2>
+        <a asp-action="Create" class="btn-modern" style="margin: 0; padding: 0.8rem 2rem; width: auto;">+ Нова група</a>
     </div>
 
     @if (!Model.Any())
     {
         <div style="text-align: center; padding: 4rem; color: var(--text-secondary); background: rgba(15, 23, 42, 0.4); border-radius: 16px;">
-            <p style="font-size: 1.1rem; margin-bottom: 0;">No groups found.</p>
+            <p style="font-size: 1.1rem; margin-bottom: 0;">Груп не знайдено.</p>
         </div>
     }
     else
@@ -23,10 +23,10 @@
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="background: rgba(255,255,255,0.03); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Name</th>
-                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Faculty</th>
-                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Students</th>
-                        <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: right;">Actions</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Назва</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Факультет</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Студенти</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: right;">Дії</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,9 +38,10 @@
                             <td style="padding: 1rem; color: var(--text-secondary);">@item.StudentCount</td>
                             <td style="padding: 1rem; text-align: right;">
                                 <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                                    <a asp-action="Edit" asp-route-id="@item.Id" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(59, 130, 246, 0.1); color: #60a5fa; text-decoration: none; font-size: 0.9rem;">Edit</a>
-                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline;" onsubmit="return confirm('Delete this group?');">
-                                        <button type="submit" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(248, 113, 113, 0.1); color: #f87171; border: none; cursor: pointer; font-size: 0.9rem;">Delete</button>
+                                    <a asp-action="Details" asp-route-id="@item.Id" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(15, 23, 42, 0.6); color: #fff; text-decoration: none; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Склад</a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(59, 130, 246, 0.1); color: #60a5fa; text-decoration: none; font-size: 0.9rem;">Редагувати</a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline;" onsubmit="return confirm('Видалити цю групу?');">
+                                        <button type="submit" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(248, 113, 113, 0.1); color: #f87171; border: none; cursor: pointer; font-size: 0.9rem;">Видалити</button>
                                     </form>
                                 </div>
                             </td>

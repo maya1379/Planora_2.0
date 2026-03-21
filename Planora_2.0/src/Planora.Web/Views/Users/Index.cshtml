@@ -1,20 +1,20 @@
 @model IEnumerable<Planora.Domain.Entities.User>
 
 @{
-    ViewData["Title"] = "Users Directory";
-    ViewData["Breadcrumb"] = "Admin / Users";
+    ViewData["Title"] = "Довідник користувачів";
+    ViewData["Breadcrumb"] = "Адмін / Користувачі";
 }
 
 <div class="glass-card" style="max-width: 1000px; margin: 0 auto;">
     <div class="glass-card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 2rem;">
-        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Users Directory</h2>
-        <a asp-action="Create" class="btn-modern" style="margin: 0 0 0 40ex">+ New User</a>
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Користувачі</h2>
+        <a asp-action="Create" class="btn-modern" style="margin: 0; padding: 0.8rem 2rem; width: auto;">+ Новий користувач</a>
     </div>
 
     @if (!Model.Any())
     {
         <div style="text-align: center; padding: 4rem; color: var(--text-secondary); background: rgba(15, 23, 42, 0.4); border-radius: 16px;">
-            <p style="font-size: 1.1rem; margin-bottom: 0;">No users found.</p>
+            <p style="font-size: 1.1rem; margin-bottom: 0;">Користувачів не знайдено.</p>
         </div>
     }
     else
@@ -23,10 +23,10 @@
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="background: rgba(255,255,255,0.03); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Name</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">ПІБ</th>
                         <th style="padding: 1rem; color: #fff; font-weight: 600;">Email</th>
-                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Role</th>
-                        <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: right;">Actions</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Роль</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: right;">Дії</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,23 +38,23 @@
                             <td style="padding: 1rem;">
                                 @if(item.Role == Planora.Domain.Enums.UserRole.Admin)
                                 {
-                                    <span style="background: rgba(248, 113, 113, 0.2); color: #f87171; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">ADMIN</span>
+                                    <span style="background: rgba(248, 113, 113, 0.2); color: #f87171; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">АДМІНІСТРАТОР</span>
                                 }
                                 else if(item.Role == Planora.Domain.Enums.UserRole.Teacher)
                                 {
-                                    <span style="background: rgba(52, 211, 153, 0.2); color: #34d399; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">TEACHER</span>
+                                    <span style="background: rgba(52, 211, 153, 0.2); color: #34d399; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">ВИКЛАДАЧ</span>
                                 }
                                 else
                                 {
-                                    <span style="background: rgba(96, 165, 250, 0.2); color: #60a5fa; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">STUDENT</span>
+                                    <span style="background: rgba(96, 165, 250, 0.2); color: #60a5fa; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">СТУДЕНТ</span>
                                 }
                             </td>
                             <td style="padding: 1rem; text-align: right;">
                                 <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                                    <a asp-action="Edit" asp-route-id="@item.Id" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(59, 130, 246, 0.1); color: #60a5fa; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;">Edit</a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(59, 130, 246, 0.1); color: #60a5fa; text-decoration: none; font-size: 0.9rem;">Редагувати</a>
                                     
-                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline;" onsubmit="return confirm('Delete this user?');">
-                                        <button type="submit" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(248, 113, 113, 0.1); color: #f87171; border: none; cursor: pointer; font-size: 0.9rem; transition: background 0.2s;">Delete</button>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline;" onsubmit="return confirm('Видалити цього користувача?');">
+                                        <button type="submit" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(248, 113, 113, 0.1); color: #f87171; border: none; cursor: pointer; font-size: 0.9rem;">Видалити</button>
                                     </form>
                                 </div>
                             </td>

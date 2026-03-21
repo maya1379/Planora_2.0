@@ -1,8 +1,8 @@
 @model Planora.Services.DTOs.ScheduleGenerationResultDto
 
 @{
-    ViewData["Title"] = Model.Success ? "Generation Successful" : "Generation Encountered Issues";
-    ViewData["Breadcrumb"] = "Admin / Schedule / Result";
+    ViewData["Title"] = Model.Success ? "Генерація завершена успішно" : "Під час генерації виникли проблеми";
+    ViewData["Breadcrumb"] = "Адмін / Розклад / Результат";
 }
 
 <div class="glass-card" style="max-width: 900px; margin: 0 auto; padding: 3rem;">
@@ -15,8 +15,8 @@
                     <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
             </div>
-            <h2 style="font-size: 2.2rem; color: #fff; margin-bottom: 0.5rem; font-weight: 800;">Schedule Created!</h2>
-            <p style="color: #10b981; font-weight: 600; font-size: 1.1rem;">Success: @Model.TotalEntriesCreated lessons successfully scheduled.</p>
+            <h2 style="font-size: 2.2rem; color: #fff; margin-bottom: 0.5rem; font-weight: 800;">Розклад створено!</h2>
+            <p style="color: #10b981; font-weight: 600; font-size: 1.1rem;">Успіх: @Model.TotalEntriesCreated занять успішно додано до розкладу.</p>
         </div>
     }
     else
@@ -29,15 +29,15 @@
                     <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
             </div>
-            <h2 style="font-size: 2.2rem; color: #fff; margin-bottom: 0.5rem; font-weight: 800;">Generation Failed</h2>
-            <p style="color: #ef4444; font-weight: 600; font-size: 1.1rem;">Engine stopped due to critical errors.</p>
+            <h2 style="font-size: 2.2rem; color: #fff; margin-bottom: 0.5rem; font-weight: 800;">Помилка генерації</h2>
+            <p style="color: #ef4444; font-weight: 600; font-size: 1.1rem;">Процес зупинено через критичні помилки.</p>
         </div>
     }
 
     @if (Model.Errors != null && Model.Errors.Any())
     {
         <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
-            <h4 style="color: #ef4444; margin: 0 0 1rem 0; font-weight: 600;">Critical Errors:</h4>
+            <h4 style="color: #ef4444; margin: 0 0 1rem 0; font-weight: 600;">Критичні помилки:</h4>
             <ul style="color: var(--text-secondary); margin: 0; padding-left: 1.5rem;">
                 @foreach (var error in Model.Errors)
                 {
@@ -50,7 +50,7 @@
     @if (Model.Warnings != null && Model.Warnings.Any())
     {
         <div style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
-            <h4 style="color: #fbbf24; margin: 0 0 1rem 0; font-weight: 600;">Warnings (Items requiring manual assignment):</h4>
+            <h4 style="color: #fbbf24; margin: 0 0 1rem 0; font-weight: 600;">Попередження (Потребують ручного втручання):</h4>
             <ul style="color: var(--text-secondary); margin: 0; padding-left: 1.5rem;">
                 @foreach (var warning in Model.Warnings)
                 {
@@ -61,8 +61,8 @@
     }
 
     <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 3rem;">
-        <a asp-controller="Schedule" asp-action="Index" class="btn-modern" style="margin: 0; min-width: 200px; text-align: center; background: linear-gradient(135deg, #10b981, #059669); font-weight: 700;">View Timetable</a>
-        <a asp-controller="Admin" asp-action="Index" class="btn-modern" style="margin: 0; min-width: 200px; text-align: center; background: rgba(255,255,255,0.05);">Back to Dashboard</a>
+        <a asp-controller="Schedule" asp-action="Index" class="btn-modern" style="margin: 0; min-width: 200px; text-align: center; background: linear-gradient(135deg, #10b981, #059669); font-weight: 700; padding: 1rem 2rem;">Переглянути розклад</a>
+        <a asp-controller="Admin" asp-action="Index" class="btn-modern" style="margin: 0; min-width: 200px; text-align: center; background: rgba(255,255,255,0.05); padding: 1rem 2rem;">На головну панель</a>
     </div>
 
 </div>
