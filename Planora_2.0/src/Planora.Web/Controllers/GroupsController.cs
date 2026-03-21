@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Planora.Domain.Entities;
+using Planora.Domain.Enums;
 using Planora.Services.DTOs;
 using Planora.Services.Services.Interfaces;
+using Planora.Web.ViewModels;
 
 namespace Planora.Web.Controllers;
 
@@ -9,10 +13,12 @@ namespace Planora.Web.Controllers;
 public class GroupsController : Controller
 {
     private readonly IGroupService _groupService;
+    private readonly UserManager<User> _userManager;
 
-    public GroupsController(IGroupService groupService)
+    public GroupsController(IGroupService groupService, UserManager<User> userManager)
     {
         _groupService = groupService;
+        _userManager = userManager;
     }
 
     public async Task<IActionResult> Index()
@@ -62,9 +68,66 @@ public class GroupsController : Controller
 
     public async Task<IActionResult> Details(int id)
     {
-        var groups = await _groupService.GetByIdAsync(id);
-        if (groups == null) return NotFound();
-        return View(groups);
+        var group = await _groupService.GetByIdAsync(id);
+        if (group == null) return NotFound();
+
+        var students = _userManager.Users
+            .Where(u => u.Role == UserRole.Student && u.GroupId == id)
+            .OrderBy(u => u.FullName)
+            .ToList();
+
+        ViewBag.Students = students;
+        return View(group);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> AddStudents(int id)
+    {
+        var group = await _groupService.GetByIdAsync(id);
+        if (group == null) return NotFound();
+
+        var availableStudents = _userManager.Users
+            .Where(u => u.Role == UserRole.Student && u.GroupId == null)
+            .OrderBy(u => u.FullName)
+            .ToList();
+
+        ViewBag.GroupName = group.Name;
+        ViewBag.GroupId = id;
+        return View(availableStudents);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddStudents(int groupId, List<string> studentIds)
+    {
+        if (studentIds == null || !studentIds.Any())
+            return RedirectToAction(nameof(Details), new { id = groupId });
+
+        foreach (var studentId in studentIds)
+        {
+            var student = await _userManager.FindByIdAsync(studentId);
+            if (student != null)
+            {
+                student.GroupId = groupId;
+                await _userManager.UpdateAsync(student);
+            }
+        }
+
+        return RedirectToAction(nameof(Details), new { id = groupId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveStudent(int groupId, string studentId)
+    {
+        var student = await _userManager.FindByIdAsync(studentId);
+        if (student != null && student.GroupId == groupId)
+        {
+            student.GroupId = null;
+            await _userManager.UpdateAsync(student);
+        }
+
+        return RedirectToAction(nameof(Details), new { id = groupId });
     }
 
     [HttpPost]

@@ -1,0 +1,73 @@
+@model Planora.Services.DTOs.GroupDto
+@using Planora.Domain.Entities
+
+@{
+    ViewData["Title"] = "Group Details";
+    ViewData["Breadcrumb"] = "Admin / Groups / Details";
+    var students = ViewBag.Students as List<User>;
+}
+
+<div class="glass-card" style="max-width: 900px; margin: 0 auto;">
+    <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="font-size: 2.2rem; color: #fff; margin: 0; font-weight: 700;">@Model.Name</h2>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 1.1rem;">@Model.Faculty Faculty</p>
+        </div>
+        
+        <div style="display: flex; gap: 1rem;">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-modern" style="margin: 0; background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2);">Edit Details</a>
+            <a asp-action="Index" class="btn-modern" style="margin: 0; background: rgba(255,255,255,0.05);">Back to List</a>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 3rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 style="color: #fff; font-size: 1.4rem; margin: 0;">Student Roster</h3>
+            <a asp-action="AddStudents" asp-route-id="@Model.Id" class="btn-modern" style="margin: 0; font-size: 0.9rem;">+ Add Existing Students</a>
+        </div>
+
+        @if (students == null || !students.Any())
+        {
+            <div style="background: rgba(15, 23, 42, 0.4); border-radius: 16px; padding: 3rem; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
+                <p style="color: var(--text-secondary); margin-bottom: 0;">No students are currently assigned to this group.</p>
+            </div>
+        }
+        else
+        {
+            <div style="background: rgba(15, 23, 42, 0.4); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: rgba(255,255,255,0.03); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <th style="padding: 1rem; color: #fff; font-weight: 600;">Full Name</th>
+                            <th style="padding: 1rem; color: #fff; font-weight: 600;">Email</th>
+                            <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var student in students)
+                        {
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <td style="padding: 1rem; color: #60a5fa; font-weight: 500;">@student.FullName</td>
+                                <td style="padding: 1rem; color: var(--text-secondary);">@student.Email</td>
+                                <td style="padding: 1rem; text-align: right;">
+                                    <form asp-action="RemoveStudent" method="post" onsubmit="return confirm('Remove @student.FullName from this group?');">
+                                        <input type="hidden" name="groupId" value="@Model.Id" />
+                                        <input type="hidden" name="studentId" value="@student.Id" />
+                                        <button type="submit" style="background: rgba(239, 68, 68, 0.1); color: #f87171; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div style="background: rgba(52, 211, 153, 0.05); border: 1px solid rgba(52, 211, 153, 0.1); border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 12px; height: 12px; border-radius: 50%; background: #34d399;"></div>
+        <p style="color: #34d399; margin: 0; font-size: 0.95rem;">
+            Current count: <strong>@(students?.Count ?? 0)</strong> assigned students. Group target capacity: <strong>@Model.StudentCount</strong>.
+        </p>
+    </div>
+</div>

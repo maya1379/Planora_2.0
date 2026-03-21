@@ -1,0 +1,56 @@
+@model Planora.Services.DTOs.CreateTeachingAssignmentDto
+
+@{
+    ViewData["Title"] = "New Assignment";
+    ViewData["Breadcrumb"] = "Admin / Workload / Create";
+}
+
+<div class="glass-card" style="max-width: 600px; margin: 0 auto; padding: 2.5rem;">
+    <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2rem; margin-bottom: 2rem; text-align: center;">
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Create Workload Entry</h2>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Connecting teacher, subject and student group.</p>
+    </div>
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" style="color: #ef4444; margin-bottom: 1rem;"></div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="TeacherId" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Select Teacher</label>
+            <select asp-for="TeacherId" asp-items="ViewBag.Teachers" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;">
+                <option value="">-- Choose Teacher --</option>
+            </select>
+            <span asp-validation-for="TeacherId" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="SubjectId" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Select Subject</label>
+            <select asp-for="SubjectId" asp-items="ViewBag.Subjects" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;">
+                <option value="">-- Choose Subject --</option>
+            </select>
+            <span asp-validation-for="SubjectId" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="GroupId" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Select Group</label>
+            <select asp-for="GroupId" asp-items="ViewBag.Groups" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;">
+                <option value="">-- Choose Group --</option>
+            </select>
+            <span asp-validation-for="GroupId" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <label asp-for="HoursPerWeek" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Hours Per Week (e.g. 2, 4, 6)</label>
+            <input asp-for="HoursPerWeek" class="modern-input" type="number" value="2" />
+            <span asp-validation-for="HoursPerWeek" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn-modern" style="margin: 0; flex: 1;">Create Workload</button>
+            <a asp-action="Index" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

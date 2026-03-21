@@ -45,7 +45,8 @@ public class SubjectsController : Controller
         {
             Id = subjects.Id,
             Name = subjects.Name,
-            Type = subjects.Type
+            Type = subjects.Type,
+            Requirements = subjects.Requirements
         });
     }
 

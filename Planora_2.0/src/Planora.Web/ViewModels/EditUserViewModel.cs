@@ -16,4 +16,9 @@ public class EditUserViewModel
 
     [Display(Name = "Посада")]
     public string? Position { get; set; }
+
+    [Display(Name = "Група")]
+    public int? GroupId { get; set; }
+
+    public UserRole Role { get; set; }
 }

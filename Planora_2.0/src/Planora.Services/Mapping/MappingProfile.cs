@@ -9,6 +9,7 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
 
+        CreateMap<User, TeacherSearchDto>();
         CreateMap<Groups, GroupDto>();
         CreateMap<CreateGroupDto, Groups>();
         CreateMap<UpdateGroupDto, Groups>();
@@ -29,7 +30,8 @@ public class MappingProfile : Profile
 
         CreateMap<TeachingAssignment, TeachingAssignmentDto>()
             .ForMember(dest => dest.TeacherName, opt => opt.MapFrom(src => src.Teacher.FullName))
-            .ForMember(dest => dest.SubjectName, opt => opt.MapFrom(src => src.Subjects.Name));
+            .ForMember(dest => dest.SubjectName, opt => opt.MapFrom(src => src.Subjects.Name))
+            .ForMember(dest => dest.GroupName, opt => opt.MapFrom(src => src.Groups.Name));
         CreateMap<CreateTeachingAssignmentDto, TeachingAssignment>();
         CreateMap<UpdateTeachingAssignmentDto, TeachingAssignment>();
 

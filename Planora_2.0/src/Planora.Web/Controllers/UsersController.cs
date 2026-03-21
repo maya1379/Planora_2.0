@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Planora.Domain.Entities;
 using Planora.Domain.Enums;
+using Planora.Services.Services.Interfaces;
 using Planora.Web.ViewModels;
 
 namespace Planora.Web.Controllers;
@@ -12,10 +13,12 @@ namespace Planora.Web.Controllers;
 public class UsersController : Controller
 {
     private readonly UserManager<User> _userManager;
+    private readonly IGroupService _groupService;
 
-    public UsersController(UserManager<User> userManager)
+    public UsersController(UserManager<User> userManager, IGroupService groupService)
     {
         _userManager = userManager;
+        _groupService = groupService;
     }
 
     public IActionResult Index()
@@ -24,16 +27,23 @@ public class UsersController : Controller
         return View(users);
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        return View(new CreateUserViewModel());
+        var groups = await _groupService.GetAllAsync();
+        ViewBag.Groups = new SelectList(groups, "Id", "Name");
+        return View(new CreateUserViewModel { Role = UserRole.Student });
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateUserViewModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid) 
+        {
+            var groups = await _groupService.GetAllAsync();
+            ViewBag.Groups = new SelectList(groups, "Id", "Name");
+            return View(model);
+        }
 
         var user = new User
         {
@@ -43,6 +53,7 @@ public class UsersController : Controller
             Role = model.Role,
             Faculty = model.Faculty,
             Position = model.Position,
+            GroupId = model.Role == UserRole.Student ? model.GroupId : null,
             EmailConfirmed = true
         };
 
@@ -68,12 +79,17 @@ public class UsersController : Controller
         var user = await _userManager.FindByIdAsync(id);
         if (user == null) return NotFound();
 
+        var groups = await _groupService.GetAllAsync();
+        ViewBag.Groups = new SelectList(groups, "Id", "Name");
+
         var model = new EditUserViewModel
         {
             Id = user.Id,
             FullName = user.FullName,
             Faculty = user.Faculty,
-            Position = user.Position
+            Position = user.Position,
+            GroupId = user.GroupId,
+            Role = user.Role
         };
         return View(model);
     }
@@ -82,7 +98,12 @@ public class UsersController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(EditUserViewModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid)
+        {
+            var groups = await _groupService.GetAllAsync();
+            ViewBag.Groups = new SelectList(groups, "Id", "Name");
+            return View(model);
+        }
 
         var user = await _userManager.FindByIdAsync(model.Id);
         if (user == null) return NotFound();
@@ -90,6 +111,7 @@ public class UsersController : Controller
         user.FullName = model.FullName;
         user.Faculty = model.Faculty;
         user.Position = model.Position;
+        user.GroupId = user.Role == UserRole.Student ? model.GroupId : null;
 
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)

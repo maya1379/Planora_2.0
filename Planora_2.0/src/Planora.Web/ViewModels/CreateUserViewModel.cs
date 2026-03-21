@@ -27,4 +27,7 @@ public class CreateUserViewModel
 
     [Display(Name = "Посада")]
     public string? Position { get; set; }
+
+    [Display(Name = "Група (для студентів)")]
+    public int? GroupId { get; set; }
 }

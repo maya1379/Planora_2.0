@@ -212,47 +212,46 @@ public static class SeedData
         {
             var teachers = context.Users.Where(u => u.Role == UserRole.Teacher).ToList();
             var subjects = context.Subjects.ToList();
+            var groups   = context.Groups.ToList();
 
-            Subjects S(string name) => subjects.First(s => s.Name == name);
-            User T(string email) => teachers.First(t => t.Email == email);
+            Subjects? S(string name) => subjects.FirstOrDefault(s => s.Name == name);
+            User? T(string email) => teachers.FirstOrDefault(t => t.Email == email);
+            Groups? G(string name) => groups.FirstOrDefault(g => g.Name == name);
 
-            context.TeachingAssignments.AddRange(
+            var assignmentsToAdd = new List<TeachingAssignment>();
 
-                new TeachingAssignment { TeacherId = T("ivanov@planora.ua").Id,    SubjectId = S("Вища математика").Id,             HoursPerWeek = 6 },
-                new TeachingAssignment { TeacherId = T("ivanov@planora.ua").Id,    SubjectId = S("Вища математика — практ.").Id,     HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("ivanov@planora.ua").Id,    SubjectId = S("Дискретна математика").Id,          HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("ivanov@planora.ua").Id,    SubjectId = S("Дискретна математика — практ.").Id, HoursPerWeek = 4 },
+            void AddAssignment(string teacherEmail, string subjectName, string groupName, int hours)
+            {
+                var teacher = T(teacherEmail);
+                var subject = S(subjectName);
+                var group = G(groupName);
 
-                new TeachingAssignment { TeacherId = T("petrova@planora.ua").Id,   SubjectId = S("Програмування (C++)").Id,           HoursPerWeek = 6 },
-                new TeachingAssignment { TeacherId = T("petrova@planora.ua").Id,   SubjectId = S("Програмування (C++) — лаб.").Id,    HoursPerWeek = 8 },
+                if (teacher != null && subject != null && group != null)
+                {
+                    assignmentsToAdd.Add(new TeachingAssignment 
+                    { 
+                        TeacherId = teacher.Id, 
+                        SubjectId = subject.Id, 
+                        GroupId = group.Id, 
+                        HoursPerWeek = hours 
+                    });
+                }
+            }
 
-                new TeachingAssignment { TeacherId = T("sydorenko@planora.ua").Id, SubjectId = S("Алгоритми та структури даних").Id,  HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("sydorenko@planora.ua").Id, SubjectId = S("Алгоритми — практ.").Id,            HoursPerWeek = 6 },
+            AddAssignment("ivanov@planora.ua", "Вища математика", "КН-11", 2);
+            AddAssignment("ivanov@planora.ua", "Вища математика — практ.", "КН-11", 2);
+            AddAssignment("petrova@planora.ua", "Програмування (C++)", "КН-11", 2);
+            AddAssignment("petrova@planora.ua", "Програмування (C++) — лаб.", "КН-11", 2);
+            AddAssignment("sydorenko@planora.ua", "Алгоритми та структури даних", "КН-21", 2);
+            AddAssignment("sydorenko@planora.ua", "Алгоритми — практ.", "КН-21", 2);
+            AddAssignment("kovalenko@planora.ua", "Бази даних", "КН-21", 2);
+            AddAssignment("kovalenko@planora.ua", "Бази даних — лаб.", "КН-21", 2);
+            AddAssignment("ivanov@planora.ua", "Вища математика", "ІО-11", 2);
+            AddAssignment("ivanov@planora.ua", "Вища математика — практ.", "ІО-11", 2);
+            AddAssignment("moroz@planora.ua", "Цифрова електроніка", "ІО-11", 2);
+            AddAssignment("moroz@planora.ua", "Цифрова електроніка — лаб.", "ІО-11", 2);
 
-                new TeachingAssignment { TeacherId = T("kovalenko@planora.ua").Id, SubjectId = S("Бази даних").Id,                    HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("kovalenko@planora.ua").Id, SubjectId = S("Бази даних — лаб.").Id,             HoursPerWeek = 6 },
-
-                new TeachingAssignment { TeacherId = T("bondar@planora.ua").Id,    SubjectId = S("Комп'ютерні мережі").Id,            HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("bondar@planora.ua").Id,    SubjectId = S("Комп'ютерні мережі — лаб.").Id,     HoursPerWeek = 6 },
-
-                new TeachingAssignment { TeacherId = T("marchenko@planora.ua").Id, SubjectId = S("Операційні системи").Id,             HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("marchenko@planora.ua").Id, SubjectId = S("ОС — лаб.").Id,                     HoursPerWeek = 6 },
-
-                new TeachingAssignment { TeacherId = T("moroz@planora.ua").Id,     SubjectId = S("Фізика").Id,                        HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("moroz@planora.ua").Id,     SubjectId = S("Фізика — лаб.").Id,                 HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("moroz@planora.ua").Id,     SubjectId = S("Цифрова електроніка").Id,            HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("moroz@planora.ua").Id,     SubjectId = S("Цифрова електроніка — лаб.").Id,    HoursPerWeek = 4 },
-
-                new TeachingAssignment { TeacherId = T("shevchenko@planora.ua").Id,SubjectId = S("Англійська мова").Id,                HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("shevchenko@planora.ua").Id,SubjectId = S("Англійська мова — практ.").Id,       HoursPerWeek = 8 },
-                new TeachingAssignment { TeacherId = T("shevchenko@planora.ua").Id,SubjectId = S("Філософія").Id,                      HoursPerWeek = 2 },
-
-                new TeachingAssignment { TeacherId = T("tkachuk@planora.ua").Id,   SubjectId = S("Економіка").Id,                      HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("tkachuk@planora.ua").Id,   SubjectId = S("Економіка — практ.").Id,             HoursPerWeek = 4 },
-
-                new TeachingAssignment { TeacherId = T("lysenko@planora.ua").Id,   SubjectId = S("Фізика").Id,                        HoursPerWeek = 4 },
-                new TeachingAssignment { TeacherId = T("lysenko@planora.ua").Id,   SubjectId = S("Фізика — лаб.").Id,                 HoursPerWeek = 4 }
-            );
+            context.TeachingAssignments.AddRange(assignmentsToAdd);
             await context.SaveChangesAsync();
         }
 

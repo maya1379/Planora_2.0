@@ -1,0 +1,63 @@
+@model Planora.Services.DTOs.TeacherLocationDto
+
+@{
+    ViewData["Title"] = "Track Teacher";
+    ViewData["Breadcrumb"] = "Schedule / Track";
+}
+
+<div class="glass-card" style="max-width: 700px; margin: 0 auto; padding: 3rem; text-align: center;">
+    <h2 style="font-size: 2.5rem; color: #fff; margin-bottom: 2rem; font-weight: 800;">Find Teacher</h2>
+    
+    <div style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 2rem; margin-bottom: 3rem;">
+        <form method="get" asp-action="TeacherLocation" style="display: flex; gap: 1rem; align-items: center; justify-content: center;">
+            <div style="flex: 1;">
+                <select name="teacherId" asp-items="ViewBag.Teachers" class="modern-select" style="width: 100%;" onchange="this.form.submit()">
+                    <option value="">-- Start Typing Teacher Name --</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-modern" style="margin: 0; min-width: 120px;">Locate</button>
+        </form>
+    </div>
+
+    @if (Model != null)
+    {
+        @if (Model.IsTeachingNow)
+        {
+            <div style="background: rgba(16, 185, 129, 0.05); border: 2px solid rgba(16, 185, 129, 0.3); border-radius: 24px; padding: 3rem; transform: scale(1.05); box-shadow: 0 15px 40px rgba(0,0,0,0.3);">
+                <div style="display: inline-block; padding: 0.5rem 1.5rem; background: #10b981; border-radius: 20px; color: #fff; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 1.5rem;">Currently in Session</div>
+                <h3 style="color: #fff; font-size: 2rem; margin-bottom: 0.5rem;">@Model.TeacherName</h3>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 2rem;">teaching <span style="color: #fff; font-weight: 600;">@Model.SubjectName</span></p>
+                
+                <div style="display: flex; gap: 2rem; justify-content: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+                    <div>
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">Building</span>
+                        <span style="display: block; font-size: 1.25rem; color: #fff; font-weight: 700;">@Model.BuildingName</span>
+                    </div>
+                    <div>
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">Room</span>
+                        <span style="display: block; font-size: 1.25rem; color: #10b981; font-weight: 800;">@Model.ClassroomNumber</span>
+                    </div>
+                    <div>
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">Time Slot</span>
+                        <span style="display: block; font-size: 1.25rem; color: #fff; font-weight: 700;">Slot #@Model.TimeSlotNumber</span>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 3rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" style="margin-bottom: 1.5rem;">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="18" y1="8" x2="23" y2="13"></line><line x1="23" y1="8" x2="18" y2="13"></line>
+                </svg>
+                <h3 style="color: #fff; font-size: 1.75rem; margin-bottom: 0.5rem;">@Model.TeacherName</h3>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; margin: 0;">Is not currently in any scheduled session.</p>
+                <p style="color: rgba(255,255,255,0.2); margin-top: 1rem;">Next class available in the full timetable.</p>
+            </div>
+        }
+    }
+</div>
+
+<style>
+    .modern-select { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.8rem 1rem; border-radius: 12px; outline: none; }
+</style>

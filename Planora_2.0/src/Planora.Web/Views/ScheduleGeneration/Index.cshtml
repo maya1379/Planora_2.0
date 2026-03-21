@@ -1,0 +1,60 @@
+@{
+    ViewData["Title"] = "Schedule Generation Engine";
+    ViewData["Breadcrumb"] = "Admin / Schedule / Generate";
+}
+
+<div class="glass-card" style="max-width: 800px; margin: 0 auto; padding: 3rem; text-align: center;">
+    <div style="background: rgba(245, 158, 11, 0.1); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+    </div>
+
+    <h2 style="font-size: 2.5rem; color: #fff; margin-bottom: 1rem; font-weight: 800;">Schedule Generation</h2>
+    <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; margin-bottom: 3rem;">
+        Our engine will analyze all student groups, teacher workloads, and available classrooms to build the most efficient weekly schedule. 
+        <br/><span style="color: #fbbf24; font-weight: 600;">Warning:</span> Generating a new schedule will replace any existing entries.
+    </p>
+
+    <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 2rem; margin-bottom: 3rem; text-align: left;">
+        <h4 style="color: #fff; margin-bottom: 1rem; font-weight: 600;">Generation Checklist:</h4>
+        <ul style="color: var(--text-secondary); margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+            <li>✓ Every group has a discipline list configured</li>
+            <li>✓ Teachers are assigned to all subjects (Workload Planning)</li>
+            <li>✓ Classroom capacities match group sizes</li>
+            <li>✓ Equipment (Projectors/Computers) is ready</li>
+        </ul>
+    </div>
+
+    <form asp-action="Generate" method="post" id="generationForm">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn-modern" style="padding: 1.2rem 4rem; font-size: 1.2rem; background: linear-gradient(135deg, #fbbf24, #f59e0b); box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3); border: none; font-weight: 700;">
+            Start Automated Generation
+        </button>
+    </form>
+
+    <div id="loader" style="display: none; margin-top: 2rem;">
+        <div class="loader-spinner"></div>
+        <p style="color: #fbbf24; margin-top: 1rem; font-weight: 500;">Analyzing requirements and building timetable... Please wait.</p>
+    </div>
+</div>
+
+<style>
+    .loader-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(251, 191, 36, 0.1);
+        border-top: 4px solid #fbbf24;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+    @@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+
+<script>
+    document.getElementById('generationForm').onsubmit = function() {
+        this.querySelector('button').style.display = 'none';
+        document.getElementById('loader').style.display = 'block';
+    };
+</script>

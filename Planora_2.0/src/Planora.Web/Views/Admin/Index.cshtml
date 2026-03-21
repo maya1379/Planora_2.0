@@ -1,0 +1,116 @@
+@model Planora.Web.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Breadcrumb"] = "Admin / Dashboard";
+}
+
+<div class="glass-card" style="max-width: 1000px; margin: 0 auto;">
+    <div class="glass-card-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 2rem;">
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700; text-align: left;">Dashboard</h2>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #60a5fa;">@Model.TotalStudents</div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Students</div>
+        </div>
+        
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #34d399;">@Model.TotalTeachers</div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Teachers</div>
+        </div>
+
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #f472b6;">@Model.TotalGroups</div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Groups</div>
+        </div>
+
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #fbbf24;">@Model.TotalBuildings</div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Buildings</div>
+        </div>
+        
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #a78bfa;">@Model.TotalScheduleEntries</div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Classes</div>
+        </div>
+    </div>
+
+    <h3 style="color: #fff; font-size: 1.3rem; margin-bottom: 1.5rem;">Management</h3>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
+        
+        <a asp-controller="Users" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(59, 130, 246, 0.1); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); transition: all 0.3s ease;">
+            <h4 style="color: #60a5fa; margin: 0 0 0.5rem 0;">Users Directory</h4>
+            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Manage Students, Teachers and Admins.</p>
+        </a>
+
+        <a asp-controller="Groups" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(244, 114, 182, 0.1); border-radius: 12px; border: 1px solid rgba(244, 114, 182, 0.2); transition: all 0.3s ease;">
+            <h4 style="color: #f472b6; margin: 0 0 0.5rem 0;">Groups</h4>
+            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Create and edit groups, view rosters.</p>
+        </a>
+
+        <a asp-controller="Classrooms" asp-action="AdminIndex" style="text-decoration: none; padding: 1.5rem; background: rgba(251, 191, 36, 0.1); border-radius: 12px; border: 1px solid rgba(251, 191, 36, 0.2); transition: all 0.3s ease;">
+            <h4 style="color: #fbbf24; margin: 0 0 0.5rem 0;">Classrooms & Buildings</h4>
+            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Manage addresses, classrooms and equipment.</p>
+        </a>
+        
+        <a asp-controller="Subjects" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2); transition: all 0.3s ease;">
+            <h4 style="color: #34d399; margin: 0 0 0.5rem 0;">Subjects</h4>
+            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Configure disciplines and courses config.</p>
+        </a>
+
+        <a asp-controller="TeachingAssignments" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(167, 139, 250, 0.1); border-radius: 12px; border: 1px solid rgba(167, 139, 250, 0.2); transition: all 0.3s ease;">
+            <h4 style="color: #a78bfa; margin: 0 0 0.5rem 0;">Workload Planning</h4>
+            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Assign teachers to subjects and groups.</p>
+        </a>
+
+        <a asp-controller="ScheduleGeneration" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.2); transition: all 0.3s ease;">
+            <h4 style="color: #fbbf24; margin: 0 0 0.5rem 0;">Generate Schedule</h4>
+            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Run the algorithm to create an optimal university schedule.</p>
+        </a>
+    </div>
+
+    <h3 style="color: #fff; font-size: 1.3rem; margin-bottom: 1rem;">Recent Users Joined</h3>
+    <div style="background: rgba(15, 23, 42, 0.4); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: rgba(255,255,255,0.03); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Full Name</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Email</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var user in Model.RecentUsers)
+                {
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <td style="padding: 1rem; color: var(--text-secondary);">@user.FullName</td>
+                        <td style="padding: 1rem; color: var(--text-secondary);">@user.Email</td>
+                        <td style="padding: 1rem;">
+                            @if(user.Role == Planora.Domain.Enums.UserRole.Admin)
+                            {
+                                <span style="background: rgba(248, 113, 113, 0.2); color: #f87171; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">ADMIN</span>
+                            }
+                            else if(user.Role == Planora.Domain.Enums.UserRole.Teacher)
+                            {
+                                <span style="background: rgba(52, 211, 153, 0.2); color: #34d399; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">TEACHER</span>
+                            }
+                            else
+                            {
+                                <span style="background: rgba(96, 165, 250, 0.2); color: #60a5fa; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">STUDENT</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    a[href]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+</style>

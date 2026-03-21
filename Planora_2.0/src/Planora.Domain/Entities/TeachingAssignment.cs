@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Planora.Domain.Entities;
 
 public class TeachingAssignment
@@ -9,8 +11,11 @@ public class TeachingAssignment
     public string TeacherId { get; set; } = string.Empty;
 
     public int SubjectId { get; set; }
+    public int GroupId { get; set; }
 
     public virtual User Teacher { get; set; } = null!;
-
     public virtual Subjects Subjects { get; set; } = null!;
+
+    [ForeignKey("GroupId")]
+    public virtual Groups Groups { get; set; } = null!;
 }

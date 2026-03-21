@@ -229,7 +229,7 @@ public class ScheduleGenerationService : IScheduleGenerationService
             {
 
                 var assignment = teachingAssignments
-                    .FirstOrDefault(ta => ta.SubjectId == gs.SubjectId);
+                    .FirstOrDefault(ta => ta.SubjectId == gs.SubjectId && ta.GroupId == gs.GroupId);
 
                 if (assignment == null) continue;
 

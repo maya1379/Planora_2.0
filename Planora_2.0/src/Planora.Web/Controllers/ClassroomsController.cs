@@ -19,9 +19,23 @@ public class ClassroomsController : Controller
     }
 
     [AllowAnonymous]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int? buildingId = null)
     {
         var classrooms = await _classroomService.GetAllAsync();
+        if (buildingId.HasValue)
+        {
+            classrooms = classrooms.Where(c => c.BuildingId == buildingId.Value);
+        }
+        return View(classrooms);
+    }
+
+    public async Task<IActionResult> AdminIndex(int? buildingId = null)
+    {
+        var classrooms = await _classroomService.GetAllAsync();
+        if (buildingId.HasValue)
+        {
+            classrooms = classrooms.Where(c => c.BuildingId == buildingId.Value);
+        }
         return View(classrooms);
     }
 
@@ -42,7 +56,7 @@ public class ClassroomsController : Controller
         }
 
         await _classroomService.CreateAsync(dto);
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(AdminIndex));
     }
 
     public async Task<IActionResult> Edit(int id)
@@ -75,7 +89,7 @@ public class ClassroomsController : Controller
         }
 
         await _classroomService.UpdateAsync(dto);
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(AdminIndex));
     }
 
     [HttpPost]
@@ -83,7 +97,7 @@ public class ClassroomsController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         await _classroomService.DeleteAsync(id);
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(AdminIndex));
     }
 
     [Authorize] 

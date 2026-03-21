@@ -1,37 +1,62 @@
+@model IEnumerable<Planora.Services.DTOs.ScheduleEntryDto>
+@using Planora.Domain.Enums
+
 @{
     ViewData["Title"] = "Home";
+    
+    var todayName = DateTime.Now.DayOfWeek.ToString();
 }
 
 <div class="glass-card" style="max-width: 600px; margin: 0 auto;">
     <div class="glass-card-header">
-        <h2>Today</h2>
+        <h2 style="font-size: 2rem; color: #fff; margin-bottom: 0.5rem; font-weight: 700;">Today (@todayName)</h2>
     </div>
 
-    <div class="schedule-list">
-        <div class="schedule-header-day">Monday</div>
-        <div class="schedule-item">
-            <div class="schedule-time">08:30 - 09:50</div>
-            <div class="schedule-subject">Math</div>
-            <div class="schedule-room-chip">122</div>
+    @if (User.Identity == null || !User.Identity.IsAuthenticated)
+    {
+        <div style="text-align: center; padding: 2.5rem; color: var(--text-secondary); background: rgba(15, 23, 42, 0.4); border-radius: 16px; margin-bottom: 2rem;">
+            <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">Please log in to see your personal schedule for today.</p>
+            <a asp-controller="Account" asp-action="Login" class="btn-modern" style="display: inline-block; padding: 0.8rem 2rem; text-decoration: none;">Login</a>
         </div>
-        <div class="schedule-item">
-            <div class="schedule-time">10:10 - 11:30</div>
-            <div class="schedule-subject">Programming</div>
-            <div class="schedule-room-chip">166</div>
+    }
+    else if (Model == null || !Model.Any())
+    {
+        <div style="text-align: center; padding: 3rem; color: var(--text-secondary); background: rgba(16, 185, 129, 0.05); border: 1px dashed rgba(16, 185, 129, 0.3); border-radius: 16px; margin-bottom: 2rem;">
+            <p style="font-size: 1.2rem; color: #10b981; margin: 0;">No classes for today. Take a break! 🎉</p>
         </div>
-        <div class="schedule-item">
-            <div class="schedule-time">11:50 - 13:10</div>
-            <div class="schedule-subject">Programming</div>
-            <div class="schedule-room-chip">166</div>
-        </div>
-        <div class="schedule-item">
-            <div class="schedule-time">13:30 - 14:50</div>
-            <div class="schedule-subject">English</div>
-            <div class="schedule-room-chip">87</div>
-        </div>
-    </div>
+    }
+    else
+    {
+        <div class="schedule-list">
+            <div class="schedule-header-day">Schedule</div>
+            @foreach (var item in Model.OrderBy(x => x.StartTime))
+            {
+                <div class="schedule-item">
+                    <div class="schedule-time">@item.StartTime.ToString(@"hh\:mm") - @item.EndTime.ToString(@"hh\:mm")</div>
+                    
+                    <div class="schedule-subject" style="display: flex; flex-direction: column;">
+                        <span style="font-weight: 600; color: #fff;">@item.SubjectName</span>
+                        <span style="font-size: 0.85rem; color: var(--text-secondary); opacity: 0.8; margin-top: 0.2rem;">
+                            @if (User.IsInRole("Student"))
+                            {
+                                <text>Teacher: @item.TeacherName</text>
+                            }
+                            else if (User.IsInRole("Teacher"))
+                            {
+                                <text>Group: @item.GroupName</text>
+                            }
+                        </span>
+                    </div>
 
-    <div class="btn-container" style="margin-top: 2.5rem;">
+                    <div class="schedule-room-chip">
+                        @(string.IsNullOrEmpty(item.ClassroomNumber) ? "-" : item.ClassroomNumber)
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="btn-container" style="margin-top: 1rem;">
         <a asp-action="Schedule" class="btn-modern">Schedule</a>
         <a asp-controller="Classrooms" asp-action="Index" class="btn-modern">Find a Room</a>
         <a asp-action="FindPerson" class="btn-modern">Find a Person</a>
