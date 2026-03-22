@@ -42,6 +42,7 @@ public class ScheduleGenerationService : IScheduleGenerationService
         try
         {
             var groups = (await _groupRepository.GetAllAsync()).ToList();
+            var groupDisciplineLists = (await _groupSubjectRepository.GetAllAsync()).ToList();
             var teachingAssignments = (await _teachingAssignmentRepository.GetAllAsync()).ToList();
             var classrooms = (await _classroomRepository.GetAllAsync()).ToList();
             var timeSlots = (await _timeSlotRepository.GetAllAsync()).OrderBy(ts => ts.Number).ToList();
@@ -49,6 +50,12 @@ public class ScheduleGenerationService : IScheduleGenerationService
             if (!groups.Any())
             {
                 result.Errors.Add("Немає жодної групи в системі.");
+                return result;
+            }
+
+            if (!groupDisciplineLists.Any())
+            {
+                result.Errors.Add("Немає навчальних планів для груп.");
                 return result;
             }
 
@@ -72,11 +79,11 @@ public class ScheduleGenerationService : IScheduleGenerationService
 
             await _scheduleEntryRepository.DeleteAllAsync();
 
-            var scheduleRequirements = BuildScheduleRequirements(groups, teachingAssignments);
+            var scheduleRequirements = BuildScheduleRequirements(groups, groupDisciplineLists, teachingAssignments, result);
 
             if (!scheduleRequirements.Any())
             {
-                result.Errors.Add("Не вдалося побудувати вимоги до розкладу. Перевірте навантаження викладачів.");
+                result.Errors.Add("Не вдалося побудувати вимоги до розкладу. Перевірте, чи призначені викладачі на предмети з навчальних планів.");
                 return result;
             }
 
@@ -209,13 +216,24 @@ public class ScheduleGenerationService : IScheduleGenerationService
 
     private List<ScheduleRequirement> BuildScheduleRequirements(
         List<Groups> groups,
-        List<TeachingAssignment> teachingAssignments)
+        List<GroupDisciplineList> planEntries,
+        List<TeachingAssignment> assignments,
+        ScheduleGenerationResultDto result)
     {
         var requirements = new List<ScheduleRequirement>();
 
-        foreach (var ta in teachingAssignments)
+        foreach (var plan in planEntries)
         {
-            var group = groups.FirstOrDefault(g => g.Id == ta.GroupId);
+            var assignment = assignments.FirstOrDefault(a => 
+                a.GroupId == plan.GroupId && a.SubjectId == plan.SubjectId);
+
+            if (assignment == null)
+            {
+                result.Warnings.Add($"Для предмета '{plan.Subjects?.Name ?? "ID:"+plan.SubjectId}' групи '{plan.Groups?.Name ?? "ID:"+plan.GroupId}' не призначено викладача в навантаженні. Скіпаємо.");
+                continue;
+            }
+
+            var group = groups.FirstOrDefault(g => g.Id == plan.GroupId);
             if (group == null) continue;
 
             requirements.Add(new ScheduleRequirement
@@ -223,13 +241,13 @@ public class ScheduleGenerationService : IScheduleGenerationService
                 GroupId = group.Id,
                 GroupName = group.Name,
                 GroupStudentCount = group.StudentCount,
-                SubjectId = ta.SubjectId,
-                SubjectName = ta.Subjects?.Name ?? "Unknown",
-                LessonType = ta.Subjects?.Type ?? LessonType.Lecture,
-                TeacherId = ta.TeacherId,
-                TeacherName = ta.Teacher?.FullName ?? "Unknown",
-                HoursPerWeek = ta.HoursPerWeek,
-                TotalHours = ta.HoursPerWeek
+                SubjectId = plan.SubjectId,
+                SubjectName = plan.Subjects?.Name ?? "Unknown",
+                LessonType = plan.LessonType,
+                TeacherId = assignment.TeacherId,
+                TeacherName = assignment.Teacher?.FullName ?? "Unknown",
+                HoursPerWeek = plan.HoursPerWeek,
+                TotalHours = plan.HoursPerWeek
             });
         }
 
