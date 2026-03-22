@@ -41,9 +41,7 @@ public class ScheduleGenerationService : IScheduleGenerationService
 
         try
         {
-
             var groups = (await _groupRepository.GetAllAsync()).ToList();
-            var groupDisciplineLists = (await _groupSubjectRepository.GetAllAsync()).ToList();
             var teachingAssignments = (await _teachingAssignmentRepository.GetAllAsync()).ToList();
             var classrooms = (await _classroomRepository.GetAllAsync()).ToList();
             var timeSlots = (await _timeSlotRepository.GetAllAsync()).OrderBy(ts => ts.Number).ToList();
@@ -74,21 +72,20 @@ public class ScheduleGenerationService : IScheduleGenerationService
 
             await _scheduleEntryRepository.DeleteAllAsync();
 
-            var scheduleRequirements = BuildScheduleRequirements(groups, groupDisciplineLists, teachingAssignments);
+            var scheduleRequirements = BuildScheduleRequirements(groups, teachingAssignments);
 
             if (!scheduleRequirements.Any())
             {
-                result.Errors.Add("Не вдалося побудувати вимоги до розкладу. Перевірте навантаження груп та викладачів.");
+                result.Errors.Add("Не вдалося побудувати вимоги до розкладу. Перевірте навантаження викладачів.");
                 return result;
             }
 
             var days = Enum.GetValues<DayOfWeekEnum>()
                            .Where(d => d >= DayOfWeekEnum.Monday && d <= DayOfWeekEnum.Friday)
                            .ToList();
-            var weekTypes = new[] { WeekType.Both, WeekType.Numerator, WeekType.Denominator };
 
             var sortedRequirements = scheduleRequirements
-                .OrderByDescending(r => r.TotalHours)
+                .OrderByDescending(r => r.HoursPerWeek)
                 .ToList();
 
             var placedEntries = new List<Schedule>();
@@ -101,8 +98,6 @@ public class ScheduleGenerationService : IScheduleGenerationService
                 var weekTypeForPlacement = hoursToPlace >= 2
                     ? WeekType.Both
                     : WeekType.Numerator; 
-
-                bool placed = false;
 
                 var orderedDays = days.OrderBy(d => (int)d).ToList();
 
@@ -136,7 +131,6 @@ public class ScheduleGenerationService : IScheduleGenerationService
                         }
                         else
                         {
-
                             string teacherNumKey = $"T:{requirement.TeacherId}|D:{day}|TS:{timeSlot.Id}|W:{WeekType.Numerator}";
                             string teacherDenKey = $"T:{requirement.TeacherId}|D:{day}|TS:{timeSlot.Id}|W:{WeekType.Denominator}";
                             string groupNumKey = $"G:{requirement.GroupId}|D:{day}|TS:{timeSlot.Id}|W:{WeekType.Numerator}";
@@ -180,7 +174,6 @@ public class ScheduleGenerationService : IScheduleGenerationService
                         occupiedSlots.Add(classroomSlotKey);
 
                         hoursToPlace -= (weekTypeForPlacement == WeekType.Both ? 2 : 1);
-                        placed = true;
                     }
                 }
 
@@ -216,37 +209,28 @@ public class ScheduleGenerationService : IScheduleGenerationService
 
     private List<ScheduleRequirement> BuildScheduleRequirements(
         List<Groups> groups,
-        List<GroupDisciplineList> groupDisciplineLists,
         List<TeachingAssignment> teachingAssignments)
     {
         var requirements = new List<ScheduleRequirement>();
 
-        foreach (var g in groups)
+        foreach (var ta in teachingAssignments)
         {
-            var groupSubs = groupDisciplineLists.Where(gs => gs.GroupId == g.Id).ToList();
+            var group = groups.FirstOrDefault(g => g.Id == ta.GroupId);
+            if (group == null) continue;
 
-            foreach (var gs in groupSubs)
+            requirements.Add(new ScheduleRequirement
             {
-
-                var assignment = teachingAssignments
-                    .FirstOrDefault(ta => ta.SubjectId == gs.SubjectId && ta.GroupId == gs.GroupId);
-
-                if (assignment == null) continue;
-
-                requirements.Add(new ScheduleRequirement
-                {
-                    GroupId = g.Id,
-                    GroupName = g.Name,
-                    GroupStudentCount = g.StudentCount,
-                    SubjectId = gs.SubjectId,
-                    SubjectName = gs.Subjects?.Name ?? "Unknown",
-                    LessonType = gs.LessonType,
-                    TeacherId = assignment.TeacherId,
-                    TeacherName = assignment.Teacher?.FullName ?? "Unknown",
-                    HoursPerWeek = gs.HoursPerWeek,
-                    TotalHours = assignment.HoursPerWeek
-                });
-            }
+                GroupId = group.Id,
+                GroupName = group.Name,
+                GroupStudentCount = group.StudentCount,
+                SubjectId = ta.SubjectId,
+                SubjectName = ta.Subjects?.Name ?? "Unknown",
+                LessonType = ta.Subjects?.Type ?? LessonType.Lecture,
+                TeacherId = ta.TeacherId,
+                TeacherName = ta.Teacher?.FullName ?? "Unknown",
+                HoursPerWeek = ta.HoursPerWeek,
+                TotalHours = ta.HoursPerWeek
+            });
         }
 
         return requirements;
@@ -263,7 +247,6 @@ public class ScheduleGenerationService : IScheduleGenerationService
         List<Schedule> placedEntries,
         int groupId)
     {
-
         var suitable = allClassrooms
             .Where(c => c.Capacity >= groupStudentCount)
             .ToList();
@@ -309,7 +292,6 @@ public class ScheduleGenerationService : IScheduleGenerationService
                 var sameBuildingRooms = suitable.Where(c => c.BuildingId == usedBuildingId.Value).ToList();
                 if (sameBuildingRooms.Any())
                 {
-
                     return sameBuildingRooms.OrderBy(c => c.Capacity).First();
                 }
             }
@@ -355,7 +337,6 @@ public class ScheduleGenerationService : IScheduleGenerationService
             .ToList();
 
         int candidateNumber = candidateSlot.Number;
-
         int min = occupiedSlotNumbers.Min();
         int max = occupiedSlotNumbers.Max();
 

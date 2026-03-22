@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Planora.Domain.Entities;
 using Planora.Domain.Enums;
 using Planora.Services.DTOs;
@@ -92,11 +93,12 @@ public class TeachingAssignmentsController : Controller
 
     private async Task PopulateDropdowns()
     {
-        var teachers = _userManager.Users
+        // Using ToListAsync from Microsoft.EntityFrameworkCore
+        var teachers = await _userManager.Users
             .Where(u => u.Role == UserRole.Teacher)
             .OrderBy(u => u.FullName)
             .Select(u => new { u.Id, u.FullName })
-            .ToList();
+            .ToListAsync();
 
         var subjects = await _subjectService.GetAllAsync();
         var groups = await _groupService.GetAllAsync();

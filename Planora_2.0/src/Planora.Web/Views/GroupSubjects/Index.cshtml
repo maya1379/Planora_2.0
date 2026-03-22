@@ -1,0 +1,87 @@
+@model IEnumerable<Planora.Services.DTOs.GroupSubjectDto>
+
+@{
+    ViewData["Title"] = "Навчальні плани";
+    ViewData["Breadcrumb"] = "Адмін / Навчальні плани";
+}
+
+<div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem;">
+        <div>
+            <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Навчальні плани груп</h2>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Керування списком дисциплін, що вивчаються групами.</p>
+        </div>
+        <a asp-action="Create" class="btn-modern" style="margin: 0; display: flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+            <span>+ Додати дисципліну</span>
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div style="text-align: center; padding: 4rem 1rem; background: rgba(15, 23, 42, 0.4); border-radius: 16px; border: 1px dashed rgba(255,255,255,0.1);">
+            <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">📚</div>
+            <h4 style="color: #fff; margin-bottom: 0.5rem;">Жодної дисципліни ще не додано до планів.</h4>
+            <p style="color: var(--text-secondary);">Почніть з додавання предметів до навчальних планів конкретних груп.</p>
+        </div>
+    }
+    else
+    {
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: rgba(255,255,255,0.03); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Група</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Дисципліна</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Тип</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: center;">Год/тиждень</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: right;">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderBy(i => i.GroupName).ThenBy(i => i.SubjectName))
+                    {
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.03); transition: all 0.2s ease;">
+                            <td style="padding: 1rem;">
+                                <span style="color: #60a5fa; font-weight: 600;">@item.GroupName</span>
+                            </td>
+                            <td style="padding: 1rem; color: #fff;">@item.SubjectName</td>
+                            <td style="padding: 1rem;">
+                                @if (item.LessonType == Planora.Domain.Enums.LessonType.Lecture)
+                                {
+                                    <span style="background: rgba(52, 211, 153, 0.2); color: #34d399; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">ЛЕКЦІЯ</span>
+                                }
+                                else if(item.LessonType == Planora.Domain.Enums.LessonType.Lab)
+                                {
+                                    <span style="background: rgba(167, 139, 250, 0.2); color: #a78bfa; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">ЛАБ. РОБОТА</span>
+                                }
+                                else
+                                {
+                                    <span style="background: rgba(251, 191, 36, 0.2); color: #fbbf24; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">ПРАКТИКА</span>
+                                }
+                            </td>
+                            <td style="padding: 1rem; text-align: center; color: var(--text-secondary);">@item.HoursPerWeek</td>
+                            <td style="padding: 1rem; text-align: right;">
+                                <form asp-action="Delete" method="post" style="display:inline;" onsubmit="return confirm('Ви впевнені, що хочете видалити цей предмет з плану групи?');">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                        Видалити
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<style>
+    tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+    .btn-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+</style>
