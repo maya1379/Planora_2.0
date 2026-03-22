@@ -14,7 +14,8 @@
 
 ##  Структура ресурсів
 * [Документація в Notion]([https://www.notion.so/30f059ddc09280beb1a0fccd503ad70e?source=copy_link](https://www.notion.so/Planora_2-0-30c059ddc0928034a1b0c44a9a599b12?source=copy_link))
-* [Управління проєктом у Jira]([посилання](https://edumail220.atlassian.net/jira/software/projects/KAN/boards/2))
+* [BPMN діаграма процесу створення розкладу](https://miro.com/app/board/uXjVGvV5xdk=/?share_link_id=271257926858)
+  
 
 ##  Як запустити проєкт
 
