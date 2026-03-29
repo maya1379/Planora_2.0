@@ -26,6 +26,8 @@ public class SearchController : Controller
                 .ThenInclude(s => s.TimeSlot)
             .Include(u => u.Schedules)
                 .ThenInclude(s => s.Subjects)
+            .Include(u => u.Schedules)
+                .ThenInclude(s => s.Groups)
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(teacherName))
@@ -37,6 +39,30 @@ public class SearchController : Controller
         ViewBag.SearchTerm = teacherName;
 
         return View(teachers);
+    }
+
+    public async Task<IActionResult> TeacherDetails(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+            return NotFound();
+
+        var teacher = await _context.Users
+            .Include(u => u.TeachingAssignments)
+                .ThenInclude(ta => ta.Subjects)
+            .Include(u => u.Schedules)
+                .ThenInclude(s => s.Classrooms)
+            .Include(u => u.Schedules)
+                .ThenInclude(s => s.TimeSlot)
+            .Include(u => u.Schedules)
+                .ThenInclude(s => s.Subjects)
+            .Include(u => u.Schedules)
+                .ThenInclude(s => s.Groups)
+            .FirstOrDefaultAsync(u => u.Id == id && u.Role == UserRole.Teacher);
+
+        if (teacher == null)
+            return NotFound();
+
+        return View(teacher);
     }
 
     public async Task<IActionResult> ClassroomAvailability(DayOfWeekEnum? day, int? timeSlotId)

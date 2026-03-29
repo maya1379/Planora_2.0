@@ -82,10 +82,6 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult FindPerson()
-    {
-        return View();
-    }
 
     public IActionResult Error()
     {
