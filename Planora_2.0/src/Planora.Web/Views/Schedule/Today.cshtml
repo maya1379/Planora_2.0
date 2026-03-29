@@ -1,18 +1,18 @@
 @model IEnumerable<Planora.Services.DTOs.ScheduleEntryDto>
 
 @{
-    ViewData["Title"] = "Today's Schedule";
-    ViewData["Breadcrumb"] = "Schedule / Today";
+    ViewData["Title"] = "Розклад на сьогодні";
+    ViewData["Breadcrumb"] = "Розклад / Сьогодні";
 }
 
 <div class="glass-card" style="padding: 2.5rem; margin-bottom: 2rem; border-left: 4px solid #6366f1;">
     <div style="display: flex; justify-content: space-between; align-items: flex-end;">
         <div>
-            <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 800;">📅 Live Schedule</h2>
-            <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 1.1rem;">See what's happening right now across the campus.</p>
+            <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 800;">📅 Актуальний розклад</h2>
+            <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 1.1rem;">Переглядайте поточні заняття по всьому кампусу.</p>
         </div>
         <div style="text-align: right;">
-            <p style="color: #6366f1; font-weight: 700; margin: 0; font-size: 1.2rem;">@DateTime.Now.ToString("dddd, MMMM dd")</p>
+            <p style="color: #6366f1; font-weight: 700; margin: 0; font-size: 1.2rem;">@DateTime.Now.ToString("dddd, dd MMMM")</p>
         </div>
     </div>
 </div>
@@ -20,12 +20,12 @@
 <div class="glass-card" style="padding: 1rem; margin-bottom: 2rem;">
     <form method="get" asp-action="Today" style="display: flex; gap: 1rem; flex-wrap: wrap;">
         <select name="groupId" asp-items="ViewBag.Groups" class="modern-select" style="flex: 1; min-width: 200px;" onchange="this.form.submit()">
-            <option value="">-- Faculty / Group --</option>
+            <option value="">-- Факультет / Група --</option>
         </select>
         <select name="teacherId" asp-items="ViewBag.Teachers" class="modern-select" style="flex: 1; min-width: 200px;" onchange="this.form.submit()">
-            <option value="">-- Search Teacher --</option>
+            <option value="">-- Пошук викладача --</option>
         </select>
-        <a asp-action="Today" class="btn-modern" style="margin: 0; background: rgba(255,255,255,0.05);">Reset</a>
+        <a asp-action="Today" class="btn-modern" style="margin: 0; background: rgba(255,255,255,0.05);">Скинути</a>
     </form>
 </div>
 
@@ -36,8 +36,8 @@
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
         </svg>
-        <h4 style="color: rgba(255,255,255,0.4); font-weight: 600;">No classes scheduled for today.</h4>
-        <p style="color: rgba(255,255,255,0.2); margin-top: 0.5rem;">Enjoy your day off!</p>
+        <h4 style="color: rgba(255,255,255,0.4); font-weight: 600;">На сьогодні занять не заплановано.</h4>
+        <p style="color: rgba(255,255,255,0.2); margin-top: 0.5rem;">Гарного відпочинку!</p>
     </div>
 }
 else
@@ -50,11 +50,11 @@ else
                 
                 <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
                     <div>
-                        <span style="display: block; font-size: 0.8rem; color: #6366f1; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">Pair #@entry.TimeSlotNumber</span>
+                        <span style="display: block; font-size: 0.8rem; color: #6366f1; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">Пара №@entry.TimeSlotNumber</span>
                         <span style="font-size: 1.1rem; color: #fff; font-weight: 600;">@entry.StartTime.ToString(@"hh\:mm") - @entry.EndTime.ToString(@"hh\:mm")</span>
                     </div>
                     <div style="text-align: right;">
-                        <span style="display: block; font-size: 0.75rem; color: #34d399; font-weight: 700; background: rgba(52, 211, 153, 0.1); padding: 0.3rem 0.8rem; border-radius: 20px;">Room @entry.ClassroomNumber</span>
+                        <span style="display: block; font-size: 0.75rem; color: #34d399; font-weight: 700; background: rgba(52, 211, 153, 0.1); padding: 0.3rem 0.8rem; border-radius: 20px;">Ауд. @entry.ClassroomNumber</span>
                         <span style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.4rem;">@entry.BuildingName</span>
                     </div>
                 </div>
@@ -68,7 +68,7 @@ else
                         </div>
                         <div>
                             <span style="display: block; font-size: 0.9rem; color: #fff; font-weight: 500;">@entry.TeacherName</span>
-                            <span style="display: block; font-size: 0.8rem; color: var(--text-secondary);">Teacher</span>
+                            <span style="display: block; font-size: 0.8rem; color: var(--text-secondary);">Викладач</span>
                         </div>
                     </div>
                     <div style="text-align: right;">

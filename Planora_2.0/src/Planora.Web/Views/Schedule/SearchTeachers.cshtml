@@ -1,15 +1,15 @@
 @model IEnumerable<Planora.Services.DTOs.TeacherSearchDto>
 
 @{
-    ViewData["Title"] = "Directory Search";
-    ViewData["Breadcrumb"] = "Schedule / Directory";
+    ViewData["Title"] = "Пошук у довіднику";
+    ViewData["Breadcrumb"] = "Розклад / Довідник";
 }
 
 <div class="glass-card" style="max-width: 800px; margin: 0 auto 3rem; padding: 2.5rem;">
-    <h2 style="font-size: 2.2rem; color: #fff; margin-bottom: 1.5rem; text-align: center; font-weight: 800;">Campus Directory</h2>
+    <h2 style="font-size: 2.2rem; color: #fff; margin-bottom: 1.5rem; text-align: center; font-weight: 800;">Довідник кампусу</h2>
     
     <form method="get" asp-action="SearchTeachers" style="position: relative;">
-        <input name="query" type="text" value="@ViewBag.Query" placeholder="Search by name, faculty or department..." 
+        <input name="query" type="text" value="@ViewBag.Query" placeholder="Шукайте за ім'ям, факультетом або кафедрою..." 
                class="modern-input" style="padding: 1.2rem 4rem 1.2rem 1.5rem; width: 100%; border-radius: 16px; font-size: 1.1rem; background: rgba(15, 23, 42, 0.6); border-color: rgba(255,255,255,0.05); color: #fff;" />
         <button type="submit" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: #6366f1; border: none; border-radius: 12px; padding: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -35,7 +35,7 @@
 
                 <div style="background: rgba(15, 23, 42, 0.3); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem;">
-                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Position</span>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Посада</span>
                         <span style="font-size: 0.85rem; color: #fff; font-weight: 500;">@teacher.Position</span>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
@@ -45,8 +45,8 @@
                 </div>
 
                 <div style="display: flex; gap: 0.8rem;">
-                    <a asp-controller="Schedule" asp-action="Index" asp-route-teacherId="@teacher.Id" class="btn-modern-card" style="flex: 1; text-align: center; text-decoration: none; padding: 0.75rem; background: rgba(99, 102, 241, 0.1); color: #6366f1; border-radius: 10px; font-size: 0.85rem; font-weight: 700;">Full Timetable</a>
-                    <a asp-controller="Schedule" asp-action="TeacherLocation" asp-route-teacherId="@teacher.Id" class="btn-modern-card" style="flex: 1; text-align: center; text-decoration: none; padding: 0.75rem; background: rgba(52, 211, 153, 0.1); color: #34d399; border-radius: 10px; font-size: 0.85rem; font-weight: 700;">Locate Now</a>
+                    <a asp-controller="Schedule" asp-action="Index" asp-route-teacherId="@teacher.Id" class="btn-modern-card" style="flex: 1; text-align: center; text-decoration: none; padding: 0.75rem; background: rgba(99, 102, 241, 0.1); color: #6366f1; border-radius: 10px; font-size: 0.85rem; font-weight: 700;">Повний розклад</a>
+                    <a asp-controller="Schedule" asp-action="TeacherLocation" asp-route-teacherId="@teacher.Id" class="btn-modern-card" style="flex: 1; text-align: center; text-decoration: none; padding: 0.75rem; background: rgba(52, 211, 153, 0.1); color: #34d399; border-radius: 10px; font-size: 0.85rem; font-weight: 700;">Де зараз?</a>
                 </div>
             </div>
         }
@@ -56,8 +56,8 @@ else if (!string.IsNullOrEmpty(ViewBag.Query))
 {
     <div style="text-align: center; padding: 4rem; opacity: 0.5;">
         <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" style="margin-bottom: 1rem;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <p style="color: #fff; font-size: 1.25rem;">No staff members found matching "@ViewBag.Query"</p>
-        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Try refining your query or check for typos.</p>
+        <p style="color: #fff; font-size: 1.25rem;">Не знайдено викладачів за запитом "@ViewBag.Query"</p>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Спробуйте уточнити запит або перевірте правильність написання.</p>
     </div>
 }
 

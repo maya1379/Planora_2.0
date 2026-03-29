@@ -10,11 +10,11 @@
 }
 
 <div class="rooms-app-card">
-    <h1 class="rooms-title">Find a Room</h1>
+    <h1 class="rooms-title">Знайти аудиторію</h1>
     
     <div class="search-container" style="margin-bottom: 1.5rem;">
         <div class="search-input-wrapper">
-            <input type="text" id="searchInput" class="search-input" placeholder="Search..." onkeyup="filterRooms()" />
+            <input type="text" id="searchInput" class="search-input" placeholder="Пошук за номером..." onkeyup="filterRooms()" />
         </div>
     </div>
 
@@ -61,8 +61,8 @@
                      onclick="openDarkModal('@room.Number', '@(room.BuildingName ?? "Без корпусу")', @room.Capacity, '@(room.Faculty ?? "-")', @room.HasComputers.ToString().ToLower(), @room.HasProjector.ToString().ToLower())">
                     
                     <div class="room-indicators">
-                        @if (room.HasProjector) { <span title="Проектор">📽️</span> }
-                        @if (room.HasComputers) { <span title="Комп'ютери">💻</span> }
+                        @if (room.HasProjector) { <img src="~/icons/projector.png" title="Проектор" class="room-indicator-icon" alt="Проектор" /> }
+                        @if (room.HasComputers) { <img src="~/icons/computer.avif" title="Комп'ютери" class="room-indicator-icon" alt="ПК" /> }
                     </div>
                     
                     @if (!string.IsNullOrEmpty(statusClass))
@@ -83,7 +83,7 @@
         <button class="dark-modal-close" onclick="closeDarkModal(event, true)">&times;</button>
         
         <div class="dark-modal-header">
-            <div class="dark-modal-title" id="mTitle">Room 120</div>
+            <div class="dark-modal-title" id="mTitle">Аудиторія 120</div>
             <div class="dark-modal-subtitle" id="mSubtitle">Корпус: Головний</div>
         </div>
 
@@ -149,10 +149,10 @@
         }
 
         function openDarkModal(number, building, capacity, faculty, hasPc, hasProjector) {
-            document.getElementById("mTitle").innerText = "Room " + number;
+            document.getElementById("mTitle").innerText = "Аудиторія " + number;
             document.getElementById("mSubtitle").innerText = building;
             
-            document.getElementById("mCapacity").innerText = capacity;
+            document.getElementById("mCapacity").innerText = capacity + " місць";
             document.getElementById("mFaculty").innerText = faculty;
             
             document.getElementById("mPc").innerText = hasPc ? "Є" : "Немає";
