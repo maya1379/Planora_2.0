@@ -19,12 +19,6 @@ public class PlanoraDbContext : IdentityDbContext<User>
     public DbSet<GroupDisciplineList> GroupDisciplineLists => Set<GroupDisciplineList>();
     public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();
     public DbSet<Schedule> Schedules => Set<Schedule>();
-    public DbSet<Workload> Workloads => Set<Workload>();
-
-    public DbSet<Student> Students => Set<Student>();
-    public DbSet<Teacher> Teachers => Set<Teacher>();
-    public DbSet<Administrator> Administrators => Set<Administrator>();
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

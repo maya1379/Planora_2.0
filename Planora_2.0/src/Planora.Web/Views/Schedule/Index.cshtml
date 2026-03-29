@@ -4,6 +4,10 @@
 @{
     ViewData["Title"] = "Перегляд розкладів";
     ViewData["Breadcrumb"] = "Розклад / Повний розклад";
+    var editMode = (bool)(ViewBag.EditMode ?? false);
+    var isAdmin = User.IsInRole("Admin");
+    var currentGroupId = Context.Request.Query["groupId"].ToString();
+    var currentTeacherId = Context.Request.Query["teacherId"].ToString();
 
     string GetDayName(DayOfWeekEnum day) => day switch {
         DayOfWeekEnum.Monday => "ПОНЕДІЛОК",
@@ -17,20 +21,37 @@
 }
 
 <div class="glass-card" style="padding: 2rem; margin-bottom: 2rem;">
-    <form method="get" asp-action="Index" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 250px;">
-            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Фільтр за групою</label>
-            <select name="groupId" asp-items="ViewBag.Groups" class="modern-select" style="width: 100%;" onchange="this.form.submit()">
-                <option value="">-- Всі групи --</option>
-            </select>
+    <form method="get" asp-action="Index">
+        <div style="display: flex; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem;">
+            <div style="flex: 1; min-width: 220px;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Фільтр за групою</label>
+                <select name="groupId" asp-items="ViewBag.Groups" class="modern-select" style="width: 100%;" onchange="this.form.submit()">
+                    <option value="">-- Всі групи --</option>
+                </select>
+            </div>
+            <div style="flex: 1; min-width: 220px;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Фільтр за викладачем</label>
+                <select name="teacherId" asp-items="ViewBag.Teachers" class="modern-select" style="width: 100%;" onchange="this.form.submit()">
+                    <option value="">-- Всі викладачі --</option>
+                </select>
+            </div>
         </div>
-        <div style="flex: 1; min-width: 250px;">
-            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Фільтр за викладачем</label>
-            <select name="teacherId" asp-items="ViewBag.Teachers" class="modern-select" style="width: 100%;" onchange="this.form.submit()">
-                <option value="">-- Всі викладачі --</option>
-            </select>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <a asp-action="Index" class="schedule-toolbar-btn schedule-toolbar-btn--reset">Скинути</a>
+            <a asp-action="ExportExcel" asp-route-groupId="@currentGroupId" asp-route-teacherId="@currentTeacherId" class="schedule-toolbar-btn schedule-toolbar-btn--export">Експорт в Excel</a>
+            @if (isAdmin)
+            {
+                <div style="flex: 1;"></div>
+                @if (editMode)
+                {
+                    <a asp-action="Index" asp-route-groupId="@currentGroupId" asp-route-teacherId="@currentTeacherId" class="schedule-toolbar-btn schedule-toolbar-btn--done">Готово</a>
+                }
+                else
+                {
+                    <a asp-action="Index" asp-route-editMode="true" asp-route-groupId="@currentGroupId" asp-route-teacherId="@currentTeacherId" class="schedule-toolbar-btn schedule-toolbar-btn--edit">Редагувати</a>
+                }
+            }
         </div>
-        <a asp-action="Index" class="btn-modern" style="margin: 0; padding: 0.8rem 1.5rem; width: auto; background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.2); color: #a78bfa; text-align: center;">Скинути</a>
     </form>
 </div>
 
@@ -43,6 +64,13 @@
 }
 else
 {
+    @if (editMode && isAdmin)
+    {
+        <div style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+            <p style="color: #fbbf24; margin: 0; font-size: 0.9rem; font-weight: 500;">Режим редагування увімкнено. Натискайте на картку заняття, щоб змінити його параметри.</p>
+        </div>
+    }
+
     <div style="display: flex; flex-direction: column; gap: 2.5em;">
         @foreach (var day in Enum.GetValues<DayOfWeekEnum>().Where(d => d >= DayOfWeekEnum.Monday && d <= DayOfWeekEnum.Saturday))
         {
@@ -59,7 +87,20 @@ else
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
                     @foreach (var slot in dayEntries)
                     {
-                        <div class="schedule-card-mini">
+                        <div class="schedule-card-mini @(editMode && isAdmin ? "schedule-card-mini--editable" : "")">
+                            @if (editMode && isAdmin)
+                            {
+                                <a asp-action="EditEntry" asp-route-id="@slot.Id" asp-route-filterGroupId="@currentGroupId" asp-route-filterTeacherId="@currentTeacherId" class="schedule-card-link"></a>
+                                <form asp-action="DeleteEntry" method="post" onsubmit="return confirm('Видалити цей запис?');" class="schedule-delete-form">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@slot.Id" />
+                                    <input type="hidden" name="filterGroupId" value="@currentGroupId" />
+                                    <input type="hidden" name="filterTeacherId" value="@currentTeacherId" />
+                                    <button type="submit" class="schedule-delete-btn" title="Видалити">
+                                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>
+                                    </button>
+                                </form>
+                            }
                             <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; align-items: flex-start;">
                                 <span class="slot-badge">Пара №@slot.TimeSlotNumber</span>
                                 <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">@slot.StartTime.ToString(@"hh\:mm") - @slot.EndTime.ToString(@"hh\:mm")</span>
@@ -94,6 +135,53 @@ else
 }
 
 <style>
+    /* Toolbar buttons */
+    .schedule-toolbar-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.7rem 1.4rem;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        border: 1px solid transparent;
+    }
+    .schedule-toolbar-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .schedule-toolbar-btn--reset {
+        background: rgba(255,255,255,0.05);
+        color: var(--text-secondary);
+        border-color: rgba(255,255,255,0.1);
+    }
+    .schedule-toolbar-btn--reset:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .schedule-toolbar-btn--export {
+        background: rgba(52, 211, 153, 0.08);
+        color: #34d399;
+        border-color: rgba(52, 211, 153, 0.2);
+    }
+    .schedule-toolbar-btn--export:hover { background: rgba(52, 211, 153, 0.15); }
+
+    .schedule-toolbar-btn--edit {
+        background: rgba(245, 158, 11, 0.08);
+        color: #fbbf24;
+        border-color: rgba(245, 158, 11, 0.2);
+    }
+    .schedule-toolbar-btn--edit:hover { background: rgba(245, 158, 11, 0.15); }
+
+    .schedule-toolbar-btn--done {
+        background: rgba(99, 102, 241, 0.12);
+        color: #818cf8;
+        border-color: rgba(99, 102, 241, 0.3);
+    }
+    .schedule-toolbar-btn--done:hover { background: rgba(99, 102, 241, 0.2); }
+
+    /* Schedule cards */
     .schedule-card-mini {
         background: rgba(15, 23, 42, 0.4);
         border: 1px solid rgba(255, 255, 255, 0.05);
@@ -102,12 +190,53 @@ else
         display: flex;
         flex-direction: column;
         transition: all 0.3s ease;
+        position: relative;
     }
     .schedule-card-mini:hover {
         background: rgba(30, 41, 59, 0.6);
-        border-color: rgba(99, 102, 241, 0.4);
+        border-color: rgba(99, 102, 241, 0.3);
         transform: translateY(-4px);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .schedule-card-mini--editable {
+        cursor: pointer;
+        border-color: rgba(245, 158, 11, 0.15);
+    }
+    .schedule-card-mini--editable:hover {
+        border-color: rgba(245, 158, 11, 0.4);
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1);
+    }
+    .schedule-card-link {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        border-radius: 16px;
+    }
+    .schedule-delete-form {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        z-index: 3;
+    }
+    .schedule-delete-btn {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #1e293b;
+        border: 2px solid rgba(239, 68, 68, 0.4);
+        color: #f87171;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        padding: 0;
+    }
+    .schedule-delete-btn:hover {
+        background: #ef4444;
+        color: #fff;
+        border-color: #ef4444;
+        transform: scale(1.15);
     }
     .slot-badge {
         font-size: 0.65rem;

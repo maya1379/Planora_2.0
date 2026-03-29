@@ -1,0 +1,68 @@
+@model Planora.Web.ViewModels.EditScheduleEntryViewModel
+
+@{
+    ViewData["Title"] = "Редагувати запис розкладу";
+    ViewData["Breadcrumb"] = "Розклад / Редагування";
+    var filterGroupId = ViewBag.FilterGroupId;
+    var filterTeacherId = ViewBag.FilterTeacherId;
+}
+
+<div class="glass-card" style="max-width: 600px; margin: 0 auto; padding: 2rem;">
+    <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2rem; margin-bottom: 2rem; text-align: center;">
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Редагувати запис</h2>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Змініть параметри заняття</p>
+    </div>
+
+    <form asp-action="EditEntry" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" name="filterGroupId" value="@filterGroupId" />
+        <input type="hidden" name="filterTeacherId" value="@filterTeacherId" />
+        <div asp-validation-summary="ModelOnly" style="color: #ef4444; margin-bottom: 1rem; border-radius: 8px; background: rgba(239, 68, 68, 0.1); padding: 1rem;"></div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">День тижня</label>
+                <select asp-for="DayOfWeek" asp-items="@(ViewBag.DaysList as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;"></select>
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Пара</label>
+                <select asp-for="TimeSlotId" asp-items="@(ViewBag.TimeSlotsList as Microsoft.AspNetCore.Mvc.Rendering.SelectList)" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;"></select>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Предмет</label>
+            <select asp-for="SubjectId" asp-items="@(ViewBag.SubjectsList as Microsoft.AspNetCore.Mvc.Rendering.SelectList)" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;"></select>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Викладач</label>
+            <select asp-for="TeacherId" asp-items="@(ViewBag.TeachersList as Microsoft.AspNetCore.Mvc.Rendering.SelectList)" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;"></select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Аудиторія</label>
+                <select asp-for="ClassroomId" asp-items="@(ViewBag.ClassroomsList as Microsoft.AspNetCore.Mvc.Rendering.SelectList)" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;"></select>
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Група</label>
+                <select asp-for="GroupId" asp-items="@(ViewBag.GroupsList as Microsoft.AspNetCore.Mvc.Rendering.SelectList)" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;"></select>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Тип тижня</label>
+            <select asp-for="WeekType" asp-items="@(ViewBag.WeekTypesList as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;"></select>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button type="submit" class="btn-modern" style="margin: 0; flex: 1;">Зберегти</button>
+            <a asp-action="Index" asp-route-editMode="true" asp-route-groupId="@filterGroupId" asp-route-teacherId="@filterTeacherId" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Скасувати</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

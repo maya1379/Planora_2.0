@@ -82,13 +82,21 @@
             </div>
         </a>
 
-        <a asp-controller="ScheduleGeneration" asp-action="Index" style="grid-column: span 2; text-decoration: none; padding: 1.5rem; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.2); transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
+        <div onclick="window.location.href='@Url.Action("Index", "ScheduleGeneration")'" style="grid-column: span 2; cursor: pointer; padding: 1.5rem; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.2); transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
             <div>
                 <h4 style="color: #fbbf24; margin: 0 0 0.5rem 0;">Генерація розкладу</h4>
                 <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Запуск алгоритму для створення оптимального розкладу.</p>
             </div>
-            <div style="background: rgba(245, 158, 11, 0.2); padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: 600; color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">ВПЕРЕД</div>
-        </a>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <a asp-controller="Schedule" asp-action="Index" onclick="event.stopPropagation();" style="width: 48px; height: 48px; background: rgba(245, 158, 11, 0.25); border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.4); display: flex; align-items: center; justify-content: center; text-decoration: none;" title="Переглянути розклад">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </a>
+                <div style="background: rgba(245, 158, 11, 0.2); padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: 600; color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">ВПЕРЕД</div>
+            </div>
+        </div>
     </div>
 
     <h3 style="color: #fff; font-size: 1.3rem; margin-bottom: 1rem;">Нові користувачі</h3>

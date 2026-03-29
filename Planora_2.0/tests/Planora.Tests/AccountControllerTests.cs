@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Planora.Domain.Entities;
 using Planora.Infrastructure.Data;
+using Planora.Services.Services.Interfaces;
 using Planora.Web.Controllers;
 using Planora.Web.ViewModels;
 using Xunit;
@@ -15,6 +16,7 @@ public class AccountControllerTests
     private readonly Mock<UserManager<User>> _userManagerMock;
     private readonly Mock<SignInManager<User>> _signInManagerMock;
     private readonly PlanoraDbContext _context;
+    private readonly Mock<IEmailService> _emailServiceMock;
 
     private readonly AccountController _controller;
 
@@ -42,10 +44,13 @@ public class AccountControllerTests
 
         _context = new PlanoraDbContext(options);
 
+        _emailServiceMock = new Mock<IEmailService>();
+
         _controller = new AccountController(
             _userManagerMock.Object,
             _signInManagerMock.Object,
-            _context);
+            _context,
+            _emailServiceMock.Object);
     }
 
     [Fact]

@@ -182,10 +182,17 @@ public class GroupsControllerTests
             Name = "G1"
         });
 
+        _groupServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<GroupDto>
+        {
+            new GroupDto { Id = 1, Name = "G1" },
+            new GroupDto { Id = 2, Name = "G2" }
+        });
+
         var users = new List<User>
         {
             new User { Id = "1", FullName = "Free Student", Role = UserRole.Student, GroupId = null },
-            new User { Id = "2", FullName = "Busy Student", Role = UserRole.Student, GroupId = 2 }
+            new User { Id = "2", FullName = "Busy Student", Role = UserRole.Student, GroupId = 2 },
+            new User { Id = "3", FullName = "In Group 1", Role = UserRole.Student, GroupId = 1 }
         }.AsQueryable();
 
         _userManagerMock.Setup(u => u.Users).Returns(users);
@@ -194,7 +201,7 @@ public class GroupsControllerTests
 
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsAssignableFrom<IEnumerable<User>>(viewResult.Model);
-        Assert.Single(model);
+        Assert.Equal(2, model.Count());
         Assert.Equal("G1", _controller.ViewBag.GroupName);
         Assert.Equal(1, _controller.ViewBag.GroupId);
     }

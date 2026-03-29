@@ -87,10 +87,13 @@ public class GroupsController : Controller
         if (group == null) return NotFound();
 
         var availableStudents = _userManager.Users
-            .Where(u => u.Role == UserRole.Student && u.GroupId == null)
-            .OrderBy(u => u.FullName)
+            .Where(u => u.Role == UserRole.Student && u.GroupId != id)
+            .OrderBy(u => u.GroupId == null ? 0 : 1)
+            .ThenBy(u => u.FullName)
             .ToList();
 
+        var allGroups = await _groupService.GetAllAsync();
+        ViewBag.AllGroups = allGroups.ToList();
         ViewBag.GroupName = group.Name;
         ViewBag.GroupId = id;
         return View(availableStudents);

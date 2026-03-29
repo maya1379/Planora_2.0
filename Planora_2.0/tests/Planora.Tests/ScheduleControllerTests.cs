@@ -15,6 +15,10 @@ public class ScheduleControllerTests
 {
     private readonly Mock<IScheduleService> _scheduleServiceMock;
     private readonly Mock<IGroupService> _groupServiceMock;
+    private readonly Mock<IExportService> _exportServiceMock;
+    private readonly Mock<IClassroomService> _classroomServiceMock;
+    private readonly Mock<ISubjectService> _subjectServiceMock;
+    private readonly Mock<ITimeSlotService> _timeSlotServiceMock;
     private readonly Mock<UserManager<User>> _userManagerMock;
     private readonly ScheduleController _controller;
 
@@ -22,6 +26,10 @@ public class ScheduleControllerTests
     {
         _scheduleServiceMock = new Mock<IScheduleService>();
         _groupServiceMock = new Mock<IGroupService>();
+        _exportServiceMock = new Mock<IExportService>();
+        _classroomServiceMock = new Mock<IClassroomService>();
+        _subjectServiceMock = new Mock<ISubjectService>();
+        _timeSlotServiceMock = new Mock<ITimeSlotService>();
 
         var userStore = new Mock<IUserStore<User>>();
         _userManagerMock = new Mock<UserManager<User>>(
@@ -31,6 +39,10 @@ public class ScheduleControllerTests
         _controller = new ScheduleController(
             _scheduleServiceMock.Object,
             _groupServiceMock.Object,
+            _exportServiceMock.Object,
+            _classroomServiceMock.Object,
+            _subjectServiceMock.Object,
+            _timeSlotServiceMock.Object,
             _userManagerMock.Object);
     }
 
@@ -218,7 +230,7 @@ public class ScheduleControllerTests
     [Fact]
     public async Task DeleteEntry_Post_RedirectsToIndex()
     {
-        var result = await _controller.DeleteEntry(1);
+        var result = await _controller.DeleteEntry(1, null, null);
 
         var redirectResult = Assert.IsType<RedirectToActionResult>(result);
         Assert.Equal("Index", redirectResult.ActionName);
