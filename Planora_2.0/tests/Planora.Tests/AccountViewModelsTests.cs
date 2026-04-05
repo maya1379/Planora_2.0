@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Planora.Domain.Enums;
+using Planora.Domain.Constants;
 using Planora.Web.ViewModels;
 using Xunit;
 
@@ -83,7 +83,7 @@ public class AccountViewModelsTests
             Email = "test@example.com",
             Password = "123456",
             ConfirmPassword = "123456",
-            Role = UserRole.Teacher,
+            Role = AppRoles.Teacher,
             Faculty = "FIT",
             Position = "Professor"
         };
@@ -102,7 +102,7 @@ public class AccountViewModelsTests
             Email = "test@example.com",
             Password = "123456",
             ConfirmPassword = "123456",
-            Role = UserRole.Teacher
+            Role = AppRoles.Teacher
         };
 
         var results = ValidateModel(model);
@@ -119,7 +119,7 @@ public class AccountViewModelsTests
             Email = "wrong-email",
             Password = "123456",
             ConfirmPassword = "123456",
-            Role = UserRole.Teacher
+            Role = AppRoles.Teacher
         };
 
         var results = ValidateModel(model);
@@ -136,7 +136,7 @@ public class AccountViewModelsTests
             Email = "test@example.com",
             Password = "123",
             ConfirmPassword = "123",
-            Role = UserRole.Teacher
+            Role = AppRoles.Teacher
         };
 
         var results = ValidateModel(model);
@@ -153,7 +153,7 @@ public class AccountViewModelsTests
             Email = "test@example.com",
             Password = "123456",
             ConfirmPassword = "654321",
-            Role = UserRole.Teacher
+            Role = AppRoles.Teacher
         };
 
         var results = ValidateModel(model);
@@ -170,7 +170,7 @@ public class AccountViewModelsTests
             Email = "student@example.com",
             Password = "123456",
             ConfirmPassword = "123456",
-            Role = UserRole.Student,
+            Role = AppRoles.Student,
             Faculty = null,
             Position = null,
             GroupId = null

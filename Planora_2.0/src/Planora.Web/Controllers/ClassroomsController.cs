@@ -1,3 +1,4 @@
+using Planora.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,7 +7,7 @@ using Planora.Services.Services.Interfaces;
 
 namespace Planora.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Admin)]
 public class ClassroomsController : Controller
 {
     private readonly IClassroomService _classroomService;
@@ -96,7 +97,19 @@ public class ClassroomsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        await _classroomService.DeleteAsync(id);
+        try
+        {
+            await _classroomService.DeleteAsync(id);
+            TempData["SuccessMessage"] = "Аудиторію успішно видалено.";
+        }
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+        {
+            TempData["ErrorMessage"] = "Неможливо видалити цю аудиторію, оскільки вона використовується в розкладі.";
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Сталася непередбачена помилка під час видалення аудиторії.";
+        }
         return RedirectToAction(nameof(AdminIndex));
     }
 

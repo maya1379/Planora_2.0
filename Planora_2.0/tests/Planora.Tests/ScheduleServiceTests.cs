@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using Planora.Domain.Entities;
+using Planora.Domain.Constants;
 using Planora.Domain.Enums;
 using Planora.Services.DTOs;
 using Planora.Services.Interfaces;
@@ -58,7 +59,6 @@ public class ScheduleServiceTests
         // Act
         var result = (await _service.GetAllAsync()).ToList();
 
-        // Assert
         Assert.Equal(2, result.Count);
         Assert.Equal(1, result[0].Id);
         Assert.Equal(2, result[1].Id);
@@ -287,28 +287,26 @@ public class ScheduleServiceTests
                 Id = "1",
                 FullName = "Ivan Petrenko",
                 Faculty = "FIT",
-                Position = "Professor",
-                Role = UserRole.Teacher
+                Position = "Professor"
             },
             new User
             {
                 Id = "2",
                 FullName = "Olena Sidorenko",
                 Faculty = "FIT",
-                Position = "Assistant",
-                Role = UserRole.Teacher
+                Position = "Assistant"
             },
             new User
             {
                 Id = "3",
                 FullName = "Student User",
                 Faculty = "FIT",
-                Position = "",
-                Role = UserRole.Student
+                Position = ""
             }
         }.AsQueryable();
 
         _userManagerMock.Setup(um => um.Users).Returns(users);
+        _userManagerMock.Setup(um => um.GetUsersInRoleAsync(AppRoles.Teacher)).ReturnsAsync(users.ToList());
 
         // Act
         var result = (await _service.SearchTeachersAsync("ivan")).ToList();
@@ -330,34 +328,32 @@ public class ScheduleServiceTests
                 Id = "1",
                 FullName = "Ivan Petrenko",
                 Faculty = "FIT",
-                Position = "Professor",
-                Role = UserRole.Teacher
+                Position = "Professor"
             },
             new User
             {
                 Id = "2",
                 FullName = "Olena Sidorenko",
                 Faculty = "FIT",
-                Position = "Assistant",
-                Role = UserRole.Teacher
+                Position = "Assistant"
             },
             new User
             {
                 Id = "3",
                 FullName = "Another Student",
                 Faculty = "FIT",
-                Position = "",
-                Role = UserRole.Student
+                Position = ""
             }
         }.AsQueryable();
 
         _userManagerMock.Setup(um => um.Users).Returns(users);
+        _userManagerMock.Setup(um => um.GetUsersInRoleAsync(AppRoles.Teacher)).ReturnsAsync(users.ToList());
 
         // Act
         var result = (await _service.SearchTeachersAsync("")).ToList();
 
         // Assert
-        Assert.Equal(2, result.Count);
+        Assert.Equal(3, result.Count);
         Assert.All(result, t => Assert.NotNull(t.FullName));
     }
 

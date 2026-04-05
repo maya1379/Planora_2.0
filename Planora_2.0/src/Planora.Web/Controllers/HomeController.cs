@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Planora.Domain.Entities;
-using Planora.Domain.Enums;
+using Planora.Domain.Constants;
 using Planora.Services.DTOs;
 using Planora.Services.Services.Interfaces;
 
@@ -27,16 +27,20 @@ public class HomeController : Controller
             var user = await _userManager.GetUserAsync(User);
             if (user != null)
             {
-                if (user.Role == UserRole.Admin)
+                var isAdmin = await _userManager.IsInRoleAsync(user, AppRoles.Admin);
+                var isStudent = await _userManager.IsInRoleAsync(user, AppRoles.Student);
+                var isTeacher = await _userManager.IsInRoleAsync(user, AppRoles.Teacher);
+
+                if (isAdmin)
                 {
                     return RedirectToAction("Index", "Admin");
                 }
-                else if (user.Role == UserRole.Student && user.GroupId.HasValue)
+                else if (isStudent && user.GroupId.HasValue)
                 {
                     var studentSchedule = await _scheduleService.GetTodayByGroupIdAsync(user.GroupId.Value);
                     model = studentSchedule.ToList();
                 }
-                else if (user.Role == UserRole.Teacher)
+                else if (isTeacher)
                 {
                     var teacherSchedule = await _scheduleService.GetTodayByTeacherIdAsync(user.Id);
                     model = teacherSchedule.ToList();
@@ -56,12 +60,15 @@ public class HomeController : Controller
             var user = await _userManager.GetUserAsync(User);
             if (user != null)
             {
-                if (user.Role == UserRole.Student && user.GroupId.HasValue)
+                var isStudent = await _userManager.IsInRoleAsync(user, AppRoles.Student);
+                var isTeacher = await _userManager.IsInRoleAsync(user, AppRoles.Teacher);
+
+                if (isStudent && user.GroupId.HasValue)
                 {
                     var result = await _scheduleService.GetByGroupIdAsync(user.GroupId.Value);
                     model = result.ToList();
                 }
-                else if (user.Role == UserRole.Teacher)
+                else if (isTeacher)
                 {
                     var result = await _scheduleService.GetByTeacherIdAsync(user.Id);
                     model = result.ToList();

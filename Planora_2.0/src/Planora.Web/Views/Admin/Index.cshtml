@@ -1,4 +1,6 @@
 @model Planora.Web.ViewModels.AdminDashboardViewModel
+@inject Microsoft.AspNetCore.Identity.UserManager<Planora.Domain.Entities.User> UserManager
+@using Planora.Domain.Constants
 
 @{
     ViewData["Title"] = "Панель адміністратора";
@@ -32,8 +34,8 @@
         </div>
         
         <div style="background: rgba(15, 23, 42, 0.6); padding: 1.2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center;">
-            <div style="font-size: 2.2rem; font-weight: 700; color: #a78bfa; line-height: 1.2;">@Model.TotalScheduleEntries</div>
-            <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Заняття</div>
+            <div style="font-size: 2.2rem; font-weight: 700; color: #a78bfa; line-height: 1.2;">@Model.TotalSubjects</div>
+            <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Предмети</div>
         </div>
     </div>
 
@@ -116,11 +118,11 @@
                         <td style="padding: 1rem; color: var(--text-secondary);">@user.FullName</td>
                         <td style="padding: 1rem; color: var(--text-secondary);">@user.Email</td>
                         <td style="padding: 1rem;">
-                            @if(user.Role == Planora.Domain.Enums.UserRole.Admin)
+                            @if(await UserManager.IsInRoleAsync(user, AppRoles.Admin))
                             {
                                 <span style="background: rgba(248, 113, 113, 0.2); color: #f87171; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">АДМІНІСТРАТОР</span>
                             }
-                            else if(user.Role == Planora.Domain.Enums.UserRole.Teacher)
+                            else if(await UserManager.IsInRoleAsync(user, AppRoles.Teacher))
                             {
                                 <span style="background: rgba(52, 211, 153, 0.2); color: #34d399; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">ВИКЛАДАЧ</span>
                             }

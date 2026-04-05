@@ -1,3 +1,4 @@
+using Planora.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -42,8 +43,8 @@ public class ScheduleController : Controller
     public async Task<IActionResult> Index(int? groupId, string? teacherId, bool editMode = false)
     {
         var groups = await _groupService.GetAllAsync();
-        var teachers = _userManager.Users
-            .Where(u => u.Role == UserRole.Teacher)
+        var teachersInRole = await _userManager.GetUsersInRoleAsync(AppRoles.Teacher);
+        var teachers = teachersInRole
             .Select(u => new { u.Id, u.FullName })
             .ToList();
 
@@ -70,8 +71,8 @@ public class ScheduleController : Controller
     public async Task<IActionResult> Today(int? groupId, string? teacherId)
     {
         var groups = await _groupService.GetAllAsync();
-        var teachers = _userManager.Users
-            .Where(u => u.Role == UserRole.Teacher)
+        var teachersInRole = await _userManager.GetUsersInRoleAsync(AppRoles.Teacher);
+        var teachers = teachersInRole
             .Select(u => new { u.Id, u.FullName })
             .ToList();
 
@@ -95,8 +96,8 @@ public class ScheduleController : Controller
 
     public async Task<IActionResult> TeacherLocation(string? teacherId)
     {
-        var teachers = _userManager.Users
-            .Where(u => u.Role == UserRole.Teacher)
+        var teachersInRole = await _userManager.GetUsersInRoleAsync(AppRoles.Teacher);
+        var teachers = teachersInRole
             .Select(u => new { u.Id, u.FullName })
             .ToList();
 
@@ -124,7 +125,7 @@ public class ScheduleController : Controller
         return View(Enumerable.Empty<TeacherSearchDto>());
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = AppRoles.Admin)]
     public async Task<IActionResult> EditEntry(int id, int? filterGroupId, string? filterTeacherId)
     {
         var entry = await _scheduleService.GetByIdAsync(id);
@@ -152,7 +153,7 @@ public class ScheduleController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = AppRoles.Admin)]
     public async Task<IActionResult> EditEntry(EditScheduleEntryViewModel model, int? filterGroupId, string? filterTeacherId)
     {
         if (!ModelState.IsValid)
@@ -210,7 +211,7 @@ public class ScheduleController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = AppRoles.Admin)]
     public async Task<IActionResult> DeleteEntry(int id, int? filterGroupId, string? filterTeacherId)
     {
         await _scheduleService.DeleteAsync(id);
@@ -219,7 +220,7 @@ public class ScheduleController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = AppRoles.Admin)]
     public async Task<IActionResult> ClearSchedule()
     {
         await _scheduleService.DeleteAllAsync();
@@ -232,8 +233,8 @@ public class ScheduleController : Controller
         var classrooms = await _classroomService.GetAllAsync();
         var subjects = await _subjectService.GetAllAsync();
         var timeSlots = await _timeSlotService.GetAllAsync();
-        var teachers = _userManager.Users
-            .Where(u => u.Role == UserRole.Teacher)
+        var teachersInRole = await _userManager.GetUsersInRoleAsync(AppRoles.Teacher);
+        var teachers = teachersInRole
             .Select(u => new { u.Id, u.FullName })
             .ToList();
 

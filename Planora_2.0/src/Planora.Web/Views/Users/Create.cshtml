@@ -34,10 +34,7 @@
 
         <div style="margin-bottom: 1.5rem;">
             <label asp-for="Role" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Роль</label>
-            <select asp-for="Role" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;" onchange="toggleRoleFields(this.value)">
-                <option value="Student">Студент</option>
-                <option value="Teacher">Викладач</option>
-                <option value="Admin">Адміністратор</option>
+            <select asp-for="Role" asp-items="ViewBag.Roles" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;" onchange="toggleRoleFields(this.value)">
             </select>
             <span asp-validation-for="Role" style="color: #ef4444; font-size: 0.85rem; display: block; margin-top: 0.5rem;"></span>
         </div>

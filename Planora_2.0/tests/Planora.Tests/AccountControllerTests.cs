@@ -22,12 +22,11 @@ public class AccountControllerTests
 
     public AccountControllerTests()
     {
-        // ✅ UserManager mock
+        
         var userStoreMock = new Mock<IUserStore<User>>();
         _userManagerMock = new Mock<UserManager<User>>(
             userStoreMock.Object, null, null, null, null, null, null, null, null);
 
-        // ✅ SignInManager mock
         var contextAccessor = new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
         var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
 
@@ -37,7 +36,6 @@ public class AccountControllerTests
             userPrincipalFactory.Object,
             null, null, null, null);
 
-        // ✅ 🔥 ЗАМІСТЬ MOCK — InMemory DB
         var options = new DbContextOptionsBuilder<PlanoraDbContext>()
             .UseInMemoryDatabase(databaseName: "TestDb")
             .Options;

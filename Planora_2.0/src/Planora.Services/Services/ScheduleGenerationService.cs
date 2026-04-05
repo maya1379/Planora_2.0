@@ -155,7 +155,8 @@ public class ScheduleGenerationService : IScheduleGenerationService
                             weekTypeForPlacement,
                             occupiedSlots,
                             placedEntries,
-                            requirement.GroupId);
+                            requirement.GroupId,
+                            requirement.GroupFaculty);
 
                         if (suitableClassroom == null)
                         {
@@ -240,6 +241,7 @@ public class ScheduleGenerationService : IScheduleGenerationService
             {
                 GroupId = group.Id,
                 GroupName = group.Name,
+                GroupFaculty = group.Faculty,
                 GroupStudentCount = group.StudentCount,
                 SubjectId = plan.SubjectId,
                 SubjectName = plan.Subjects?.Name ?? "Unknown",
@@ -263,7 +265,8 @@ public class ScheduleGenerationService : IScheduleGenerationService
         WeekType weekType,
         HashSet<string> occupiedSlots,
         List<Schedule> placedEntries,
-        int groupId)
+        int groupId,
+        string groupFaculty)
     {
         var suitable = allClassrooms
             .Where(c => c.Capacity >= groupStudentCount)
@@ -296,6 +299,11 @@ public class ScheduleGenerationService : IScheduleGenerationService
 
         if (!suitable.Any()) return null;
 
+        var orderedSuitable = suitable
+            .OrderBy(c => c.Faculty == groupFaculty ? 0 : (c.Faculty == "Загальний" ? 1 : 2))
+            .ThenBy(c => c.Capacity)
+            .ToList();
+
         var groupEntriesForDay = placedEntries
             .Where(e => e.GroupId == groupId && e.DayOfWeek == day)
             .ToList();
@@ -307,21 +315,22 @@ public class ScheduleGenerationService : IScheduleGenerationService
 
             if (usedBuildingId.HasValue)
             {
-                var sameBuildingRooms = suitable.Where(c => c.BuildingId == usedBuildingId.Value).ToList();
+                var sameBuildingRooms = orderedSuitable.Where(c => c.BuildingId == usedBuildingId.Value).ToList();
                 if (sameBuildingRooms.Any())
                 {
-                    return sameBuildingRooms.OrderBy(c => c.Capacity).First();
+                    return sameBuildingRooms.First();
                 }
             }
         }
 
-        return suitable.OrderBy(c => c.Capacity).First();
+        return orderedSuitable.First();
     }
 
     private class ScheduleRequirement
     {
         public int GroupId { get; set; }
         public string GroupName { get; set; } = string.Empty;
+        public string GroupFaculty { get; set; } = string.Empty;
         public int GroupStudentCount { get; set; }
         public int SubjectId { get; set; }
         public string SubjectName { get; set; } = string.Empty;

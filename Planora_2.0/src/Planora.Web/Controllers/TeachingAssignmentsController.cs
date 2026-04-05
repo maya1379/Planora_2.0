@@ -1,3 +1,4 @@
+using Planora.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ using Planora.Services.Services.Interfaces;
 
 namespace Planora.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Admin)]
 public class TeachingAssignmentsController : Controller
 {
     private readonly ITeachingAssignmentService _assignmentService;
@@ -93,12 +94,11 @@ public class TeachingAssignmentsController : Controller
 
     private async Task PopulateDropdowns()
     {
-        // Using ToListAsync from Microsoft.EntityFrameworkCore
-        var teachers = await _userManager.Users
-            .Where(u => u.Role == UserRole.Teacher)
+        var teachersInRole = await _userManager.GetUsersInRoleAsync(AppRoles.Teacher);
+        var teachers = teachersInRole
             .OrderBy(u => u.FullName)
             .Select(u => new { u.Id, u.FullName })
-            .ToListAsync();
+            .ToList();
 
         var subjects = await _subjectService.GetAllAsync();
         var groups = await _groupService.GetAllAsync();

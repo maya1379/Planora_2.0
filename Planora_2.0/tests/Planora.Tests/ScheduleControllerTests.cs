@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Moq;
 using Planora.Domain.Entities;
-using Planora.Domain.Enums;
+using Planora.Domain.Constants;
 using Planora.Services.DTOs;
 using Planora.Services.Services.Interfaces;
 using Planora.Web.Controllers;
@@ -55,10 +55,12 @@ public class ScheduleControllerTests
 
         var users = new List<User>
         {
-            new User { Id = "t1", FullName = "Teacher 1", Role = UserRole.Teacher }
+            new User { Id = "t1", FullName = "Teacher 1" }
         }.AsQueryable();
 
         _userManagerMock.Setup(u => u.Users).Returns(users);
+        _userManagerMock.Setup(u => u.GetUsersInRoleAsync(AppRoles.Teacher)).ReturnsAsync(users.ToList());
+        _subjectServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<SubjectDto>());
     }
 
     [Fact]
@@ -165,10 +167,11 @@ public class ScheduleControllerTests
     {
         var users = new List<User>
         {
-            new User { Id = "t1", FullName = "Teacher 1", Role = UserRole.Teacher }
+            new User { Id = "t1", FullName = "Teacher 1" }
         }.AsQueryable();
 
         _userManagerMock.Setup(u => u.Users).Returns(users);
+        _userManagerMock.Setup(u => u.GetUsersInRoleAsync(AppRoles.Teacher)).ReturnsAsync(users.ToList());
 
         _scheduleServiceMock.Setup(s => s.FindTeacherLocationAsync("t1")).ReturnsAsync(new TeacherLocationDto
         {
@@ -190,10 +193,11 @@ public class ScheduleControllerTests
     {
         var users = new List<User>
         {
-            new User { Id = "t1", FullName = "Teacher 1", Role = UserRole.Teacher }
+            new User { Id = "t1", FullName = "Teacher 1" }
         }.AsQueryable();
 
         _userManagerMock.Setup(u => u.Users).Returns(users);
+        _userManagerMock.Setup(u => u.GetUsersInRoleAsync(AppRoles.Teacher)).ReturnsAsync(users.ToList());
 
         var result = await _controller.TeacherLocation(null);
 

@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Planora.Domain.Enums;
+
 
 namespace Planora.Web.ViewModels;
 
@@ -41,7 +41,7 @@ public class RegisterViewModel
 
     [Required(ErrorMessage = "Роль є обов'язковою")]
     [Display(Name = "Роль")]
-    public UserRole Role { get; set; }
+    public string Role { get; set; } = string.Empty;
 
     [Display(Name = "Факультет")]
     public string? Faculty { get; set; }

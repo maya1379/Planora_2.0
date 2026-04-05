@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Planora.Domain.Constants;
 using Planora.Domain.Enums;
 using Planora.Infrastructure.Data;
 
@@ -16,8 +17,11 @@ public class SearchController : Controller
 
     public async Task<IActionResult> TeacherSearch(string? teacherName)
     {
-        var query = _context.Users
-            .Where(u => u.Role == UserRole.Teacher)
+        var query = (from u in _context.Users
+                     join ur in _context.UserRoles on u.Id equals ur.UserId
+                     join r in _context.Roles on ur.RoleId equals r.Id
+                     where r.Name == AppRoles.Teacher
+                     select u)
             .Include(u => u.TeachingAssignments)
                 .ThenInclude(ta => ta.Subjects)
             .Include(u => u.Schedules)
@@ -46,7 +50,11 @@ public class SearchController : Controller
         if (string.IsNullOrEmpty(id))
             return NotFound();
 
-        var teacher = await _context.Users
+        var teacher = await (from u in _context.Users
+                             join ur in _context.UserRoles on u.Id equals ur.UserId
+                             join r in _context.Roles on ur.RoleId equals r.Id
+                             where r.Name == AppRoles.Teacher && u.Id == id
+                             select u)
             .Include(u => u.TeachingAssignments)
                 .ThenInclude(ta => ta.Subjects)
             .Include(u => u.Schedules)
@@ -57,7 +65,7 @@ public class SearchController : Controller
                 .ThenInclude(s => s.Subjects)
             .Include(u => u.Schedules)
                 .ThenInclude(s => s.Groups)
-            .FirstOrDefaultAsync(u => u.Id == id && u.Role == UserRole.Teacher);
+            .FirstOrDefaultAsync();
 
         if (teacher == null)
             return NotFound();

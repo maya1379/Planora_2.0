@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Planora.Domain.Entities;
 using Planora.Infrastructure.Data;
+using Planora.Domain.Constants;
 using Planora.Services.Services.Interfaces;
 using Planora.Web.ViewModels;
 
@@ -72,17 +73,16 @@ public class AccountController : Controller
                 UserName = model.Email, 
                 Email = model.Email,
                 FullName = model.FullName,
-                Role = model.Role,
                 Faculty = model.Faculty,
                 Position = model.Position,
-                GroupId = model.GroupId
+                GroupId = model.Role == AppRoles.Student ? model.GroupId : null
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, model.Role.ToString());
+                await _userManager.AddToRoleAsync(user, model.Role);
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }
@@ -209,5 +209,6 @@ public class AccountController : Controller
             .ToListAsync();
             
         ViewBag.Groups = new SelectList(groups, "Id", "Name");
+        ViewBag.Roles = new SelectList(new[] { AppRoles.Admin, AppRoles.Teacher, AppRoles.Student });
     }
 }

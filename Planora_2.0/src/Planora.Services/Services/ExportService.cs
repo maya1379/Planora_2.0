@@ -47,7 +47,7 @@ public class ExportService : IExportService
             worksheet.Cell(dataRow, 5).Value = entry.SubjectName;
             worksheet.Cell(dataRow, 6).Value = GetLessonTypeName(entry.LessonType);
             worksheet.Cell(dataRow, 7).Value = entry.TeacherName;
-            worksheet.Cell(dataRow, 8).Value = $"{entry.ClassroomNumber} ({entry.BuildingName})";
+            worksheet.Cell(dataRow, 8).Value = entry.ClassroomNumber;
             worksheet.Cell(dataRow, 9).Value = entry.GroupName;
 
             for (int col = 1; col <= 9; col++)

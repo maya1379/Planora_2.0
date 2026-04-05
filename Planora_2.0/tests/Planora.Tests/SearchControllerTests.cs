@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Planora.Domain.Entities;
+using Planora.Domain.Constants;
 using Planora.Domain.Enums;
 using Planora.Infrastructure.Data;
 using Planora.Web.Controllers;
@@ -24,26 +26,17 @@ public class SearchControllerTests
     {
         using var context = CreateContext(nameof(TeacherSearch_WithoutFilter_ReturnsAllTeachersOrdered));
 
-        context.Users.AddRange(
-            new User
-            {
-                Id = "t2",
-                FullName = "Petrenko Ivan",
-                Role = UserRole.Teacher
-            },
-            new User
-            {
-                Id = "t1",
-                FullName = "Antonenko Oleg",
-                Role = UserRole.Teacher
-            },
-            new User
-            {
-                Id = "s1",
-                FullName = "Student User",
-                Role = UserRole.Student
-            });
+        var role = new IdentityRole { Id = "r1", Name = AppRoles.Teacher };
+        context.Roles.Add(role);
 
+        context.Users.AddRange(
+            new User { Id = "t2", FullName = "Petrenko Ivan" },
+            new User { Id = "t1", FullName = "Antonenko Oleg" },
+            new User { Id = "s1", FullName = "Student User" });
+
+        context.UserRoles.AddRange(
+            new IdentityUserRole<string> { UserId = "t2", RoleId = "r1" },
+            new IdentityUserRole<string> { UserId = "t1", RoleId = "r1" });
         await context.SaveChangesAsync();
 
         var controller = new SearchController(context);
@@ -64,26 +57,17 @@ public class SearchControllerTests
     {
         using var context = CreateContext(nameof(TeacherSearch_WithFilter_ReturnsMatchingTeachers));
 
-        context.Users.AddRange(
-            new User
-            {
-                Id = "t1",
-                FullName = "Ivan Ivanov",
-                Role = UserRole.Teacher
-            },
-            new User
-            {
-                Id = "t2",
-                FullName = "Petro Petrenko",
-                Role = UserRole.Teacher
-            },
-            new User
-            {
-                Id = "s1",
-                FullName = "Ivan Student",
-                Role = UserRole.Student
-            });
+        var role = new IdentityRole { Id = "r1", Name = AppRoles.Teacher };
+        context.Roles.Add(role);
 
+        context.Users.AddRange(
+            new User { Id = "t1", FullName = "Ivan Ivanov" },
+            new User { Id = "t2", FullName = "Petro Petrenko" },
+            new User { Id = "s1", FullName = "Ivan Student" });
+
+        context.UserRoles.AddRange(
+            new IdentityUserRole<string> { UserId = "t1", RoleId = "r1" },
+            new IdentityUserRole<string> { UserId = "t2", RoleId = "r1" });
         await context.SaveChangesAsync();
 
         var controller = new SearchController(context);
@@ -103,20 +87,16 @@ public class SearchControllerTests
     {
         using var context = CreateContext(nameof(TeacherSearch_WithNoMatches_ReturnsEmptyList));
 
-        context.Users.AddRange(
-            new User
-            {
-                Id = "t1",
-                FullName = "Ivan Ivanov",
-                Role = UserRole.Teacher
-            },
-            new User
-            {
-                Id = "t2",
-                FullName = "Petro Petrenko",
-                Role = UserRole.Teacher
-            });
+        var role = new IdentityRole { Id = "r1", Name = AppRoles.Teacher };
+        context.Roles.Add(role);
 
+        context.Users.AddRange(
+            new User { Id = "t1", FullName = "Ivan Ivanov" },
+            new User { Id = "t2", FullName = "Petro Petrenko" });
+
+        context.UserRoles.AddRange(
+            new IdentityUserRole<string> { UserId = "t1", RoleId = "r1" },
+            new IdentityUserRole<string> { UserId = "t2", RoleId = "r1" });
         await context.SaveChangesAsync();
 
         var controller = new SearchController(context);

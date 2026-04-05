@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Planora.Infrastructure.Data;
@@ -11,9 +12,11 @@ using Planora.Infrastructure.Data;
 namespace Planora.Infrastructure.Migrations
 {
     [DbContext(typeof(PlanoraDbContext))]
-    partial class PlanoraDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260404193236_RemoveUserRoleEnum")]
+    partial class RemoveUserRoleEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -372,7 +375,7 @@ namespace Planora.Infrastructure.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.HasIndex("TeacherId", "SubjectId", "GroupId")
+                    b.HasIndex("TeacherId", "SubjectId")
                         .IsUnique();
 
                     b.ToTable("TeachingAssignments");

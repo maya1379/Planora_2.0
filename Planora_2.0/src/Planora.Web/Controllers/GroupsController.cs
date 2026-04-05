@@ -1,3 +1,4 @@
+using Planora.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using Planora.Web.ViewModels;
 
 namespace Planora.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Admin)]
 public class GroupsController : Controller
 {
     private readonly IGroupService _groupService;
@@ -71,8 +72,9 @@ public class GroupsController : Controller
         var group = await _groupService.GetByIdAsync(id);
         if (group == null) return NotFound();
 
-        var students = _userManager.Users
-            .Where(u => u.Role == UserRole.Student && u.GroupId == id)
+        var allStudents = await _userManager.GetUsersInRoleAsync(AppRoles.Student);
+        var students = allStudents
+            .Where(u => u.GroupId == id)
             .OrderBy(u => u.FullName)
             .ToList();
 
@@ -86,8 +88,9 @@ public class GroupsController : Controller
         var group = await _groupService.GetByIdAsync(id);
         if (group == null) return NotFound();
 
-        var availableStudents = _userManager.Users
-            .Where(u => u.Role == UserRole.Student && u.GroupId != id)
+        var allStudents = await _userManager.GetUsersInRoleAsync(AppRoles.Student);
+        var availableStudents = allStudents
+            .Where(u => u.GroupId != id)
             .OrderBy(u => u.GroupId == null ? 0 : 1)
             .ThenBy(u => u.FullName)
             .ToList();
@@ -137,7 +140,19 @@ public class GroupsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        await _groupService.DeleteAsync(id);
+        try
+        {
+            await _groupService.DeleteAsync(id);
+            TempData["SuccessMessage"] = "Групу успішно видалено.";
+        }
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+        {
+            TempData["ErrorMessage"] = "Неможливо видалити цю групу, оскільки вона використовується в розкладі або має прив'язаних студентів.";
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Сталася непередбачена помилка під час видалення групи.";
+        }
         return RedirectToAction(nameof(Index));
     }
 }
