@@ -12,11 +12,13 @@ public class ClassroomsController : Controller
 {
     private readonly IClassroomService _classroomService;
     private readonly IBuildingService _buildingService;
+    private readonly IScheduleService _scheduleService;
 
-    public ClassroomsController(IClassroomService classroomService, IBuildingService buildingService)
+    public ClassroomsController(IClassroomService classroomService, IBuildingService buildingService, IScheduleService scheduleService)
     {
         _classroomService = classroomService;
         _buildingService = buildingService;
+        _scheduleService = scheduleService;
     }
 
     [AllowAnonymous]
@@ -118,6 +120,28 @@ public class ClassroomsController : Controller
     {
         var freeRooms = await _classroomService.FindFreeClassroomsNowAsync();
         return View(freeRooms);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetSchedule(int id)
+    {
+        var schedule = await _scheduleService.GetByClassroomIdAsync(id);
+        
+        var orderedSchedule = schedule
+            .OrderBy(s => (int)s.DayOfWeek)
+            .ThenBy(s => s.StartTime);
+            
+        return Json(orderedSchedule.Select(s => new {
+            s.SubjectName,
+            s.TeacherName,
+            s.GroupName,
+            s.StartTime,
+            s.EndTime,
+            DayOfWeek = s.DayOfWeek.ToString(),
+            LessonType = s.LessonType.ToString(),
+            s.WeekType
+        }));
     }
 
     private async Task PopulateBuildingsDropdown(int? selectedBuildingId = null)

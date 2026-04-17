@@ -207,6 +207,16 @@
   background: rgba(59, 130, 246, 0.05);
 }
 
+.room-box.status-occupied {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+}
+
+.status-occupied .room-status-text {
+  color: #ef4444;
+}
+
 .room-status-icon {
   font-size: 1.5rem;
   margin-bottom: 0.3rem;
@@ -228,6 +238,7 @@
 .status-working .room-status-text {
   color: #3b82f6;
 }
+
 
 .dark-modal-overlay {
   position: fixed;
@@ -254,10 +265,10 @@
 
 .dark-modal-card {
   background: #1e243a;
-  width: 100%;
-  max-width: 400px;
-  border-radius: 20px;
-  padding: 2.5rem;
+  width: 95%;
+  max-width: 600px;
+  border-radius: 28px;
+  padding: 3rem;
   position: relative;
   transform: scale(0.95) translateY(20px);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -304,15 +315,18 @@
 
 .dark-modal-body {
   background: #141a29;
-  padding: 1.5rem;
-  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 2rem;
 }
 
 .modal-info-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.8rem 0;
+  padding: 1rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -330,4 +344,153 @@
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
+}
+
+.modal-schedule-section {
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+}
+
+.modal-schedule-title {
+    color: #6d83f2;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.modal-schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+/* Custom Scrollbar for the list */
+.modal-schedule-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-schedule-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+}
+
+.modal-schedule-list::-webkit-scrollbar-thumb {
+    background: rgba(109, 131, 242, 0.2);
+    border-radius: 10px;
+}
+
+.modal-schedule-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(109, 131, 242, 0.4);
+}
+
+.schedule-item {
+    background: #141a29;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: background 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.schedule-item:hover {
+    background: #182033;
+    border-color: rgba(109, 131, 242, 0.3);
+}
+
+.schedule-item-time-box {
+    min-width: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 1rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.schedule-item-time {
+    color: #6d83f2;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.schedule-item-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+
+.schedule-item-subject {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.schedule-item-info {
+    color: #64748b;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.schedule-item-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+    min-width: 100px;
+}
+
+.schedule-tag {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    background: rgba(109, 131, 242, 0.1);
+    color: #6d83f2;
+}
+
+.schedule-tag.secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #64748b;
+}
+
+.schedule-item.active {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.schedule-item.active .schedule-item-time {
+    color: #ef4444;
+}
+
+.schedule-item.active .schedule-tag {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.schedule-empty {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.85rem;
+    padding: 2rem 0;
+    background: #141a29;
+    border-radius: 12px;
 }
