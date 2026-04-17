@@ -44,11 +44,8 @@ using (var scope = app.Services.CreateScope())
     await SeedData.InitializeAsync(context, userManager, roleManager);
 }
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+// Temporarily enable detailed errors to diagnose Account pages
+app.UseDeveloperExceptionPage();
 
 // app.UseHttpsRedirection();
 app.UseStaticFiles();
