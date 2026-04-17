@@ -1,28 +1,33 @@
+using Planora.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Planora.Services.DTOs;
-using Planora.Services.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Planora.Domain.Entities;
 using Planora.Domain.Enums;
+using Planora.Services.DTOs;
+using Planora.Services.Services.Interfaces;
 
 namespace Planora.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Admin)]
 public class TeachingAssignmentsController : Controller
 {
     private readonly ITeachingAssignmentService _assignmentService;
     private readonly ISubjectService _subjectService;
+    private readonly IGroupService _groupService;
     private readonly UserManager<User> _userManager;
 
     public TeachingAssignmentsController(
         ITeachingAssignmentService assignmentService,
         ISubjectService subjectService,
+        IGroupService groupService,
         UserManager<User> userManager)
     {
         _assignmentService = assignmentService;
         _subjectService = subjectService;
+        _groupService = groupService;
         _userManager = userManager;
     }
 
@@ -42,30 +47,29 @@ public class TeachingAssignmentsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateTeachingAssignmentDto dto)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
-            await PopulateDropdowns();
-            return View(dto);
+            await _assignmentService.CreateAsync(dto);
+            return RedirectToAction(nameof(Index));
         }
-
-        await _assignmentService.CreateAsync(dto);
-        return RedirectToAction(nameof(Index));
+        await PopulateDropdowns();
+        return View(dto);
     }
 
-    [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
         var assignment = await _assignmentService.GetByIdAsync(id);
         if (assignment == null) return NotFound();
 
-        await PopulateDropdowns();
         var dto = new UpdateTeachingAssignmentDto
         {
             Id = assignment.Id,
             TeacherId = assignment.TeacherId,
             SubjectId = assignment.SubjectId,
+            GroupId = assignment.GroupId,
             HoursPerWeek = assignment.HoursPerWeek
         };
+        await PopulateDropdowns();
         return View(dto);
     }
 
@@ -73,18 +77,15 @@ public class TeachingAssignmentsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(UpdateTeachingAssignmentDto dto)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
-            await PopulateDropdowns();
-            return View(dto);
+            await _assignmentService.UpdateAsync(dto);
+            return RedirectToAction(nameof(Index));
         }
-
-        await _assignmentService.UpdateAsync(dto);
-        return RedirectToAction(nameof(Index));
+        await PopulateDropdowns();
+        return View(dto);
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
         await _assignmentService.DeleteAsync(id);
@@ -93,14 +94,17 @@ public class TeachingAssignmentsController : Controller
 
     private async Task PopulateDropdowns()
     {
-        var teachers = _userManager.Users
-            .Where(u => u.Role == UserRole.Teacher)
+        var teachersInRole = await _userManager.GetUsersInRoleAsync(AppRoles.Teacher);
+        var teachers = teachersInRole
+            .OrderBy(u => u.FullName)
             .Select(u => new { u.Id, u.FullName })
             .ToList();
 
         var subjects = await _subjectService.GetAllAsync();
+        var groups = await _groupService.GetAllAsync();
 
         ViewBag.Teachers = new SelectList(teachers, "Id", "FullName");
         ViewBag.Subjects = new SelectList(subjects, "Id", "Name");
+        ViewBag.Groups = new SelectList(groups, "Id", "Name");
     }
 }

@@ -1,0 +1,57 @@
+@model IEnumerable<Planora.Services.DTOs.ClassroomDto>
+
+@{
+    ViewData["Title"] = "Керування аудиторіями";
+    ViewData["Breadcrumb"] = "Адмін / Аудиторії";
+}
+
+<div class="glass-card" style="max-width: 1000px; margin: 0 auto;">
+    <div class="glass-card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 2rem;">
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Аудиторії</h2>
+        <div style="display: flex; gap: 1rem;">
+            <a asp-controller="Buildings" asp-action="Index" class="btn-modern" style="margin: 0; padding: 0.8rem 1.5rem; width: auto; background: rgba(255,255,255,0.05);">Керування корпусами</a>
+            <a asp-action="Create" class="btn-modern" style="margin: 0; padding: 0.8rem 1.5rem; width: auto;">+ Нова аудиторія</a>
+        </div>
+    </div>
+
+    <div style="background: rgba(15, 23, 42, 0.4); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: rgba(255,255,255,0.03); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">№ Ауд.</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Корпус</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Факультет</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Місць</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Обладнання</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: right;">Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var item in Model)
+                {
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <td style="padding: 1rem; color: #60a5fa; font-weight: 700;">@item.Number</td>
+                        <td style="padding: 1rem; color: var(--text-secondary);">@(item.BuildingName ?? "Н/Д")</td>
+                        <td style="padding: 1rem; color: var(--text-secondary);">@item.Faculty</td>
+                        <td style="padding: 1rem; color: var(--text-secondary);">@item.Capacity</td>
+                        <td style="padding: 1rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                @if(item.HasComputers) { <span title="Комп'ютери в наявності" style="font-size: 1.2rem;">💻</span> }
+                                @if(item.HasProjector) { <span title="Проектор в наявності" style="font-size: 1.2rem;">📽️</span> }
+                            </div>
+                        </td>
+                        <td style="padding: 1rem; text-align: right;">
+                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                <a asp-action="Edit" asp-route-id="@item.Id" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(59, 130, 246, 0.1); color: #60a5fa; text-decoration: none; font-size: 0.8rem;">Редагувати</a>
+                                
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline;" onsubmit="return confirm('Видалити аудиторію @item.Number?');">
+                                    <button type="submit" style="padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(248, 113, 113, 0.1); color: #f87171; border: none; cursor: pointer; font-size: 0.8rem;">Видалити</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Planora</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Planora.Web.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-left">
+            <a asp-controller="Home" asp-action="Index" class="logo-brand">
+                <div class="logo-dot"></div>
+                Planora
+            </a>
+
+            @if (ViewData["Breadcrumb"] != null)
+            {
+                <a href="javascript:history.back()" class="back-link-modern">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Назад
+                </a>
+
+                <nav class="breadcrumbs">
+                    <a asp-controller="Home" asp-action="Index">Головна</a>
+                    <span class="separator">›</span>
+                    <span class="current">@ViewData["Breadcrumb"]</span>
+                </nav>
+            }
+        </div>
+
+        <div class="header-right">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Index" style="color: var(--accent-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; margin-right: 0.5rem;">Панель керування</a>
+                }
+                
+                <a asp-controller="Classrooms" asp-action="Index" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500;">Аудиторії</a>
+
+                <div class="user-display">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #34d399;"></div>
+                    <span>@User.Identity.Name</span>
+                    <span style="color: rgba(255,255,255,0.1);">|</span>
+                    <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                        <button type="submit" class="logout-btn-minimal">Вийти</button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <a asp-controller="Classrooms" asp-action="Index" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500;">Аудиторії</a>
+                <div style="display: flex; gap: 1rem; align-items: center; margin-left: 0.5rem;">
+                    <a asp-controller="Account" asp-action="Login" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;">Увійти</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn-modern" style="margin: 0; padding: 0.5rem 1.25rem; font-size: 0.85rem; width: auto; background: var(--accent-gradient); border: none;">Реєстрація</a>
+                </div>
+            }
+        </div>
+    </header>
+
+    <div class="main-container">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div style="background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.4); color: #f87171; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                @TempData["ErrorMessage"]
+            </div>
+        }
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div style="background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.4); color: #34d399; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                @TempData["SuccessMessage"]
+            </div>
+        }
+        @RenderBody()
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

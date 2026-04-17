@@ -1,0 +1,66 @@
+@model IEnumerable<Planora.Services.DTOs.TeachingAssignmentDto>
+
+@{
+    ViewData["Title"] = "Керування навантаженням";
+    ViewData["Breadcrumb"] = "Адмін / Навантаження";
+}
+
+<div class="glass-card" style="padding: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1.5rem;">
+        <div>
+            <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Навчальне навантаження</h2>
+            <p style="color: var(--text-secondary); margin: 0;">Визначте, хто викладає предмети для груп та яку кількість годин.</p>
+        </div>
+        <a asp-action="Create" class="btn-modern" style="margin: 0; padding: 0.8rem 2rem; width: auto;">+ Призначити викладача</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div style="text-align: center; padding: 4rem; color: var(--text-secondary); background: rgba(15, 23, 42, 0.4); border-radius: 16px;">
+            <p style="font-size: 1.1rem; margin-bottom: 0;">Призначень поки не знайдено.</p>
+        </div>
+    }
+    else
+    {
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: separate; border-spacing: 0 0.5rem;">
+                <thead>
+                    <tr style="background: rgba(255,255,255,0.03); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Викладач</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Предмет</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Цільова група</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600;">Год/тижд.</th>
+                        <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: right;">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr style="background: rgba(255,255,255,0.02); transition: background 0.2s;">
+                            <td style="padding: 1rem; color: #fff; font-weight: 500;">
+                                @item.TeacherName
+                            </td>
+                            <td style="padding: 1rem;">
+                                <span style="display: inline-block; padding: 0.25rem 0.75rem; background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 20px; font-size: 0.85rem;">
+                                    @item.SubjectName
+                                </span>
+                            </td>
+                            <td style="padding: 1rem; color: var(--text-secondary);">
+                                <span style="color: #a78bfa;">@item.GroupName</span>
+                            </td>
+                            <td style="padding: 1rem; color: #fff;">@item.HoursPerWeek</td>
+                            <td style="padding: 1rem; text-align: right;">
+                                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" style="color: #60a5fa; text-decoration: none; padding: 0.4rem 0.8rem; background: rgba(59,130,246,0.1); border-radius: 6px; font-size: 0.9rem;">Редагувати</a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline;" onsubmit="return confirm('Видалити це призначення?');">
+                                        <button type="submit" style="background: rgba(239,68,68,0.1); border: none; color: #f87171; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Видалити</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

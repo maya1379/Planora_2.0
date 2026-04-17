@@ -1,0 +1,62 @@
+@model Planora.Services.DTOs.UpdateClassroomDto
+
+@{
+    ViewData["Title"] = "Редагувати аудиторію";
+    ViewData["Breadcrumb"] = "Адмін / Аудиторії / Редагувати";
+}
+
+<div class="glass-card" style="max-width: 600px; margin: 0 auto; padding: 2.5rem;">
+    <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2rem; margin-bottom: 2rem; text-align: center;">
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Редагувати аудиторію @Model.Number</h2>
+    </div>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" style="color: #ef4444; margin-bottom: 1rem;"></div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="BuildingId" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Оберіть корпус</label>
+            <select asp-for="BuildingId" asp-items="ViewBag.Buildings" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;"></select>
+            <span asp-validation-for="BuildingId" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div>
+                <label asp-for="Number" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Номер аудиторії</label>
+                <input asp-for="Number" class="modern-input" />
+                <span asp-validation-for="Number" style="color: #ef4444; font-size: 0.85rem;"></span>
+            </div>
+            <div>
+                <label asp-for="Capacity" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Місткість</label>
+                <input asp-for="Capacity" class="modern-input" type="number" />
+                <span asp-validation-for="Capacity" style="color: #ef4444; font-size: 0.85rem;"></span>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="Faculty" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Прикріплений факультет</label>
+            <input asp-for="Faculty" class="modern-input" />
+            <span asp-validation-for="Faculty" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="display: flex; gap: 2rem; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.4); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <input asp-for="HasComputers" type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" />
+                <label asp-for="HasComputers" style="color: #fff; font-weight: 500; cursor: pointer;">Комп'ютери (ПК)</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <input asp-for="HasProjector" type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" />
+                <label asp-for="HasProjector" style="color: #fff; font-weight: 500; cursor: pointer;">Проєктор</label>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn-modern" style="margin: 0; flex: 1;">Зберегти зміни</button>
+            <a asp-action="AdminIndex" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Скасувати</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

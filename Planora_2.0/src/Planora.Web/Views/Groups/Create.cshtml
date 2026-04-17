@@ -1,0 +1,39 @@
+@model Planora.Services.DTOs.CreateGroupDto
+
+@{
+    ViewData["Title"] = "Створити групу";
+    ViewData["Breadcrumb"] = "Адмін / Групи / Створити";
+}
+
+<div class="glass-card" style="max-width: 600px; margin: 0 auto; padding: 2rem;">
+    <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2rem; margin-bottom: 2rem; text-align: center;">
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Створити нову групу</h2>
+    </div>
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" style="color: #ef4444; margin-bottom: 1rem;"></div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="Name" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Назва групи (напр. КН-201)</label>
+            <input asp-for="Name" class="modern-input" placeholder="напр. КН-201" />
+            <span asp-validation-for="Name" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="Faculty" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Факультет</label>
+            <input asp-for="Faculty" class="modern-input" placeholder="напр. Комп'ютерних наук" />
+            <span asp-validation-for="Faculty" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <label asp-for="StudentCount" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Місткість</label>
+            <input asp-for="StudentCount" class="modern-input" type="number" min="1" max="100" placeholder="напр. 25" />
+            <span asp-validation-for="StudentCount" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn-modern" style="margin: 0; flex: 1;">Створити групу</button>
+            <a asp-action="Index" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Скасувати</a>
+        </div>
+    </form>
+</div>

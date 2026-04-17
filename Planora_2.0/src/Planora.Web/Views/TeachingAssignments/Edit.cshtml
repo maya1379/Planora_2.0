@@ -1,0 +1,53 @@
+@model Planora.Services.DTOs.UpdateTeachingAssignmentDto
+
+@{
+    ViewData["Title"] = "Редагувати призначення";
+    ViewData["Breadcrumb"] = "Адмін / Навантаження / Редагувати";
+}
+
+<div class="glass-card" style="max-width: 600px; margin: 0 auto; padding: 2.5rem;">
+    <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2rem; margin-bottom: 2rem; text-align: center;">
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Редагувати призначення</h2>
+    </div>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" style="color: #ef4444; margin-bottom: 1rem;"></div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="TeacherId" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Виберіть викладача</label>
+            <select asp-for="TeacherId" asp-items="ViewBag.Teachers" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;">
+            </select>
+            <span asp-validation-for="TeacherId" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="SubjectId" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Виберіть предмет</label>
+            <select asp-for="SubjectId" asp-items="ViewBag.Subjects" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;">
+            </select>
+            <span asp-validation-for="SubjectId" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="GroupId" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Виберіть групу</label>
+            <select asp-for="GroupId" asp-items="ViewBag.Groups" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;">
+            </select>
+            <span asp-validation-for="GroupId" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <label asp-for="HoursPerWeek" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Годин на тиждень</label>
+            <input asp-for="HoursPerWeek" class="modern-input" type="number" />
+            <span asp-validation-for="HoursPerWeek" style="color: #ef4444; font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn-modern" style="margin: 0; flex: 1;">Зберегти зміни</button>
+            <a asp-action="Index" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Скасувати</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

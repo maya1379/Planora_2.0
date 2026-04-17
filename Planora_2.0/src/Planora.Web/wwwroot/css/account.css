@@ -1,0 +1,108 @@
+.auth-container {
+    max-width: 500px;
+    margin: 4rem auto;
+}
+
+.auth-container.wide {
+    max-width: 650px;
+}
+
+.glow-effect {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.glow-top-right { top: -10%; right: -10%; }
+.glow-bottom-left { bottom: -10%; left: -10%; }
+
+.role-selector-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(15, 23, 42, 0.4);
+    padding: 0.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.role-option {
+    flex: 1;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.role-radio {
+    position: absolute;
+    opacity: 0;
+}
+
+.role-pill {
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 15px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 2;
+}
+
+.role-pill:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.role-radio:checked + .role-pill {
+    color: #fff !important;
+    background: linear-gradient(135deg, var(--accent-color) 0%, #2563eb 100%);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    transform: translateY(-1px);
+}
+
+.role-radio:checked + .role-pill:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.auth-validation-summary {
+    color: var(--danger-text);
+    background: rgba(239, 68, 68, 0.05);
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    border-left: 3px solid var(--danger-text);
+    margin-bottom: 1.5rem;
+}
+
+.auth-label {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.auth-divider {
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.auth-footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 0.3rem;
+}

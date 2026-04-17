@@ -1,0 +1,120 @@
+@model Planora.Web.ViewModels.RegisterViewModel
+@using Planora.Domain.Constants
+
+@{
+    ViewData["Title"] = "Реєстрація";
+    ViewData["Breadcrumb"] = "Новий акаунт";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account.css" asp-append-version="true" />
+}
+
+<div class="glass-card wide" style="margin: 3rem auto;">
+    <div class="glow-effect glow-top-right"></div>
+    <div class="glow-effect glow-bottom-left"></div>
+
+    <div class="glass-card-header" style="text-align: center; margin-bottom: 2.5rem;">
+        <h2 style="font-size: 2rem; color: #fff; margin-bottom: 0.5rem; font-weight: 700;">Створення акаунту</h2>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">Приєднуйтесь до Planora вже сьогодні</p>
+    </div>
+
+    <form asp-action="Register" method="post" id="registerForm">
+        <div asp-validation-summary="ModelOnly" class="auth-validation-summary"></div>
+        
+        <div class="row" style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="flex: 1;">
+                <label class="auth-label">Повне ім'я (ПІБ)</label>
+                <input asp-for="FullName" class="modern-input" placeholder="Ковальчук Іван" style="width: 100%; box-sizing: border-box;" />
+                <span asp-validation-for="FullName" style="color: var(--danger-text); font-size: 0.8rem; display: block; margin-top: 0.4rem;"></span>
+            </div>
+            
+            <div style="flex: 1;">
+                <label class="auth-label">Email</label>
+                <input asp-for="Email" class="modern-input" placeholder="name@example.com" style="width: 100%; box-sizing: border-box;" />
+                <span asp-validation-for="Email" style="color: var(--danger-text); font-size: 0.8rem; display: block; margin-top: 0.4rem;"></span>
+            </div>
+        </div>
+
+        <div class="row" style="display: flex; gap: 1.5rem; margin-bottom: 2rem;">
+            <div style="flex: 1;">
+                <label class="auth-label">Пароль</label>
+                <input asp-for="Password" class="modern-input" placeholder="••••••••" style="width: 100%; box-sizing: border-box;" />
+                <span asp-validation-for="Password" style="color: var(--danger-text); font-size: 0.8rem; display: block; margin-top: 0.4rem;"></span>
+            </div>
+            <div style="flex: 1;">
+                <label class="auth-label">Підтвердження</label>
+                <input asp-for="ConfirmPassword" class="modern-input" placeholder="••••••••" style="width: 100%; box-sizing: border-box;" />
+                <span asp-validation-for="ConfirmPassword" style="color: var(--danger-text); font-size: 0.8rem; display: block; margin-top: 0.4rem;"></span>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <label class="auth-label">Оберіть вашу роль</label>
+            <div class="role-selector-wrapper">
+                <label class="role-option">
+                    <input type="radio" asp-for="Role" value="@AppRoles.Teacher" class="role-radio" />
+                    <div class="role-pill">
+                        <span>Викладач</span>
+                    </div>
+                </label>
+                <label class="role-option">
+                    <input type="radio" asp-for="Role" value="@AppRoles.Student" class="role-radio" />
+                    <div class="role-pill">
+                        <span>Студент</span>
+                    </div>
+                </label>
+            </div>
+            <span asp-validation-for="Role" style="color: var(--danger-text); font-size: 0.8rem; display: block; margin-top: 0.5rem;"></span>
+        </div>
+
+        <div id="extraFieldsRow" style="display: none; gap: 1.5rem; margin-top: 1rem; margin-bottom: 2rem;" class="auth-divider">
+            <div style="flex: 1;">
+                <label class="auth-label">Факультет</label>
+                <input asp-for="Faculty" class="modern-input" placeholder="Назва факультету" style="width: 100%; box-sizing: border-box;" />
+            </div>
+
+            <div style="flex: 1;">
+                <div id="teacherField" style="display: none;">
+                    <label class="auth-label">Посада</label>
+                    <input asp-for="Position" class="modern-input" placeholder="Доцент" style="width: 100%; box-sizing: border-box;" />
+                </div>
+
+                <div id="studentField" style="display: none;">
+                    <label class="auth-label">Група</label>
+                    <select asp-for="GroupId" class="modern-input" asp-items="ViewBag.Groups" style="width: 100%; box-sizing: border-box; cursor: pointer;">
+                        <option value="">-- Оберіть групу --</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-modern" style="padding: 1.2rem; font-size: 1.2rem;">
+            Зареєструватися
+        </button>
+        
+        <div class="auth-footer">
+            <a asp-action="Login">Вже маєте акаунт? <span>Увійти</span></a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            function updateFields() {
+                const role = $('input[name="Role"]:checked').val();
+                if (!role) { $('#extraFieldsRow').hide(); return; }
+                $('#extraFieldsRow').css('display', 'flex').hide().fadeIn(400);
+                if (role === "@AppRoles.Teacher") {
+                    $('#teacherField').fadeIn(200); $('#studentField').hide();
+                } else if (role === "@AppRoles.Student") {
+                    $('#studentField').fadeIn(200); $('#teacherField').hide();
+                }
+            }
+            $('.role-radio').change(updateFields);
+            updateFields();
+        });
+    </script>
+}

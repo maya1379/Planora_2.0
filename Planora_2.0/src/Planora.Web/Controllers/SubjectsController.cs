@@ -1,3 +1,4 @@
+using Planora.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Planora.Services.DTOs;
@@ -5,7 +6,7 @@ using Planora.Services.Services.Interfaces;
 
 namespace Planora.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Admin)]
 public class SubjectsController : Controller
 {
     private readonly ISubjectService _subjectService;
@@ -45,7 +46,8 @@ public class SubjectsController : Controller
         {
             Id = subjects.Id,
             Name = subjects.Name,
-            Type = subjects.Type
+            Type = subjects.Type,
+            Requirements = subjects.Requirements
         });
     }
 
@@ -63,7 +65,20 @@ public class SubjectsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        await _subjectService.DeleteAsync(id);
+        try
+        {
+            await _subjectService.DeleteAsync(id);
+            TempData["SuccessMessage"] = "Предмет успішно видалено.";
+        }
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+        {
+            TempData["ErrorMessage"] = "Неможливо видалити цей предмет, оскільки він використовується в розкладі або навантаженні викладачів.";
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Сталася непередбачена помилка під час видалення предмета.";
+        }
+        
         return RedirectToAction(nameof(Index));
     }
 }

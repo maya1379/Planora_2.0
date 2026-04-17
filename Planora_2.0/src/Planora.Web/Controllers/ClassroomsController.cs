@@ -1,3 +1,4 @@
+using Planora.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,21 +7,38 @@ using Planora.Services.Services.Interfaces;
 
 namespace Planora.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Admin)]
 public class ClassroomsController : Controller
 {
     private readonly IClassroomService _classroomService;
     private readonly IBuildingService _buildingService;
+    private readonly IScheduleService _scheduleService;
 
-    public ClassroomsController(IClassroomService classroomService, IBuildingService buildingService)
+    public ClassroomsController(IClassroomService classroomService, IBuildingService buildingService, IScheduleService scheduleService)
     {
         _classroomService = classroomService;
         _buildingService = buildingService;
+        _scheduleService = scheduleService;
     }
 
-    public async Task<IActionResult> Index()
+    [AllowAnonymous]
+    public async Task<IActionResult> Index(int? buildingId = null)
     {
         var classrooms = await _classroomService.GetAllAsync();
+        if (buildingId.HasValue)
+        {
+            classrooms = classrooms.Where(c => c.BuildingId == buildingId.Value);
+        }
+        return View(classrooms);
+    }
+
+    public async Task<IActionResult> AdminIndex(int? buildingId = null)
+    {
+        var classrooms = await _classroomService.GetAllAsync();
+        if (buildingId.HasValue)
+        {
+            classrooms = classrooms.Where(c => c.BuildingId == buildingId.Value);
+        }
         return View(classrooms);
     }
 
@@ -41,7 +59,7 @@ public class ClassroomsController : Controller
         }
 
         await _classroomService.CreateAsync(dto);
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(AdminIndex));
     }
 
     public async Task<IActionResult> Edit(int id)
@@ -74,15 +92,27 @@ public class ClassroomsController : Controller
         }
 
         await _classroomService.UpdateAsync(dto);
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(AdminIndex));
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        await _classroomService.DeleteAsync(id);
-        return RedirectToAction(nameof(Index));
+        try
+        {
+            await _classroomService.DeleteAsync(id);
+            TempData["SuccessMessage"] = "Аудиторію успішно видалено.";
+        }
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+        {
+            TempData["ErrorMessage"] = "Неможливо видалити цю аудиторію, оскільки вона використовується в розкладі.";
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Сталася непередбачена помилка під час видалення аудиторії.";
+        }
+        return RedirectToAction(nameof(AdminIndex));
     }
 
     [Authorize] 
@@ -90,6 +120,28 @@ public class ClassroomsController : Controller
     {
         var freeRooms = await _classroomService.FindFreeClassroomsNowAsync();
         return View(freeRooms);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetSchedule(int id)
+    {
+        var schedule = await _scheduleService.GetByClassroomIdAsync(id);
+        
+        var orderedSchedule = schedule
+            .OrderBy(s => (int)s.DayOfWeek)
+            .ThenBy(s => s.StartTime);
+            
+        return Json(orderedSchedule.Select(s => new {
+            s.SubjectName,
+            s.TeacherName,
+            s.GroupName,
+            s.StartTime,
+            s.EndTime,
+            DayOfWeek = s.DayOfWeek.ToString(),
+            LessonType = s.LessonType.ToString(),
+            s.WeekType
+        }));
     }
 
     private async Task PopulateBuildingsDropdown(int? selectedBuildingId = null)
