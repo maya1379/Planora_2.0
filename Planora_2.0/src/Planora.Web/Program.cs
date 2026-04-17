@@ -28,6 +28,19 @@ using (var scope = app.Services.CreateScope())
     var userManager = services.GetRequiredService<UserManager<User>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
+    // Fresh production database: drop any partial schema and recreate from current model
+    await context.Database.ExecuteSqlRawAsync(@"
+        DO $$ DECLARE
+            r RECORD;
+        BEGIN
+            FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+                EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(r.tablename) || ' CASCADE';
+            END LOOP;
+        END $$;
+    ");
+    await context.Database.EnsureCreatedAsync();
+
+    // Seed initial data
     await SeedData.InitializeAsync(context, userManager, roleManager);
 }
 

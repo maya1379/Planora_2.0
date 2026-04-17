@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Planora.Services.Interfaces;
-using Planora.Services.Services.Interfaces;
 using Planora.Domain.Entities;
 using Planora.Infrastructure.Data;
 using Planora.Infrastructure.Repositories;
@@ -44,8 +43,6 @@ public static class DependencyInjection
         services.AddScoped<IGroupSubjectRepository, GroupSubjectRepository>();
         services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
         services.AddScoped<IScheduleEntryRepository, ScheduleEntryRepository>();
-
-        services.AddScoped<IEmailService, Planora.Infrastructure.Services.EmailService>();
 
         return services;
     }
