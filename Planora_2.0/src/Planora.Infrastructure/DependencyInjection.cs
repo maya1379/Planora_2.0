@@ -19,7 +19,9 @@ public static class DependencyInjection
         services.AddDbContext<PlanoraDbContext>(options =>
             options.UseNpgsql(
                 configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly(typeof(PlanoraDbContext).Assembly.FullName)));
+                b => b.MigrationsAssembly(typeof(PlanoraDbContext).Assembly.FullName))
+            .ConfigureWarnings(w => w.Ignore(
+                Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
 
         services.AddIdentity<User, IdentityRole>(options =>
         {
