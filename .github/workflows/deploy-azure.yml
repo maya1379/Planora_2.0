@@ -23,10 +23,10 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
-        run: dotnet restore Planora_2.0/Planora.sln
+        run: dotnet restore Planora_2.0/src/Planora.Web/Planora.Web.csproj
 
       - name: Build
-        run: dotnet build Planora_2.0/Planora.sln --configuration Release --no-restore
+        run: dotnet build Planora_2.0/src/Planora.Web/Planora.Web.csproj --configuration Release --no-restore
 
       - name: Publish
         run: dotnet publish Planora_2.0/src/Planora.Web/Planora.Web.csproj --configuration Release --no-build --output ./myapp
