@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Planora.Domain.Enums;
+using Planora.Domain.Constants;
 
 namespace Planora.Web.ViewModels;
 
@@ -16,4 +16,9 @@ public class EditUserViewModel
 
     [Display(Name = "Посада")]
     public string? Position { get; set; }
+
+    [Display(Name = "Група")]
+    public int? GroupId { get; set; }
+
+    public string Role { get; set; } = string.Empty;
 }

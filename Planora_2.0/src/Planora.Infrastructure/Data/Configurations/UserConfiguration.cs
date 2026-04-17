@@ -18,8 +18,5 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Position)
             .HasMaxLength(200);
 
-        builder.Property(u => u.Role)
-            .IsRequired()
-            .HasConversion<string>();
     }
 }

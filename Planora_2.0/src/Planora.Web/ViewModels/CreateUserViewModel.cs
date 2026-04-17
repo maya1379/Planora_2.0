@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Planora.Domain.Enums;
+using Planora.Domain.Constants;
 
 namespace Planora.Web.ViewModels;
 
@@ -20,11 +20,14 @@ public class CreateUserViewModel
 
     [Required]
     [Display(Name = "Роль")]
-    public UserRole Role { get; set; } = UserRole.Teacher;
+    public string Role { get; set; } = AppRoles.Teacher;
 
     [Display(Name = "Факультет")]
     public string? Faculty { get; set; }
 
     [Display(Name = "Посада")]
     public string? Position { get; set; }
+
+    [Display(Name = "Група (для студентів)")]
+    public int? GroupId { get; set; }
 }
