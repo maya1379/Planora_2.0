@@ -28,6 +28,10 @@ using (var scope = app.Services.CreateScope())
     var userManager = services.GetRequiredService<UserManager<User>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
+    // Run migrations first to create all tables
+    await context.Database.MigrateAsync();
+
+    // Then seed initial data
     await SeedData.InitializeAsync(context, userManager, roleManager);
 }
 
