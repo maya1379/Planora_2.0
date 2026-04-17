@@ -38,7 +38,17 @@
         </div>
         <div style="display: flex; gap: 0.75rem; align-items: center;">
             <a asp-action="Index" class="schedule-toolbar-btn schedule-toolbar-btn--reset">Скинути</a>
-            <a asp-action="ExportExcel" asp-route-groupId="@currentGroupId" asp-route-teacherId="@currentTeacherId" class="schedule-toolbar-btn schedule-toolbar-btn--export">Експорт в Excel</a>
+            
+            <div style="display: flex; gap: 0.5rem; background: rgba(255,255,255,0.02); padding: 0.35rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                <a asp-action="ExportExcel" asp-route-groupId="@currentGroupId" asp-route-teacherId="@currentTeacherId" class="schedule-toolbar-btn schedule-toolbar-btn--export-excel">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line></svg>
+                    Excel
+                </a>
+                <a asp-action="ExportPdf" asp-route-groupId="@currentGroupId" asp-route-teacherId="@currentTeacherId" class="schedule-toolbar-btn schedule-toolbar-btn--export-pdf">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15v-6h3.5a2 2 0 1 1 0 4h-3.5"></path></svg>
+                    PDF
+                </a>
+            </div>
             @if (isAdmin)
             {
                 <div style="flex: 1;"></div>
@@ -160,12 +170,19 @@ else
     }
     .schedule-toolbar-btn--reset:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
-    .schedule-toolbar-btn--export {
+    .schedule-toolbar-btn--export-excel {
         background: rgba(52, 211, 153, 0.08);
         color: #34d399;
         border-color: rgba(52, 211, 153, 0.2);
     }
-    .schedule-toolbar-btn--export:hover { background: rgba(52, 211, 153, 0.15); }
+    .schedule-toolbar-btn--export-excel:hover { background: rgba(52, 211, 153, 0.15); }
+
+    .schedule-toolbar-btn--export-pdf {
+        background: rgba(239, 68, 68, 0.08); /* Red tint */
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.2);
+    }
+    .schedule-toolbar-btn--export-pdf:hover { background: rgba(239, 68, 68, 0.15); }
 
     .schedule-toolbar-btn--edit {
         background: rgba(245, 158, 11, 0.08);

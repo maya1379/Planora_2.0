@@ -67,11 +67,13 @@ public class HomeController : Controller
                 {
                     var result = await _scheduleService.GetByGroupIdAsync(user.GroupId.Value);
                     model = result.ToList();
+                    ViewBag.GroupId = user.GroupId.Value;
                 }
                 else if (isTeacher)
                 {
                     var result = await _scheduleService.GetByTeacherIdAsync(user.Id);
                     model = result.ToList();
+                    ViewBag.TeacherId = user.Id;
                 }
             }
         }

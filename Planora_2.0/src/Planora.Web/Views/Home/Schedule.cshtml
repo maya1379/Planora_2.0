@@ -29,15 +29,28 @@
         <h2 style="font-size: 2.2rem; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; margin: 0;">Сьогодні (@GetDayName((DayOfWeekEnum)(int)DateTime.Now.DayOfWeek))</h2>
     </div>
 
-    <div class="controls-bar">
-        <select id="viewModeSelect" class="modern-select" onchange="toggleViewMode()">
-            <option value="day">За днем</option>
-            <option value="week" selected>За тижнем</option>
-            <option value="month">За місяцем</option>
-        </select>
-        
-        <div class="search-wrapper">
-            <input type="text" id="scheduleSearch" class="modern-input" placeholder="Пошук (предмет, викладач...)" onkeyup="filterSchedule()" />
+    <div class="controls-bar" style="justify-content: space-between;">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <select id="viewModeSelect" class="modern-select" onchange="toggleViewMode()">
+                <option value="day">За днем</option>
+                <option value="week" selected>За тижнем</option>
+                <option value="month">За місяцем</option>
+            </select>
+            
+            <div class="search-wrapper">
+                <input type="text" id="scheduleSearch" class="modern-input" placeholder="Пошук..." onkeyup="filterSchedule()" />
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; background: rgba(255,255,255,0.02); padding: 0.35rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+            <a asp-controller="Schedule" asp-action="ExportExcel" asp-route-groupId="@ViewBag.GroupId" asp-route-teacherId="@ViewBag.TeacherId" class="schedule-toolbar-btn schedule-toolbar-btn--export-excel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line></svg>
+                Excel
+            </a>
+            <a asp-controller="Schedule" asp-action="ExportPdf" asp-route-groupId="@ViewBag.GroupId" asp-route-teacherId="@ViewBag.TeacherId" class="schedule-toolbar-btn schedule-toolbar-btn--export-pdf">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15v-6h3.5a2 2 0 1 1 0 4h-3.5"></path></svg>
+                PDF
+            </a>
         </div>
     </div>
 
@@ -168,4 +181,36 @@
             toggleViewMode();
         });
     </script>
+
+    <style>
+        .schedule-toolbar-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+        .schedule-toolbar-btn:hover {
+            transform: translateY(-1px);
+        }
+        .schedule-toolbar-btn--export-excel {
+            background: rgba(52, 211, 153, 0.08);
+            color: #34d399;
+            border-color: rgba(52, 211, 153, 0.2);
+        }
+        .schedule-toolbar-btn--export-excel:hover { background: rgba(52, 211, 153, 0.15); }
+
+        .schedule-toolbar-btn--export-pdf {
+            background: rgba(239, 68, 68, 0.08);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+        .schedule-toolbar-btn--export-pdf:hover { background: rgba(239, 68, 68, 0.15); }
+    </style>
 }

@@ -209,6 +209,36 @@ public class ScheduleController : Controller
         return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
     }
 
+    public async Task<IActionResult> ExportPdf(int? groupId, string? teacherId)
+    {
+        IEnumerable<ScheduleEntryDto> entries;
+        var title = "Розклад занять";
+
+        if (groupId.HasValue)
+        {
+            entries = await _scheduleService.GetByGroupIdAsync(groupId.Value);
+            var groups = await _groupService.GetAllAsync();
+            var groupName = groups.FirstOrDefault(g => g.Id == groupId.Value)?.Name;
+            title = $"Розклад — {groupName ?? "Група"}";
+        }
+        else if (!string.IsNullOrEmpty(teacherId))
+        {
+            entries = await _scheduleService.GetByTeacherIdAsync(teacherId);
+            var teacher = _userManager.Users.FirstOrDefault(u => u.Id == teacherId);
+            title = $"Розклад — {teacher?.FullName ?? "Викладач"}";
+        }
+        else
+        {
+            entries = await _scheduleService.GetAllAsync();
+            title = "Розклад — Усі заняття";
+        }
+
+        var fileBytes = _exportService.ExportScheduleToPdf(entries, title);
+        var fileName = $"Rozklad_{DateTime.Now:yyyyMMdd_HHmm}.pdf";
+
+        return File(fileBytes, "application/pdf", fileName);
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = AppRoles.Admin)]
