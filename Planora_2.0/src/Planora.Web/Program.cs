@@ -46,6 +46,7 @@ using (var scope = app.Services.CreateScope())
 
 // Temporarily enable detailed errors to diagnose Account pages
 app.UseDeveloperExceptionPage();
+app.UseHsts();
 
 // app.UseHttpsRedirection();
 app.UseStaticFiles();
