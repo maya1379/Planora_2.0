@@ -45,7 +45,10 @@ public static class DependencyInjection
         services.AddScoped<IGroupSubjectRepository, GroupSubjectRepository>();
         services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
         services.AddScoped<IScheduleEntryRepository, ScheduleEntryRepository>();
-        services.AddScoped<IEmailService, EmailService>();
+
+        services.AddScoped<IScheduleNoteRepository, ScheduleNoteRepository>();
+
+        services.AddScoped<IEmailService, Planora.Infrastructure.Services.EmailService>();
 
         return services;
     }

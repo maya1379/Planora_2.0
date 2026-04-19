@@ -20,6 +20,7 @@ public class ScheduleController : Controller
     private readonly IClassroomService _classroomService;
     private readonly ISubjectService _subjectService;
     private readonly ITimeSlotService _timeSlotService;
+    private readonly IScheduleNoteService _scheduleNoteService;
     private readonly UserManager<User> _userManager;
 
     public ScheduleController(
@@ -29,6 +30,7 @@ public class ScheduleController : Controller
         IClassroomService classroomService,
         ISubjectService subjectService,
         ITimeSlotService timeSlotService,
+        IScheduleNoteService scheduleNoteService,
         UserManager<User> userManager)
     {
         _scheduleService = scheduleService;
@@ -37,6 +39,7 @@ public class ScheduleController : Controller
         _classroomService = classroomService;
         _subjectService = subjectService;
         _timeSlotService = timeSlotService;
+        _scheduleNoteService = scheduleNoteService;
         _userManager = userManager;
     }
 
@@ -255,6 +258,42 @@ public class ScheduleController : Controller
     {
         await _scheduleService.DeleteAllAsync();
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetNotes(int scheduleId)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null)
+            return Unauthorized();
+
+        var notes = await _scheduleNoteService.GetNotesForScheduleAsync(scheduleId, userId);
+        return Json(notes);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddNote([FromBody] CreateScheduleNoteDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Content))
+            return BadRequest("Content cannot be empty");
+
+        var userId = _userManager.GetUserId(User);
+        if (userId == null)
+            return Unauthorized();
+
+        var note = await _scheduleNoteService.CreateNoteAsync(dto, userId);
+        return Json(note);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteNote(int noteId)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null)
+            return Unauthorized();
+
+        await _scheduleNoteService.DeleteNoteAsync(noteId, userId);
+        return Ok();
     }
 
     private async Task PrepareEditDropdowns()
