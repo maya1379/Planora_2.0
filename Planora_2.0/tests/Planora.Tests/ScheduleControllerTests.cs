@@ -19,6 +19,7 @@ public class ScheduleControllerTests
     private readonly Mock<IClassroomService> _classroomServiceMock;
     private readonly Mock<ISubjectService> _subjectServiceMock;
     private readonly Mock<ITimeSlotService> _timeSlotServiceMock;
+    private readonly Mock<IScheduleNoteService> _scheduleNoteServiceMock;
     private readonly Mock<UserManager<User>> _userManagerMock;
     private readonly ScheduleController _controller;
 
@@ -30,6 +31,7 @@ public class ScheduleControllerTests
         _classroomServiceMock = new Mock<IClassroomService>();
         _subjectServiceMock = new Mock<ISubjectService>();
         _timeSlotServiceMock = new Mock<ITimeSlotService>();
+        _scheduleNoteServiceMock = new Mock<IScheduleNoteService>();
 
         var userStore = new Mock<IUserStore<User>>();
         _userManagerMock = new Mock<UserManager<User>>(
@@ -43,6 +45,7 @@ public class ScheduleControllerTests
             _classroomServiceMock.Object,
             _subjectServiceMock.Object,
             _timeSlotServiceMock.Object,
+            _scheduleNoteServiceMock.Object,
             _userManagerMock.Object);
     }
 

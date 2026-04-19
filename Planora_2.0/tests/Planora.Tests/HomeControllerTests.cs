@@ -42,7 +42,7 @@ public class HomeControllerTests
     }
 
     [Fact]
-    public async Task Index_WhenAnonymous_ReturnsEmptyViewModel()
+    public async Task Index_WhenAnonymous_ReturnsLandingView()
     {
         _controller.ControllerContext = new ControllerContext
         {
@@ -52,8 +52,8 @@ public class HomeControllerTests
         var result = await _controller.Index();
 
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsAssignableFrom<List<ScheduleEntryDto>>(viewResult.Model);
-        Assert.Empty(model);
+        Assert.Equal("Landing", viewResult.ViewName);
+        Assert.Null(viewResult.Model);
     }
 
     [Fact]
