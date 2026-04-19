@@ -49,4 +49,20 @@ public class BuildingService : IBuildingService
     {
         await _repository.DeleteAsync(id);
     }
+    public async Task<BuildingStatisticsDto?> GetStatisticsAsync(int id)
+{
+    // Отримуємо корпус через репозиторій з підвантаженими даними
+    var building = await _repository.GetWithClassroomsAndSchedulesAsync(id);
+    
+    if (building == null) return null;
+
+    return new BuildingStatisticsDto
+    {
+        BuildingId = building.Id,
+        Name = building.Name,
+        ClassroomsCount = building.Classrooms.Count,
+        // Рахуємо суму всіх пар у всіх аудиторіях цього корпусу
+        TotalSchedulesCount = building.Classrooms.Sum(c => c.Schedules.Count)
+    };
+}
 }

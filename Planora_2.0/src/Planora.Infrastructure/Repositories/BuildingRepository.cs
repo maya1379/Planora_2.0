@@ -51,4 +51,11 @@ public class BuildingRepository : IBuildingRepository
             await _context.SaveChangesAsync();
         }
     }
+public async Task<Building?> GetWithClassroomsAndSchedulesAsync(int id)
+{
+    return await _context.Buildings
+        .Include(b => b.Classrooms)           // Завантажуємо список аудиторій
+            .ThenInclude(c => c.Schedules)    // Завантажуємо розклад для кожної з них
+        .FirstOrDefaultAsync(b => b.Id == id);
+}
 }

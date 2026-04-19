@@ -9,4 +9,5 @@ public interface IBuildingRepository
     Task<Building> AddAsync(Building building);
     Task UpdateAsync(Building building);
     Task DeleteAsync(int id);
+    Task<Building?> GetWithClassroomsAndSchedulesAsync(int id);
 }

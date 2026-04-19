@@ -9,4 +9,5 @@ public interface IBuildingService
     Task<BuildingDto> CreateAsync(CreateBuildingDto dto);
     Task UpdateAsync(UpdateBuildingDto dto);
     Task DeleteAsync(int id);
+    Task<BuildingStatisticsDto?> GetStatisticsAsync(int id);
 }

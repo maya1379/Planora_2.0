@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Planora.Services.DTOs;
 using Planora.Services.Services.Interfaces;
+using Planora.Web.ViewModels;
 
 namespace Planora.Web.Controllers;
 
@@ -79,4 +80,30 @@ public class BuildingsController : Controller
         }
         return RedirectToAction(nameof(Index));
     }
+    [HttpGet("{id}/statistics")]
+    public async Task<ActionResult<BuildingStatisticsDto>> GetStatistics(int id)
+    {
+        var stats = await _buildingService.GetStatisticsAsync(id);
+
+        if (stats == null)
+        {
+            return NotFound($"Building with ID {id} not found.");
+        }
+        return Ok(stats);
+    }
+    [HttpGet]
+    public async Task<IActionResult> Statistics(int id)
+    {
+        var stats = await _buildingService.GetStatisticsAsync(id);
+        if (stats == null) return NotFound();
+
+        var viewModel = new BuildingStatisticsViewModel
+        {
+            Name = stats.Name,
+            ClassroomsCount = stats.ClassroomsCount,
+            TotalSchedulesCount = stats.TotalSchedulesCount
+        };
+
+        return View(viewModel); 
+}
 }

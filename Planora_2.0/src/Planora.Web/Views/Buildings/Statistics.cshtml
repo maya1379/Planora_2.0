@@ -1,0 +1,32 @@
+@model Planora.Web.ViewModels.BuildingStatisticsViewModel
+
+@{
+    ViewData["Title"] = "Статистика корпусу";
+}
+
+<div class="glass-card" style="max-width: 1000px; margin: 0 auto;">
+    <div class="glass-card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 2rem;">
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Статистика: @Model.Name</h2>
+        <a asp-action="Index" class="btn-modern" style="margin: 0; padding: 0.8rem 2rem; width: auto; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.1); text-decoration: none; color: #fff; border-radius: 12px; font-size: 0.9rem;">Повернутися до списку</a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+        
+        <div style="background: rgba(15, 23, 42, 0.4); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); padding: 2.5rem; text-align: center; backdrop-filter: blur(10px);">
+            <div style="color: #60a5fa; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; opacity: 0.8;">Аудиторій всього</div>
+            <div style="font-size: 4rem; color: #fff; font-weight: 800; line-height: 1; margin-bottom: 0.5rem;">@Model.ClassroomsCount</div>
+            <div style="width: 50px; height: 4px; background: #60a5fa; margin: 1.5rem auto 0; border-radius: 2px; box-shadow: 0 0 15px rgba(96, 165, 250, 0.5);"></div>
+        </div>
+
+        <div style="background: rgba(15, 23, 42, 0.4); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); padding: 2.5rem; text-align: center; backdrop-filter: blur(10px);">
+            <div style="color: #c084fc; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; opacity: 0.8;">Занять у розкладі</div>
+            <div style="font-size: 4rem; color: #fff; font-weight: 800; line-height: 1; margin-bottom: 0.5rem;">@Model.TotalSchedulesCount</div>
+            <div style="width: 50px; height: 4px; background: #c084fc; margin: 1.5rem auto 0; border-radius: 2px; box-shadow: 0 0 15px rgba(192, 132, 252, 0.5);"></div>
+        </div>
+
+    </div>
+
+    <div style="text-align: center; opacity: 0.5; color: #fff; font-size: 0.8rem; padding-top: 1rem;">
+        Дані оновлено: @DateTime.Now.ToString("HH:mm, dd MMMM")
+    </div>
+</div>
