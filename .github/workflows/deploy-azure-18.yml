@@ -1,4 +1,4 @@
-name: CI/CD Pipeline Planora Korchynskyi-18
+name: Korchynskyi-18 CI/CD Pipeline Planora
 
 on:
   push:
