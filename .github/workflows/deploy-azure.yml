@@ -76,11 +76,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: planora-app-package
-          path: ./myapp
+          path: myapp
 
       - name: deploy to azure web app
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.azure_webapp_name }}
-          publish-profile: ${{ AZURE_WEBAPP_PUBLISH_PROFILE_KORCHYSNKYI }}
-          package: ./myapp
+          
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_KORCHYSNKYI }}
+          package: myapp
