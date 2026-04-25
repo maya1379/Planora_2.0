@@ -1,39 +1,86 @@
-name: Deploy to Azure App Service
+name: ci/cd pipeline planora korchynskyi-18
 
 on:
   push:
     branches:
-      - production
+      - korchynskyi-18-deploy
 
 env:
-  DOTNET_VERSION: '10.0.x'
-  AZURE_WEBAPP_NAME: 'planora-web'    # <-- Replace with your Azure App Service name
+  dotnet_version: '10.0.x'
+  azure_webapp_name: 'planora-project'
 
 jobs:
-  build-and-deploy:
+  build:
+    name: build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET SDK
+      - name: setup .net sdk
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: ${{ env.dotnet_version }}
 
-      - name: Restore dependencies
-        run: dotnet restore Planora_2.0/src/Planora.Web/Planora.Web.csproj
+      - name: restore dependencies
+        run: dotnet restore Planora_2.0/Planora.sln
 
-      - name: Build
-        run: dotnet build Planora_2.0/src/Planora.Web/Planora.Web.csproj --configuration Release --no-restore
+      - name: build solution
+        run: dotnet build Planora_2.0/Planora.sln --configuration Release --no-restore
 
-      - name: Publish
-        run: dotnet publish Planora_2.0/src/Planora.Web/Planora.Web.csproj --configuration Release --no-build --output ./myapp
+  test:
+    name: test
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
 
-      - name: Deploy to Azure Web App
+      - name: setup .net sdk
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.dotnet_version }}
+
+      - name: run tests
+        run: dotnet test Planora_2.0/tests/Planora.Tests/Planora.Tests.csproj --configuration Release --verbosity normal
+
+  publish:
+    name: publish
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: setup .net sdk
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.dotnet_version }}
+
+      - name: publish web app
+        run: dotnet publish Planora_2.0/src/Planora.Web/Planora.Web.csproj --configuration Release --output ./myapp
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: planora-app-package
+          path: ./myapp
+          retention-days: 1
+
+  deploy:
+    name: deploy
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: planora-app-package
+          path: ./myapp
+
+      - name: deploy to azure web app
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          app-name: ${{ env.azure_webapp_name }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_MAKSIM }}
           package: ./myapp
