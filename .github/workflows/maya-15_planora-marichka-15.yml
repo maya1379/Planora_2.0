@@ -27,7 +27,7 @@ jobs:
         run: dotnet build Planora_2.0/src/Planora.Web/Planora.Web.csproj
 
       - name: Test with dotnet
-        run: dotnet test Planora_2.0/Planora_2.0/tests/Planora.Tests/Planora.Tests.csproj --configuration Release --no-build
+        run: dotnet test Planora_2.0/tests/Planora.Tests/Planora.Tests.csproj --configuration Release --no-build
 
       - name: dotnet publish
         run: dotnet publish Planora_2.0/src/Planora.Web/Planora.Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
