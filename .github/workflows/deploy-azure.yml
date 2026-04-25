@@ -3,7 +3,7 @@ name: ci/cd pipeline planora korchynskyi-18
 on:
   push:
     branches:
-      - korchynskyi-18-deploy
+      - 18-korchynskyi-deploy
 
 env:
   dotnet_version: '10.0.x'
