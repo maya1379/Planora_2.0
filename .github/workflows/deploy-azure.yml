@@ -71,6 +71,9 @@ jobs:
     name: deploy
     needs: publish
     runs-on: ubuntu-latest
+    environment:
+      name: '18-Korchynskyi CI/CD Pipeline Planora'
+      url: https://${{ env.azure_webapp_name }}.azurewebsites.net
     steps:
       - name: download artifact
         uses: actions/download-artifact@v4
