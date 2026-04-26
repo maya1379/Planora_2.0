@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     
     environment:
-      name: development
+      name: Artur-17
       url: https://planora-17-b0fhchh6cehxece3.austriaeast-01.azurewebsites.net
     
     steps:
