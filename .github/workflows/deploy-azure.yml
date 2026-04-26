@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     
     environment:
-      name: production
+      name: Planora Web App General
       url: https://${{ env.azure_webapp_name }}.azurewebsites.net
     steps:
       - name: download artifact
