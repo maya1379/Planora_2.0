@@ -1,4 +1,4 @@
-name: Deploy Planora to Azure
+name: Ivan Maliuha Azure Deployment
 
 on:
   push:
@@ -10,26 +10,26 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 9.0.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore src/Planora.Web/Planora.Web.csproj
 
-    - name: Build project
-      run: dotnet build --configuration Release --no-restore
+      - name: Build project
+        run: dotnet build src/Planora.Web/Planora.Web.csproj --configuration Release --no-restore
 
-    - name: Publish project
-      run: dotnet publish src/Planora.Web/Planora.Web.csproj -c Release -o publish
+      - name: Publish project
+        run: dotnet publish src/Planora.Web/Planora.Web.csproj -c Release -o publish
 
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v3
-      with:
-        app-name: planora-ivanmaliuha-demo
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: ./publish
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: planora-ivanmaliuha-demo
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
