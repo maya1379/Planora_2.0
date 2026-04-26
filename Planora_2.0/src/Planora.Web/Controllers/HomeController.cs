@@ -24,7 +24,7 @@ public class HomeController : Controller
     {
         if (User.Identity == null || !User.Identity.IsAuthenticated)
         {
-            return View("Landing");
+            return View("1111");
         }
 
         var model = new List<ScheduleEntryDto>();
