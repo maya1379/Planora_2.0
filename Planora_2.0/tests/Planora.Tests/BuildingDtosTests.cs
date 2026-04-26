@@ -48,7 +48,7 @@ public class BuildingDtosTests
         var dto = new CreateBuildingDto
         {
             Name = "New Building",
-            Address = "Street 1111111112"
+            Address = "Street 2"
         };
 
         Assert.Equal("New Building", dto.Name);
