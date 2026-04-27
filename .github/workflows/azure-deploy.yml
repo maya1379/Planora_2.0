@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 9.0.x
 
       - name: Restore dependencies
         run: dotnet restore Planora_2.0/Planora.sln
@@ -25,7 +25,7 @@ jobs:
         run: dotnet build Planora_2.0/src/Planora.Web/Planora.Web.csproj --configuration Release --no-restore
 
       - name: Publish project
-        run: dotnet publish Planora_2.0/src/Planora.Web/Planora.Web.csproj -c Release -o publish
+        run: dotnet publish Planora_2.0/src/Planora.Web/Planora.Web.csproj --configuration Release --output publish
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
