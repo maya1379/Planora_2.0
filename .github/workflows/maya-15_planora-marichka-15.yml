@@ -3,7 +3,7 @@ name: Deploy to Azure App Service
 on:
   push:
     branches:
-      - production
+      - maya-15
 
 env:
   DOTNET_VERSION: '10.0.x'
