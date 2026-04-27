@@ -6,7 +6,7 @@ on:
       - azure-deployment-IvanMaliuha
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: windows-latest
 
     steps:
@@ -23,6 +23,41 @@ jobs:
 
       - name: Build project
         run: dotnet build Planora_2.0/src/Planora.Web/Planora.Web.csproj --configuration Release --no-restore
+
+  unit-tests:
+    runs-on: windows-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Planora_2.0/Planora.sln
+
+      - name: Run unit tests
+        run: dotnet test Planora_2.0/Planora.sln --configuration Release --no-build
+
+  deploy:
+    runs-on: windows-latest
+    needs: unit-tests
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Planora_2.0/Planora.sln
 
       - name: Publish project
         run: dotnet publish Planora_2.0/src/Planora.Web/Planora.Web.csproj --configuration Release --output publish
