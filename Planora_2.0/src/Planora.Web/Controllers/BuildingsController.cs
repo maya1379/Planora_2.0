@@ -20,7 +20,7 @@ public class BuildingsController : Controller
     public async Task<IActionResult> Index()
     {
         var buildings = await _buildingService.GetAllAsync();
-        return View(buildings);
+        return NotFound();
     }
 
     public IActionResult Create()
