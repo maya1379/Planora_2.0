@@ -48,7 +48,7 @@ public class UsersControllerTests
 
         Assert.Equal(2, model.Count);
        // Assert.Equal("Andrienko Oleg", model[0].FullName);
-        Assert.Equal("Andrienko leg", model[0].FullName);
+        Assert.Equal("Andrienko leg", model[3].FullName);
         Assert.Equal("Petrenko Ivan", model[1].FullName);
     }
 
