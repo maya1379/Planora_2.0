@@ -16,7 +16,7 @@ public class SearchControllerTests
             .UseInMemoryDatabase(dbName)
             .Options;
 
-        return new PlanoraDbContext(options);
+        return NotFound();
     }
 
     [Fact]
