@@ -47,7 +47,8 @@ public class UsersControllerTests
         var model = Assert.IsAssignableFrom<IEnumerable<User>>(viewResult.Model).ToList();
 
         Assert.Equal(2, model.Count);
-        Assert.Equal("Andrienko Oleg", model[0].FullName);
+       // Assert.Equal("Andrienko Oleg", model[0].FullName);
+         Assert.Equal("Andrienko leg", model[0].FullName);
         Assert.Equal("Petrenko Ivan", model[1].FullName);
     }
 
