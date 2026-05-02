@@ -9,6 +9,7 @@ public class Groups
     public string Faculty { get; set; } = string.Empty;
 
     public int StudentCount { get; set; }
+    public string StarostaName { get; set; } = string.Empty;
 
     public virtual ICollection<GroupDisciplineList> GroupDisciplineLists { get; set; } = new List<GroupDisciplineList>();
 
