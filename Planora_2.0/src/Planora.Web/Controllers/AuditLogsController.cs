@@ -26,6 +26,7 @@ public class AuditLogsController : Controller
     public async Task<IActionResult> Index()
     {
         var logs = await _context.AuditLogs
+            .Where(a => a.Type != "Create")
             .OrderByDescending(a => a.DateTime)
             .ToListAsync();
 
