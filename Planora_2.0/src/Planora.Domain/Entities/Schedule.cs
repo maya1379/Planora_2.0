@@ -20,6 +20,10 @@ public class Schedule
 
     public int GroupId { get; set; }
 
+    public bool IsOnline { get; set; }
+
+    public string? MeetingLink { get; set; }
+
     public virtual TimeSlot TimeSlot { get; set; } = null!;
 
     public virtual Classrooms Classrooms { get; set; } = null!;

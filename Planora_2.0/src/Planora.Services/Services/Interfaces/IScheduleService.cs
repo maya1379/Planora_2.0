@@ -16,6 +16,7 @@ public interface IScheduleService
     Task<IEnumerable<TeacherSearchDto>> SearchTeachersAsync(string query);
     Task<ScheduleEntryDto> CreateAsync(CreateScheduleEntryDto dto);
     Task UpdateAsync(int id, CreateScheduleEntryDto dto);
+    Task UpdateOnlineStatusAsync(int id, UpdateScheduleOnlineStatusDto dto);
     Task DeleteAsync(int id);
     Task DeleteAllAsync();
 }

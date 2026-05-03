@@ -296,6 +296,27 @@ public class ScheduleController : Controller
         return Ok();
     }
 
+    [HttpPost]
+    [Authorize(Roles = AppRoles.Teacher)]
+    public async Task<IActionResult> UpdateOnlineStatus(int scheduleId, [FromBody] UpdateScheduleOnlineStatusDto dto)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null)
+            return Unauthorized();
+
+        var entry = await _scheduleService.GetByIdAsync(scheduleId);
+        if (entry == null)
+            return NotFound();
+
+        if (entry.TeacherId != userId)
+        {
+            return Forbid();
+        }
+
+        await _scheduleService.UpdateOnlineStatusAsync(scheduleId, dto);
+        return Ok();
+    }
+
     private async Task PrepareEditDropdowns()
     {
         var groups = await _groupService.GetAllAsync();
