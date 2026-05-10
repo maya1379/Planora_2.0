@@ -317,6 +317,9 @@ public class ScheduleController : Controller
         return Ok();
     }
 
+
+
+
     private async Task PrepareEditDropdowns()
     {
         var groups = await _groupService.GetAllAsync();
