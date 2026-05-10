@@ -1,0 +1,119 @@
+@model IEnumerable<Planora.Web.ViewModels.AuditLogViewModel>
+@{
+    ViewData["Title"] = "Історія змін";
+    ViewData["Breadcrumb"] = "Адмін / Історія змін";
+}
+
+@functions {
+    public Microsoft.AspNetCore.Html.IHtmlContent RenderJson(string? jsonStr)
+    {
+        if (string.IsNullOrWhiteSpace(jsonStr)) return new Microsoft.AspNetCore.Html.HtmlString("<span style='color: rgba(255,255,255,0.2);'>-</span>");
+        
+        try
+        {
+            using var jDoc = System.Text.Json.JsonDocument.Parse(jsonStr);
+            var html = new System.Text.StringBuilder();
+            
+            if (jDoc.RootElement.ValueKind == System.Text.Json.JsonValueKind.Array)
+            {
+                html.Append("<div style='display: flex; flex-wrap: wrap; gap: 4px;'>");
+                foreach (var el in jDoc.RootElement.EnumerateArray())
+                {
+                    html.Append($"<span style='background: rgba(99, 102, 241, 0.15); color: #818cf8; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; border: 1px solid rgba(99, 102, 241, 0.3);'>{System.Text.Encodings.Web.HtmlEncoder.Default.Encode(el.ToString())}</span>");
+                }
+                html.Append("</div>");
+            }
+            else if (jDoc.RootElement.ValueKind == System.Text.Json.JsonValueKind.Object)
+            {
+                html.Append("<div style='display: flex; flex-direction: column; gap: 4px;'>");
+                foreach (var prop in jDoc.RootElement.EnumerateObject())
+                {
+                    var valStr = prop.Value.ValueKind == System.Text.Json.JsonValueKind.Null ? "null" : prop.Value.ToString();
+                    html.Append($"<div style='font-size: 0.8rem; line-height: 1.2;'><span style='color: var(--text-secondary);'>{System.Text.Encodings.Web.HtmlEncoder.Default.Encode(prop.Name)}:</span> <span style='color: #fff;'>{System.Text.Encodings.Web.HtmlEncoder.Default.Encode(valStr)}</span></div>");
+                }
+                html.Append("</div>");
+            }
+            else
+            {
+                return new Microsoft.AspNetCore.Html.HtmlString(System.Text.Encodings.Web.HtmlEncoder.Default.Encode(jsonStr));
+            }
+            
+            return new Microsoft.AspNetCore.Html.HtmlString(html.ToString());
+        }
+        catch
+        {
+            return new Microsoft.AspNetCore.Html.HtmlString(System.Text.Encodings.Web.HtmlEncoder.Default.Encode(jsonStr));
+        }
+    }
+}
+
+<div class="glass-card" style="max-width: 1200px; margin: 0 auto;">
+    <div class="glass-card-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700; text-align: left;">Історія змін</h2>
+    </div>
+
+    <div style="background: rgba(15, 23, 42, 0.4); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden; overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
+            <thead>
+                <tr style="background: rgba(255,255,255,0.03); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Дата та Час</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Користувач</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Тип дії</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Таблиця</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Змінені колонки</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Старі значення</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600;">Нові значення</th>
+                    <th style="padding: 1rem; color: #fff; font-weight: 600; text-align: center;">Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8" style="padding: 2rem; text-align: center; color: var(--text-secondary);">Змін ще не зафіксовано.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var log in Model)
+                    {
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                            <td style="padding: 1rem; color: var(--text-secondary); white-space: nowrap;">@log.DateTime.ToLocalTime().ToString("g")</td>
+                            <td style="padding: 1rem; color: var(--text-secondary);">@log.UserName</td>
+                            <td style="padding: 1rem;">
+                                @if (log.Type == "Create")
+                                {
+                                    <span style="background: rgba(52, 211, 153, 0.2); color: #34d399; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Створення</span>
+                                }
+                                else if (log.Type == "Update")
+                                {
+                                    <span style="background: rgba(96, 165, 250, 0.2); color: #60a5fa; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Оновлення</span>
+                                }
+                                else if (log.Type == "Delete")
+                                {
+                                    <span style="background: rgba(248, 113, 113, 0.2); color: #f87171; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Видалення</span>
+                                }
+                                else
+                                {
+                                    <span style="background: rgba(156, 163, 175, 0.2); color: #9ca3af; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">@log.Type</span>
+                                }
+                            </td>
+                            <td style="padding: 1rem; color: var(--text-secondary);">@log.TableName</td>
+                            <td style="padding: 1rem; color: var(--text-secondary); vertical-align: top;">@RenderJson(log.AffectedColumns)</td>
+                            <td style="padding: 1rem; color: var(--text-secondary); vertical-align: top; max-width: 300px;">@RenderJson(log.OldValues)</td>
+                            <td style="padding: 1rem; color: var(--text-secondary); vertical-align: top; max-width: 300px;">@RenderJson(log.NewValues)</td>
+                            <td style="padding: 1rem; vertical-align: top; text-align: center;">
+                                <form asp-action="Undo" method="post" onsubmit="return confirm('Ви впевнені, що хочете відмінити цю дію? Це поверне значення до попереднього стану.');">
+                                    <input type="hidden" name="id" value="@log.Id" />
+                                    <button type="submit" style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.2s;">
+                                        Відмінити
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/657e984d-e48b-43fe-8588-9a8c53099eb8/resourceGroups/Planora-17/providers/Microsoft.Web/sites/Planora-17",
+  "appService.deploySubpath": "."
+}

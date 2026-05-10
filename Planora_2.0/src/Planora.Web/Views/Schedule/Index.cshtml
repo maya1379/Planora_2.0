@@ -54,6 +54,7 @@
                 <div style="flex: 1;"></div>
                 @if (editMode)
                 {
+                    <a asp-controller="AuditLogs" asp-action="Index" class="schedule-toolbar-btn schedule-toolbar-btn--audit" style="margin-right: 0.5rem;">Історія змін</a>
                     <a asp-action="Index" asp-route-groupId="@currentGroupId" asp-route-teacherId="@currentTeacherId" class="schedule-toolbar-btn schedule-toolbar-btn--done">Готово</a>
                 }
                 else
@@ -197,6 +198,13 @@ else
         border-color: rgba(99, 102, 241, 0.3);
     }
     .schedule-toolbar-btn--done:hover { background: rgba(99, 102, 241, 0.2); }
+
+    .schedule-toolbar-btn--audit {
+        background: rgba(239, 68, 68, 0.08);
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.2);
+    }
+    .schedule-toolbar-btn--audit:hover { background: rgba(239, 68, 68, 0.15); }
 
     /* Schedule cards */
     .schedule-card-mini {
