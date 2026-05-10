@@ -4,6 +4,8 @@ using Planora.Services.DTOs;
 using Planora.Services.Interfaces;
 using Planora.Services.Services.Interfaces;
 using Planora.Domain.Entities;
+using Planora.Domain.Entities;
+using Planora.Domain.Constants;
 using Planora.Domain.Enums;
 
 namespace Planora.Services.Services;
@@ -135,12 +137,11 @@ public class ScheduleService : IScheduleService
         };
     }
 
-    public Task<IEnumerable<TeacherSearchDto>> SearchTeachersAsync(string query)
+    public async Task<IEnumerable<TeacherSearchDto>> SearchTeachersAsync(string query)
     {
         var normalizedQuery = query?.Trim().ToLower() ?? string.Empty;
-        var teachers = _userManager.Users
-            .Where(u => u.Role == UserRole.Teacher)
-            .ToList()
+        var teachersInRole = await _userManager.GetUsersInRoleAsync(AppRoles.Teacher);
+        var teachers = teachersInRole
             .Where(u => string.IsNullOrEmpty(normalizedQuery) ||
                         u.FullName.ToLower().Contains(normalizedQuery))
             .Select(u => new TeacherSearchDto
@@ -151,7 +152,7 @@ public class ScheduleService : IScheduleService
                 Position = u.Position
             });
 
-        return Task.FromResult(teachers);
+        return teachers;
     }
 
     public async Task<ScheduleEntryDto> CreateAsync(CreateScheduleEntryDto dto)

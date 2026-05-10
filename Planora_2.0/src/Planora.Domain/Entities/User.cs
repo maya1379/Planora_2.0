@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using Planora.Domain.Enums;
 
 namespace Planora.Domain.Entities;
 
@@ -10,8 +9,6 @@ public class User : IdentityUser
     public string? Faculty { get; set; }
 
     public string? Position { get; set; }
-
-    public UserRole Role { get; set; }
 
     public int? GroupId { get; set; }
 

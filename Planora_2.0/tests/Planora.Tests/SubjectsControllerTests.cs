@@ -16,6 +16,7 @@ public class SubjectsControllerTests
     {
         _subjectServiceMock = new Mock<ISubjectService>();
         _controller = new SubjectsController(_subjectServiceMock.Object);
+        _controller.TempData = new Mock<Microsoft.AspNetCore.Mvc.ViewFeatures.ITempDataDictionary>().Object;
     }
 
     [Fact]

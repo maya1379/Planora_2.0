@@ -1,6 +1,7 @@
 using AutoMapper;
 using Moq;
 using Planora.Domain.Entities;
+using Planora.Domain.Constants;
 using Planora.Domain.Enums;
 using Planora.Services.DTOs;
 using Planora.Services.Interfaces;

@@ -1,3 +1,4 @@
+using Planora.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,7 +7,7 @@ using Planora.Services.Services.Interfaces;
 
 namespace Planora.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Admin)]
 public class GroupSubjectsController : Controller
 {
     private readonly IGroupSubjectService _groupSubjectService;

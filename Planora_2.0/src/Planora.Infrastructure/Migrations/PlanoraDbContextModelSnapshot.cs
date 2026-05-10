@@ -320,6 +320,37 @@ namespace Planora.Infrastructure.Migrations
                     b.ToTable("Schedules");
                 });
 
+            modelBuilder.Entity("Planora.Domain.Entities.ScheduleNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ScheduleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScheduleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ScheduleNotes");
+                });
+
             modelBuilder.Entity("Planora.Domain.Entities.Subjects", b =>
                 {
                     b.Property<int>("Id")
@@ -372,7 +403,7 @@ namespace Planora.Infrastructure.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.HasIndex("TeacherId", "SubjectId")
+                    b.HasIndex("TeacherId", "SubjectId", "GroupId")
                         .IsUnique();
 
                     b.ToTable("TeachingAssignments");
@@ -414,11 +445,6 @@ namespace Planora.Infrastructure.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("character varying(13)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -469,10 +495,6 @@ namespace Planora.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -495,52 +517,6 @@ namespace Planora.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
-
-                    b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("Planora.Domain.Entities.Workload", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ScheduledHours")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("TeacherId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("Workloads");
-                });
-
-            modelBuilder.Entity("Planora.Domain.Entities.Administrator", b =>
-                {
-                    b.HasBaseType("Planora.Domain.Entities.User");
-
-                    b.HasDiscriminator().HasValue("Administrator");
-                });
-
-            modelBuilder.Entity("Planora.Domain.Entities.Student", b =>
-                {
-                    b.HasBaseType("Planora.Domain.Entities.User");
-
-                    b.HasDiscriminator().HasValue("Student");
-                });
-
-            modelBuilder.Entity("Planora.Domain.Entities.Teacher", b =>
-                {
-                    b.HasBaseType("Planora.Domain.Entities.User");
-
-                    b.HasDiscriminator().HasValue("Teacher");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -667,6 +643,25 @@ namespace Planora.Infrastructure.Migrations
                     b.Navigation("TimeSlot");
                 });
 
+            modelBuilder.Entity("Planora.Domain.Entities.ScheduleNote", b =>
+                {
+                    b.HasOne("Planora.Domain.Entities.Schedule", "Schedule")
+                        .WithMany()
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Planora.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Schedule");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Planora.Domain.Entities.TeachingAssignment", b =>
                 {
                     b.HasOne("Planora.Domain.Entities.Groups", "Groups")
@@ -701,15 +696,6 @@ namespace Planora.Infrastructure.Migrations
                         .HasForeignKey("GroupsId");
 
                     b.Navigation("Groups");
-                });
-
-            modelBuilder.Entity("Planora.Domain.Entities.Workload", b =>
-                {
-                    b.HasOne("Planora.Domain.Entities.User", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("Planora.Domain.Entities.Building", b =>

@@ -1,3 +1,4 @@
+using Planora.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using Planora.Web.ViewModels;
 
 namespace Planora.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Admin)]
 public class UsersController : Controller
 {
     private readonly UserManager<User> _userManager;
@@ -31,7 +32,8 @@ public class UsersController : Controller
     {
         var groups = await _groupService.GetAllAsync();
         ViewBag.Groups = new SelectList(groups, "Id", "Name");
-        return View(new CreateUserViewModel { Role = UserRole.Student });
+        ViewBag.Roles = new SelectList(new[] { AppRoles.Admin, AppRoles.Teacher, AppRoles.Student });
+        return View(new CreateUserViewModel { Role = AppRoles.Student });
     }
 
     [HttpPost]
@@ -42,6 +44,7 @@ public class UsersController : Controller
         {
             var groups = await _groupService.GetAllAsync();
             ViewBag.Groups = new SelectList(groups, "Id", "Name");
+            ViewBag.Roles = new SelectList(new[] { AppRoles.Admin, AppRoles.Teacher, AppRoles.Student });
             return View(model);
         }
 
@@ -50,10 +53,9 @@ public class UsersController : Controller
             UserName = model.Email,
             Email = model.Email,
             FullName = model.FullName,
-            Role = model.Role,
             Faculty = model.Faculty,
             Position = model.Position,
-            GroupId = model.Role == UserRole.Student ? model.GroupId : null,
+            GroupId = model.Role == AppRoles.Student ? model.GroupId : null,
             EmailConfirmed = true
         };
 
@@ -61,7 +63,7 @@ public class UsersController : Controller
 
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, model.Role.ToString());
+            await _userManager.AddToRoleAsync(user, model.Role);
             return RedirectToAction(nameof(Index));
         }
 
@@ -79,8 +81,12 @@ public class UsersController : Controller
         var user = await _userManager.FindByIdAsync(id);
         if (user == null) return NotFound();
 
+        var roles = await _userManager.GetRolesAsync(user);
+        var currentRole = roles.FirstOrDefault() ?? AppRoles.Student;
+
         var groups = await _groupService.GetAllAsync();
         ViewBag.Groups = new SelectList(groups, "Id", "Name");
+        ViewBag.Roles = new SelectList(new[] { AppRoles.Admin, AppRoles.Teacher, AppRoles.Student });
 
         var model = new EditUserViewModel
         {
@@ -89,7 +95,7 @@ public class UsersController : Controller
             Faculty = user.Faculty,
             Position = user.Position,
             GroupId = user.GroupId,
-            Role = user.Role
+            Role = currentRole
         };
         return View(model);
     }
@@ -102,6 +108,7 @@ public class UsersController : Controller
         {
             var groups = await _groupService.GetAllAsync();
             ViewBag.Groups = new SelectList(groups, "Id", "Name");
+            ViewBag.Roles = new SelectList(new[] { AppRoles.Admin, AppRoles.Teacher, AppRoles.Student });
             return View(model);
         }
 
@@ -111,11 +118,17 @@ public class UsersController : Controller
         user.FullName = model.FullName;
         user.Faculty = model.Faculty;
         user.Position = model.Position;
-        user.GroupId = user.Role == UserRole.Student ? model.GroupId : null;
+        user.GroupId = model.Role == AppRoles.Student ? model.GroupId : null;
 
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            if (!currentRoles.Contains(model.Role))
+            {
+                await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                await _userManager.AddToRoleAsync(user, model.Role);
+            }
             return RedirectToAction(nameof(Index));
         }
 

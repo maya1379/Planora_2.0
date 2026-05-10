@@ -1,3 +1,4 @@
+using Planora.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Planora.Services.DTOs;
@@ -5,7 +6,7 @@ using Planora.Services.Services.Interfaces;
 
 namespace Planora.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Admin)]
 public class BuildingsController : Controller
 {
     private readonly IBuildingService _buildingService;
@@ -63,7 +64,19 @@ public class BuildingsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        await _buildingService.DeleteAsync(id);
+        try
+        {
+            await _buildingService.DeleteAsync(id);
+            TempData["SuccessMessage"] = "Корпус успішно видалено.";
+        }
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+        {
+            TempData["ErrorMessage"] = "Неможливо видалити цей корпус, оскільки він має прив'язані аудиторії.";
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Сталася непередбачена помилка під час видалення корпусу.";
+        }
         return RedirectToAction(nameof(Index));
     }
 }

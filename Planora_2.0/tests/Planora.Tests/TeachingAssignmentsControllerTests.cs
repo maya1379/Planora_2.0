@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Moq;
 using Planora.Domain.Entities;
-using Planora.Domain.Enums;
+using Planora.Domain.Constants;
 using Planora.Services.DTOs;
 using Planora.Services.Services.Interfaces;
 using Planora.Tests.Helpers;
@@ -43,9 +43,9 @@ public class TeachingAssignmentsControllerTests
     {
         var teachers = new List<User>
         {
-            new User { Id = "t1", FullName = "Teacher 1", Role = UserRole.Teacher },
-            new User { Id = "t2", FullName = "Teacher 2", Role = UserRole.Teacher },
-            new User { Id = "s1", FullName = "Student 1", Role = UserRole.Student }
+            new User { Id = "t1", FullName = "Teacher 1" },
+            new User { Id = "t2", FullName = "Teacher 2" },
+            new User { Id = "s1", FullName = "Student 1" }
         };
 
         var asyncQueryableTeachers = new TestAsyncEnumerable<User>(teachers);
@@ -53,6 +53,8 @@ public class TeachingAssignmentsControllerTests
         _userManagerMock
             .Setup(u => u.Users)
             .Returns(asyncQueryableTeachers);
+
+        _userManagerMock.Setup(u => u.GetUsersInRoleAsync(AppRoles.Teacher)).ReturnsAsync(teachers);
 
         _subjectServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<SubjectDto>
         {

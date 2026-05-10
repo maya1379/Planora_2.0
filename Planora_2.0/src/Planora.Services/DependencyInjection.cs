@@ -20,6 +20,8 @@ public static class DependencyInjection
         services.AddScoped<ITimeSlotService, TimeSlotService>();
         services.AddScoped<IScheduleService, ScheduleService>();
         services.AddScoped<IScheduleGenerationService, ScheduleGenerationService>();
+        services.AddScoped<IExportService, ExportService>();
+        services.AddScoped<IScheduleNoteService, ScheduleNoteService>();
 
         return services;
     }

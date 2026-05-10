@@ -1,44 +1,44 @@
 @{
-    ViewData["Title"] = "Room Schedule";
-    ViewData["Breadcrumb"] = "Schedule › Details";
+    ViewData["Title"] = "Розклад аудиторії";
+    ViewData["Breadcrumb"] = "Розклад › Деталі";
 }
 
 <div class="glass-card">
     <div class="controls-bar">
         <select class="modern-select">
-            <option>Room</option>
-            <option>Subject</option>
-            <option>Professor</option>
+            <option>Аудиторія</option>
+            <option>Предмет</option>
+            <option>Викладач</option>
         </select>
         
         <div class="search-wrapper">
-            <input type="text" class="modern-input" placeholder="search" />
+            <input type="text" class="modern-input" placeholder="пошук..." />
         </div>
         
-        <a asp-action="Schedule" class="btn-modern" style="margin-bottom: 0; width: auto; margin-left: auto;">Back to Week</a>
+        <a asp-action="Schedule" class="btn-modern" style="margin-bottom: 0; width: auto; margin-left: auto;">Назад до тижня</a>
     </div>
 
     <table class="table-modern">
         <thead>
             <tr>
-                <th>Room ^</th>
-                <th>Group</th>
-                <th>Professor</th>
-                <th>Working v</th>
+                <th>Аудиторія ^</th>
+                <th>Група</th>
+                <th>Викладач</th>
+                <th>Зайнято v</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>122</td>
-                <td>PMI-31</td>
-                <td>Peldi</td>
+                <td>ПМІ-31</td>
+                <td>Пелді</td>
                 <td style="text-align: center;">
                     <input type="radio" name="working1" checked class="modern-checkbox" style="border-radius: 50%;" />
                 </td>
             </tr>
             <tr>
                 <td>166</td>
-                <td>PMI-38</td>
+                <td>ПМІ-38</td>
                 <td></td>
                 <td style="text-align: center;">
                     <input type="checkbox" checked class="modern-checkbox" />
@@ -46,22 +46,22 @@
             </tr>
             <tr>
                 <td>154</td>
-                <td>PMI-41</td>
-                <td>Patata</td>
+                <td>ПМІ-41</td>
+                <td>Патата</td>
                 <td style="text-align: center;">
                     <input type="checkbox" class="modern-checkbox" style="opacity: 0.5;" />
                 </td>
             </tr>
             <tr>
                 <td>87</td>
-                <td>PMI-11</td>
-                <td>Val</td>
+                <td>ПМІ-11</td>
+                <td>Вал</td>
                 <td style="text-align: center;">
                     <input type="checkbox" checked class="modern-checkbox" />
                 </td>
             </tr>
             <tr>
-                <td><a style="color: var(--accent-color);" href="#">Data Grid Docs</a></td>
+                <td><a style="color: var(--accent-color);" href="#">Документація</a></td>
                 <td></td>
                 <td></td>
                 <td style="text-align: center;">

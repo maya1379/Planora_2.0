@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Planora.Domain.Constants;
 using Planora.Domain.Enums;
 using Planora.Infrastructure.Data;
 
@@ -16,8 +17,11 @@ public class SearchController : Controller
 
     public async Task<IActionResult> TeacherSearch(string? teacherName)
     {
-        var query = _context.Users
-            .Where(u => u.Role == UserRole.Teacher)
+        var query = (from u in _context.Users
+                     join ur in _context.UserRoles on u.Id equals ur.UserId
+                     join r in _context.Roles on ur.RoleId equals r.Id
+                     where r.Name == AppRoles.Teacher
+                     select u)
             .Include(u => u.TeachingAssignments)
                 .ThenInclude(ta => ta.Subjects)
             .Include(u => u.Schedules)
@@ -26,6 +30,8 @@ public class SearchController : Controller
                 .ThenInclude(s => s.TimeSlot)
             .Include(u => u.Schedules)
                 .ThenInclude(s => s.Subjects)
+            .Include(u => u.Schedules)
+                .ThenInclude(s => s.Groups)
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(teacherName))
@@ -37,6 +43,34 @@ public class SearchController : Controller
         ViewBag.SearchTerm = teacherName;
 
         return View(teachers);
+    }
+
+    public async Task<IActionResult> TeacherDetails(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+            return NotFound();
+
+        var teacher = await (from u in _context.Users
+                             join ur in _context.UserRoles on u.Id equals ur.UserId
+                             join r in _context.Roles on ur.RoleId equals r.Id
+                             where r.Name == AppRoles.Teacher && u.Id == id
+                             select u)
+            .Include(u => u.TeachingAssignments)
+                .ThenInclude(ta => ta.Subjects)
+            .Include(u => u.Schedules)
+                .ThenInclude(s => s.Classrooms)
+            .Include(u => u.Schedules)
+                .ThenInclude(s => s.TimeSlot)
+            .Include(u => u.Schedules)
+                .ThenInclude(s => s.Subjects)
+            .Include(u => u.Schedules)
+                .ThenInclude(s => s.Groups)
+            .FirstOrDefaultAsync();
+
+        if (teacher == null)
+            return NotFound();
+
+        return View(teacher);
     }
 
     public async Task<IActionResult> ClassroomAvailability(DayOfWeekEnum? day, int? timeSlotId)

@@ -1,4 +1,6 @@
 @model Planora.Web.ViewModels.AdminDashboardViewModel
+@inject Microsoft.AspNetCore.Identity.UserManager<Planora.Domain.Entities.User> UserManager
+@using Planora.Domain.Constants
 
 @{
     ViewData["Title"] = "Панель адміністратора";
@@ -10,70 +12,93 @@
         <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700; text-align: left;">Панель керування</h2>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
-        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
-            <div style="font-size: 2.5rem; font-weight: 700; color: #60a5fa;">@Model.TotalStudents</div>
-            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Студенти</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-size: 2.2rem; font-weight: 700; color: #60a5fa; line-height: 1.2;">@Model.TotalStudents</div>
+            <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Студенти</div>
         </div>
         
-        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
-            <div style="font-size: 2.5rem; font-weight: 700; color: #34d399;">@Model.TotalTeachers</div>
-            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Викладачі</div>
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-size: 2.2rem; font-weight: 700; color: #34d399; line-height: 1.2;">@Model.TotalTeachers</div>
+            <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Викладачі</div>
         </div>
 
-        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
-            <div style="font-size: 2.5rem; font-weight: 700; color: #f472b6;">@Model.TotalGroups</div>
-            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Групи</div>
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-size: 2.2rem; font-weight: 700; color: #f472b6; line-height: 1.2;">@Model.TotalGroups</div>
+            <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Групи</div>
         </div>
 
-        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
-            <div style="font-size: 2.5rem; font-weight: 700; color: #fbbf24;">@Model.TotalBuildings</div>
-            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Корпуси</div>
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-size: 2.2rem; font-weight: 700; color: #fbbf24; line-height: 1.2;">@Model.TotalBuildings</div>
+            <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Корпуси</div>
         </div>
         
-        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
-            <div style="font-size: 2.5rem; font-weight: 700; color: #a78bfa;">@Model.TotalScheduleEntries</div>
-            <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Заняття</div>
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1.2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-size: 2.2rem; font-weight: 700; color: #a78bfa; line-height: 1.2;">@Model.TotalSubjects</div>
+            <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Предмети</div>
         </div>
     </div>
 
     <h3 style="color: #fff; font-size: 1.3rem; margin-bottom: 1.5rem;">Керування</h3>
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
         
-        <a asp-controller="Users" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(59, 130, 246, 0.1); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); transition: all 0.3s ease;">
-            <h4 style="color: #60a5fa; margin: 0 0 0.5rem 0;">Користувачі</h4>
-            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Керування студентами, викладачами та адмінами.</p>
+        <a asp-controller="Users" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(59, 130, 246, 0.1); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h4 style="color: #60a5fa; margin: 0 0 0.5rem 0;">Користувачі</h4>
+                <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Керування студентами, викладачами та адмінами.</p>
+            </div>
         </a>
 
-        <a asp-controller="Groups" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(244, 114, 182, 0.1); border-radius: 12px; border: 1px solid rgba(244, 114, 182, 0.2); transition: all 0.3s ease;">
-            <h4 style="color: #f472b6; margin: 0 0 0.5rem 0;">Групи</h4>
-            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Створення та редагування груп, списки студентів.</p>
+        <a asp-controller="Groups" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(244, 114, 182, 0.1); border-radius: 12px; border: 1px solid rgba(244, 114, 182, 0.2); transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h4 style="color: #f472b6; margin: 0 0 0.5rem 0;">Групи</h4>
+                <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Створення та редагування груп, списки студентів.</p>
+            </div>
         </a>
 
-        <a asp-controller="Classrooms" asp-action="AdminIndex" style="text-decoration: none; padding: 1.5rem; background: rgba(251, 191, 36, 0.1); border-radius: 12px; border: 1px solid rgba(251, 191, 36, 0.2); transition: all 0.3s ease;">
-            <h4 style="color: #fbbf24; margin: 0 0 0.5rem 0;">Аудиторії та корпуси</h4>
-            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Керування адресами, обладнанням та місткістю.</p>
+        <a asp-controller="Classrooms" asp-action="AdminIndex" style="text-decoration: none; padding: 1.5rem; background: rgba(251, 191, 36, 0.1); border-radius: 12px; border: 1px solid rgba(251, 191, 36, 0.2); transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h4 style="color: #fbbf24; margin: 0 0 0.5rem 0;">Аудиторії та корпуси</h4>
+                <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Керування адресами, обладнанням та місткістю.</p>
+            </div>
         </a>
         
-        <a asp-controller="Subjects" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2); transition: all 0.3s ease;">
-            <h4 style="color: #34d399; margin: 0 0 0.5rem 0;">Предмети</h4>
-            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Налаштування дисциплін та конфігурації курсів.</p>
+        <a asp-controller="Subjects" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2); transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h4 style="color: #34d399; margin: 0 0 0.5rem 0;">Предмети</h4>
+                <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Налаштування дисциплін та конфігурації курсів.</p>
+            </div>
         </a>
 
-        <a asp-controller="GroupSubjects" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2); transition: all 0.3s ease;">
-            <h4 style="color: #38bdf8; margin: 0 0 0.5rem 0;">Навчальні плани</h4>
-            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Визначення списку дисциплін для кожної групи.</p>
+        <a asp-controller="GroupSubjects" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2); transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h4 style="color: #38bdf8; margin: 0 0 0.5rem 0;">Навчальні плани</h4>
+                <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Визначення списку дисциплін для кожної групи.</p>
+            </div>
         </a>
 
-        <a asp-controller="TeachingAssignments" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(167, 139, 250, 0.1); border-radius: 12px; border: 1px solid rgba(167, 139, 250, 0.2); transition: all 0.3s ease;">
-            <h4 style="color: #a78bfa; margin: 0 0 0.5rem 0;">Розподіл навантаження</h4>
-            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Призначення викладачів на предмети та групи.</p>
+        <a asp-controller="TeachingAssignments" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(167, 139, 250, 0.1); border-radius: 12px; border: 1px solid rgba(167, 139, 250, 0.2); transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h4 style="color: #a78bfa; margin: 0 0 0.5rem 0;">Навантаження викладачів</h4>
+                <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Призначення викладачів на предмети та групи.</p>
+            </div>
         </a>
 
-        <a asp-controller="ScheduleGeneration" asp-action="Index" style="text-decoration: none; padding: 1.5rem; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.2); transition: all 0.3s ease;">
-            <h4 style="color: #fbbf24; margin: 0 0 0.5rem 0;">Генерація розкладу</h4>
-            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Запуск алгоритму для створення оптимального розкладу.</p>
-        </a>
+        <div onclick="window.location.href='@Url.Action("Index", "ScheduleGeneration")'" style="grid-column: span 2; cursor: pointer; padding: 1.5rem; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.2); transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <h4 style="color: #fbbf24; margin: 0 0 0.5rem 0;">Генерація розкладу</h4>
+                <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Запуск алгоритму для створення оптимального розкладу.</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <a asp-controller="Schedule" asp-action="Index" onclick="event.stopPropagation();" style="width: 48px; height: 48px; background: rgba(245, 158, 11, 0.25); border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.4); display: flex; align-items: center; justify-content: center; text-decoration: none;" title="Переглянути розклад">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </a>
+                <div style="background: rgba(245, 158, 11, 0.2); padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: 600; color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">ВПЕРЕД</div>
+            </div>
+        </div>
     </div>
 
     <h3 style="color: #fff; font-size: 1.3rem; margin-bottom: 1rem;">Нові користувачі</h3>
@@ -93,11 +118,11 @@
                         <td style="padding: 1rem; color: var(--text-secondary);">@user.FullName</td>
                         <td style="padding: 1rem; color: var(--text-secondary);">@user.Email</td>
                         <td style="padding: 1rem;">
-                            @if(user.Role == Planora.Domain.Enums.UserRole.Admin)
+                            @if(await UserManager.IsInRoleAsync(user, AppRoles.Admin))
                             {
                                 <span style="background: rgba(248, 113, 113, 0.2); color: #f87171; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">АДМІНІСТРАТОР</span>
                             }
-                            else if(user.Role == Planora.Domain.Enums.UserRole.Teacher)
+                            else if(await UserManager.IsInRoleAsync(user, AppRoles.Teacher))
                             {
                                 <span style="background: rgba(52, 211, 153, 0.2); color: #34d399; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">ВИКЛАДАЧ</span>
                             }

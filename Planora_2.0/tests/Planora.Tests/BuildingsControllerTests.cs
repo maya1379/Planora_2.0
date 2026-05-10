@@ -16,6 +16,7 @@ public class BuildingsControllerTests
     {
         _buildingServiceMock = new Mock<IBuildingService>();
         _controller = new BuildingsController(_buildingServiceMock.Object);
+        _controller.TempData = new Mock<Microsoft.AspNetCore.Mvc.ViewFeatures.ITempDataDictionary>().Object;
     }
 
     [Fact]

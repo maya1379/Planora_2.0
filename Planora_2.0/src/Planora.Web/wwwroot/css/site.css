@@ -28,6 +28,10 @@ body {
     overflow-x: hidden;
 }
 
+button, input, optgroup, select, textarea {
+    font-family: inherit;
+}
+
 .app-header {
     background: rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(20px);

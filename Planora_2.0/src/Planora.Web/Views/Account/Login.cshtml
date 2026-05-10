@@ -29,7 +29,7 @@
         <div style="margin-bottom: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
                 <label class="auth-label" style="margin-bottom: 0;">Пароль</label>
-                <a href="#" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; opacity: 0.8;">Забули?</a>
+                <a asp-action="ForgotPassword" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; opacity: 0.8;">Забули?</a>
             </div>
             <input asp-for="Password" class="modern-input" placeholder="••••••••" style="width: 100%; box-sizing: border-box;" />
             <span asp-validation-for="Password" style="color: var(--danger-text); font-size: 0.8rem; display: block; margin-top: 0.4rem;"></span>

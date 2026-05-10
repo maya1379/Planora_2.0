@@ -1,5 +1,5 @@
 @model Planora.Web.ViewModels.RegisterViewModel
-@using Planora.Domain.Enums
+@using Planora.Domain.Constants
 
 @{
     ViewData["Title"] = "Реєстрація";
@@ -52,15 +52,18 @@
         <div style="margin-bottom: 2rem;">
             <label class="auth-label">Оберіть вашу роль</label>
             <div class="role-selector-wrapper">
-                @foreach (var role in Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Where(r => r != UserRole.Admin))
-                {
-                    <label class="role-option">
-                        <input type="radio" asp-for="Role" value="@role" class="role-radio" />
-                        <div class="role-pill">
-                            <span>@(role == UserRole.Teacher ? "Викладач" : "Студент")</span>
-                        </div>
-                    </label>
-                }
+                <label class="role-option">
+                    <input type="radio" asp-for="Role" value="@AppRoles.Teacher" class="role-radio" />
+                    <div class="role-pill">
+                        <span>Викладач</span>
+                    </div>
+                </label>
+                <label class="role-option">
+                    <input type="radio" asp-for="Role" value="@AppRoles.Student" class="role-radio" />
+                    <div class="role-pill">
+                        <span>Студент</span>
+                    </div>
+                </label>
             </div>
             <span asp-validation-for="Role" style="color: var(--danger-text); font-size: 0.8rem; display: block; margin-top: 0.5rem;"></span>
         </div>
@@ -104,9 +107,9 @@
                 const role = $('input[name="Role"]:checked').val();
                 if (!role) { $('#extraFieldsRow').hide(); return; }
                 $('#extraFieldsRow').css('display', 'flex').hide().fadeIn(400);
-                if (role === "@UserRole.Teacher.ToString()") {
+                if (role === "@AppRoles.Teacher") {
                     $('#teacherField').fadeIn(200); $('#studentField').hide();
-                } else if (role === "@UserRole.Student.ToString()") {
+                } else if (role === "@AppRoles.Student") {
                     $('#studentField').fadeIn(200); $('#teacherField').hide();
                 }
             }

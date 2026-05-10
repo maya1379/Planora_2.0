@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Moq;
 using Planora.Domain.Entities;
-using Planora.Domain.Enums;
+using Planora.Domain.Constants;
 using Planora.Services.DTOs;
 using Planora.Services.Services.Interfaces;
 using Planora.Web.Controllers;
@@ -65,7 +65,7 @@ public class UsersControllerTests
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsType<CreateUserViewModel>(viewResult.Model);
 
-        Assert.Equal(UserRole.Student, model.Role);
+        Assert.Equal(AppRoles.Student, model.Role);
         Assert.IsType<SelectList>(_controller.ViewBag.Groups);
     }
 
@@ -83,8 +83,7 @@ public class UsersControllerTests
         {
             FullName = "User",
             Email = "",
-            Password = "123456",
-            Role = UserRole.Student
+            Password = "123456"
         };
 
         var result = await _controller.Create(model);
@@ -110,7 +109,6 @@ public class UsersControllerTests
             FullName = "Teacher User",
             Email = "teacher@test.com",
             Password = "123456",
-            Role = UserRole.Teacher,
             Faculty = "FIT",
             Position = "Assistant",
             GroupId = 99
@@ -126,7 +124,6 @@ public class UsersControllerTests
                 x.UserName == model.Email &&
                 x.Email == model.Email &&
                 x.FullName == model.FullName &&
-                x.Role == model.Role &&
                 x.Faculty == model.Faculty &&
                 x.Position == model.Position &&
                 x.GroupId == null &&
@@ -150,7 +147,6 @@ public class UsersControllerTests
             FullName = "Student User",
             Email = "student@test.com",
             Password = "123456",
-            Role = UserRole.Student,
             GroupId = 1
         };
 
@@ -170,11 +166,11 @@ public class UsersControllerTests
             FullName = "User One",
             Faculty = "FIT",
             Position = "Teacher",
-            GroupId = 2,
-            Role = UserRole.Teacher
+            GroupId = 2
         };
 
         _userManagerMock.Setup(u => u.FindByIdAsync("1")).ReturnsAsync(user);
+        _userManagerMock.Setup(u => u.GetRolesAsync(user)).ReturnsAsync(new List<string> { AppRoles.Teacher });
         _groupServiceMock.Setup(g => g.GetAllAsync()).ReturnsAsync(new List<GroupDto>
         {
             new GroupDto { Id = 1, Name = "G1" }
@@ -248,11 +244,11 @@ public class UsersControllerTests
             FullName = "Old Name",
             Faculty = "Old Faculty",
             Position = "Old Position",
-            GroupId = 5,
-            Role = UserRole.Student
+            GroupId = 5
         };
 
         _userManagerMock.Setup(u => u.FindByIdAsync("1")).ReturnsAsync(user);
+        _userManagerMock.Setup(u => u.GetRolesAsync(user)).ReturnsAsync(new List<string> { AppRoles.Student });
         _userManagerMock.Setup(u => u.UpdateAsync(user)).ReturnsAsync(IdentityResult.Success);
 
         var model = new EditUserViewModel
@@ -261,7 +257,8 @@ public class UsersControllerTests
             FullName = "New Name",
             Faculty = "New Faculty",
             Position = "New Position",
-            GroupId = 3
+            GroupId = 3,
+            Role = AppRoles.Student
         };
 
         var result = await _controller.Edit(model);
@@ -283,8 +280,7 @@ public class UsersControllerTests
         var user = new User
         {
             Id = "1",
-            FullName = "Old Name",
-            Role = UserRole.Teacher
+            FullName = "Old Name"
         };
 
         _userManagerMock.Setup(u => u.FindByIdAsync("1")).ReturnsAsync(user);

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Planora.Domain.Enums;
+using Planora.Domain.Constants;
 using Planora.Web.ViewModels;
 using Xunit;
 
@@ -25,7 +25,7 @@ public class UserViewModelsTests
             FullName = "Teacher User",
             Email = "teacher@example.com",
             Password = "123456",
-            Role = UserRole.Teacher,
+            Role = AppRoles.Teacher,
             Faculty = "FIT",
             Position = "Assistant"
         };
@@ -43,7 +43,7 @@ public class UserViewModelsTests
             FullName = "",
             Email = "teacher@example.com",
             Password = "123456",
-            Role = UserRole.Teacher
+            Role = AppRoles.Teacher
         };
 
         var results = ValidateModel(model);
@@ -59,7 +59,7 @@ public class UserViewModelsTests
             FullName = "Teacher User",
             Email = "",
             Password = "123456",
-            Role = UserRole.Teacher
+            Role = AppRoles.Teacher
         };
 
         var results = ValidateModel(model);
@@ -75,7 +75,7 @@ public class UserViewModelsTests
             FullName = "Teacher User",
             Email = "invalid-email",
             Password = "123456",
-            Role = UserRole.Teacher
+            Role = AppRoles.Teacher
         };
 
         var results = ValidateModel(model);
@@ -91,7 +91,7 @@ public class UserViewModelsTests
             FullName = "Teacher User",
             Email = "teacher@example.com",
             Password = "123",
-            Role = UserRole.Teacher
+            Role = AppRoles.Teacher
         };
 
         var results = ValidateModel(model);
@@ -104,7 +104,7 @@ public class UserViewModelsTests
     {
         var model = new CreateUserViewModel();
 
-        Assert.Equal(UserRole.Teacher, model.Role);
+        Assert.Equal(AppRoles.Teacher, model.Role);
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class UserViewModelsTests
             Faculty = "FIT",
             Position = "Lecturer",
             GroupId = 1,
-            Role = UserRole.Teacher
+            Role = AppRoles.Teacher
         };
 
         var results = ValidateModel(model);
@@ -132,7 +132,7 @@ public class UserViewModelsTests
         {
             Id = "user-1",
             FullName = "",
-            Role = UserRole.Teacher
+            Role = AppRoles.Teacher
         };
 
         var results = ValidateModel(model);

@@ -2,14 +2,14 @@
 @using Planora.Domain.Enums
 
 @{
-    ViewData["Title"] = "Edit Subject";
-    ViewData["Breadcrumb"] = "Admin / Subjects / Edit";
+    ViewData["Title"] = "Редагувати предмет";
+    ViewData["Breadcrumb"] = "Адмін / Предмети / Редагувати";
 }
 
 <div class="glass-card" style="max-width: 600px; margin: 0 auto; padding: 2.5rem;">
     <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2rem; margin-bottom: 2rem; text-align: center;">
-        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Edit Subject</h2>
-        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Update details for @Model.Name</p>
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Редагувати предмет</h2>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Оновити дані для @Model.Name</p>
     </div>
 
     <form asp-action="Edit" method="post">
@@ -17,29 +17,29 @@
         <div asp-validation-summary="ModelOnly" style="color: #ef4444; margin-bottom: 1rem;"></div>
 
         <div style="margin-bottom: 1.5rem;">
-            <label asp-for="Name" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Subject Name</label>
+            <label asp-for="Name" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Назва предмета</label>
             <input asp-for="Name" class="modern-input" />
             <span asp-validation-for="Name" style="color: #ef4444; font-size: 0.85rem;"></span>
         </div>
 
         <div style="margin-bottom: 1.5rem;">
-            <label asp-for="Type" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Lesson Type</label>
+            <label asp-for="Type" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Тип заняття</label>
             <select asp-for="Type" class="modern-select" style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); padding: 0.8rem 1rem; color: white;">
-                <option value="@LessonType.Lecture">Lecture</option>
-                <option value="@LessonType.Practice">Practice / Lab</option>
+                <option value="@LessonType.Lecture">Лекція</option>
+                <option value="@LessonType.Practice">Практика / Лаб</option>
             </select>
             <span asp-validation-for="Type" style="color: #ef4444; font-size: 0.85rem;"></span>
         </div>
 
         <div style="margin-bottom: 2rem;">
-            <label asp-for="Requirements" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Room Requirements (Optional)</label>
+            <label asp-for="Requirements" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Вимоги до аудиторії (опціонально)</label>
             <textarea asp-for="Requirements" class="modern-input" style="height: 100px; padding: 0.8rem; resize: vertical;"></textarea>
             <span asp-validation-for="Requirements" style="color: #ef4444; font-size: 0.85rem;"></span>
         </div>
 
         <div style="display: flex; gap: 1rem;">
-            <button type="submit" class="btn-modern" style="margin: 0; flex: 1;">Save Changes</button>
-            <a asp-action="Index" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Cancel</a>
+            <button type="submit" class="btn-modern" style="margin: 0; flex: 1;">Зберегти зміни</button>
+            <a asp-action="Index" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Скасувати</a>
         </div>
     </form>
 </div>

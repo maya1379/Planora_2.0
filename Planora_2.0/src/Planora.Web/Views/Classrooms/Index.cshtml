@@ -10,11 +10,11 @@
 }
 
 <div class="rooms-app-card">
-    <h1 class="rooms-title">Find a Room</h1>
+    <h1 class="rooms-title">Знайти аудиторію</h1>
     
     <div class="search-container" style="margin-bottom: 1.5rem;">
         <div class="search-input-wrapper">
-            <input type="text" id="searchInput" class="search-input" placeholder="Search..." onkeyup="filterRooms()" />
+            <input type="text" id="searchInput" class="search-input" placeholder="Пошук за номером..." onkeyup="filterRooms()" />
         </div>
     </div>
 
@@ -50,26 +50,18 @@
             @foreach (var room in Model)
             {
                 var statusClass = "";
-                var statusText = "";
-                var statusEmoji = "";
                 
                 <div class="room-box @statusClass" 
                      data-number="@room.Number.ToLower()"
                      data-faculty="@room.Faculty"
                      data-pc="@room.HasComputers.ToString().ToLower()"
                      data-projector="@room.HasProjector.ToString().ToLower()"
-                     onclick="openDarkModal('@room.Number', '@(room.BuildingName ?? "Без корпусу")', @room.Capacity, '@(room.Faculty ?? "-")', @room.HasComputers.ToString().ToLower(), @room.HasProjector.ToString().ToLower())">
+                     onclick="openDarkModal(@room.Id, '@room.Number', '@(room.BuildingName ?? "Без корпусу")', @room.Capacity, '@(room.Faculty ?? "-")', @room.HasComputers.ToString().ToLower(), @room.HasProjector.ToString().ToLower())">
                     
                     <div class="room-indicators">
-                        @if (room.HasProjector) { <span title="Проектор">📽️</span> }
-                        @if (room.HasComputers) { <span title="Комп'ютери">💻</span> }
+                        @if (room.HasProjector) { <img src="~/icons/projector.png" title="Проектор" class="room-indicator-icon" alt="Проектор" /> }
+                        @if (room.HasComputers) { <img src="~/icons/computer.avif" title="Комп'ютери" class="room-indicator-icon" alt="ПК" /> }
                     </div>
-                    
-                    @if (!string.IsNullOrEmpty(statusClass))
-                    {
-                        <div class="room-status-icon">@statusEmoji</div>
-                        <div class="room-status-text">@statusText</div>
-                    }
                     
                     <div class="room-number">@room.Number</div>
                 </div>
@@ -83,7 +75,7 @@
         <button class="dark-modal-close" onclick="closeDarkModal(event, true)">&times;</button>
         
         <div class="dark-modal-header">
-            <div class="dark-modal-title" id="mTitle">Room 120</div>
+            <div class="dark-modal-title" id="mTitle">Аудиторія 120</div>
             <div class="dark-modal-subtitle" id="mSubtitle">Корпус: Головний</div>
         </div>
 
@@ -106,6 +98,13 @@
             <div class="modal-info-row">
                 <span class="modal-info-label">Проектор</span>
                 <span class="modal-info-value" id="mProjector">Немає</span>
+            </div>
+        </div>
+
+        <div class="modal-schedule-section" id="scheduleSection" style="display: none;">
+            <div class="modal-schedule-title">Найближчі пари</div>
+            <div class="modal-schedule-list" id="scheduleList">
+                <!-- Schedule items will be loaded here -->
             </div>
         </div>
         
@@ -148,18 +147,132 @@
             }
         }
 
-        function openDarkModal(number, building, capacity, faculty, hasPc, hasProjector) {
-            document.getElementById("mTitle").innerText = "Room " + number;
+        function openDarkModal(id, number, building, capacity, faculty, hasPc, hasProjector) {
+            document.getElementById("mTitle").innerText = "Аудиторія " + number;
             document.getElementById("mSubtitle").innerText = building;
             
-            document.getElementById("mCapacity").innerText = capacity;
+            document.getElementById("mCapacity").innerText = capacity + " місць";
             document.getElementById("mFaculty").innerText = faculty;
             
             document.getElementById("mPc").innerText = hasPc ? "Є" : "Немає";
             document.getElementById("mProjector").innerText = hasProjector ? "Є" : "Немає";
+            
+            loadRoomSchedule(id, number);
 
             document.getElementById("darkRoomModal").classList.add("active");
             document.body.style.overflow = "hidden";
+        }
+
+        async function loadRoomSchedule(classroomId, roomNumber) {
+            const listContainer = document.getElementById("scheduleList");
+            const section = document.getElementById("scheduleSection");
+            
+            listContainer.innerHTML = '<div class="schedule-empty">Завантаження...</div>';
+            section.style.display = "block";
+
+            try {
+                const response = await fetch(`/Classrooms/GetSchedule/${classroomId}`);
+                const schedule = await response.json();
+
+                if (!schedule || schedule.length === 0) {
+                    section.style.display = "none"; // Hide if no classes as requested
+                    return;
+                }
+                
+                const now = new Date();
+                const currentTime = now.getHours() * 60 + now.getMinutes();
+                const currentDayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+
+                let html = '';
+                schedule.forEach(item => {
+                    const startTimeParts = item.startTime.split(':');
+                    const endTimeParts = item.endTime.split(':');
+                    const startTotal = parseInt(startTimeParts[0]) * 60 + parseInt(startTimeParts[1]);
+                    const endTotal = parseInt(endTimeParts[0]) * 60 + parseInt(endTimeParts[1]);
+                    
+                    const isToday = item.dayOfWeek === currentDayName;
+                    const isNow = isToday && currentTime >= startTotal && currentTime <= endTotal;
+
+                    const startTime = item.startTime.substring(0, 5);
+                    const endTime = item.endTime.substring(0, 5);
+                    const classDate = calculateDateForDay(item.dayOfWeek);
+                    
+                    html += `
+                        <div class="schedule-item ${isNow ? 'active' : ''}">
+                            <div class="schedule-item-time-box">
+                                <span class="schedule-item-time">${startTime}</span>
+                                <span class="schedule-item-time" style="opacity: 0.5; font-size: 0.7rem;">${endTime}</span>
+                                <div style="font-size: 0.65rem; color: #64748b; margin-top: 4px; font-weight: 500;">${classDate}</div>
+                            </div>
+                            
+                            <div class="schedule-item-main">
+                                <div class="schedule-item-subject" title="${item.subjectName}">${item.subjectName}</div>
+                                <div class="schedule-item-info">👤 ${item.teacherName} • 👥 Гр. ${item.groupName}</div>
+                            </div>
+                            
+                            <div class="schedule-item-side">
+                                <span class="schedule-tag">${translateLesson(item.lessonType)}</span>
+                                <div style="display: flex; gap: 0.3rem;">
+                                    <span class="schedule-tag secondary">${translateDay(item.dayOfWeek)}</span>
+                                    <span class="schedule-tag secondary">${translateWeek(item.weekType)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                listContainer.innerHTML = html;
+                section.style.display = "block";
+            } catch (error) {
+                console.error("Error loading schedule:", error);
+                section.style.display = "none";
+            }
+        }
+
+        function calculateDateForDay(dayName) {
+            const daysMap = {
+                'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4,
+                'Friday': 5, 'Saturday': 6, 'Sunday': 0
+            };
+            const targetDay = daysMap[dayName];
+            const today = new Date();
+            const currentDay = today.getDay(); // 0-6
+            
+            let diff = targetDay - currentDay;
+            
+            const resultDate = new Date(today);
+            resultDate.setDate(today.getDate() + diff);
+            
+            return resultDate.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' });
+        }
+
+        function translateDay(day) {
+            const days = {
+                'Monday': 'Понеділок',
+                'Tuesday': 'Вівторок',
+                'Wednesday': 'Середа',
+                'Thursday': 'Четвер',
+                'Friday': 'П’ятниця',
+                'Saturday': 'Субота',
+                'Sunday': 'Неділя'
+            };
+            return days[day] || day;
+        }
+
+        function translateWeek(week) {
+            if (week === 0) return "Щотижня";
+            if (week === 1) return "Чисельник";
+            if (week === 2) return "Знаменник";
+            return "";
+        }
+
+        function translateLesson(type) {
+            const types = {
+                'Lecture': 'Лекція',
+                'Lab': 'Лаб. робота',
+                'Practice': 'Практика'
+            };
+            return types[type] || type;
         }
 
         function closeDarkModal(event, force) {

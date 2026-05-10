@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Planora.Domain.Entities;
 using Planora.Infrastructure.Data;
+using Planora.Services.Services.Interfaces;
 using Planora.Web.Controllers;
 using Planora.Web.ViewModels;
 using Xunit;
@@ -15,17 +16,17 @@ public class AccountControllerTests
     private readonly Mock<UserManager<User>> _userManagerMock;
     private readonly Mock<SignInManager<User>> _signInManagerMock;
     private readonly PlanoraDbContext _context;
+    private readonly Mock<IEmailService> _emailServiceMock;
 
     private readonly AccountController _controller;
 
     public AccountControllerTests()
     {
-        // ✅ UserManager mock
+        
         var userStoreMock = new Mock<IUserStore<User>>();
         _userManagerMock = new Mock<UserManager<User>>(
             userStoreMock.Object, null, null, null, null, null, null, null, null);
 
-        // ✅ SignInManager mock
         var contextAccessor = new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
         var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
 
@@ -35,17 +36,19 @@ public class AccountControllerTests
             userPrincipalFactory.Object,
             null, null, null, null);
 
-        // ✅ 🔥 ЗАМІСТЬ MOCK — InMemory DB
         var options = new DbContextOptionsBuilder<PlanoraDbContext>()
             .UseInMemoryDatabase(databaseName: "TestDb")
             .Options;
 
         _context = new PlanoraDbContext(options);
 
+        _emailServiceMock = new Mock<IEmailService>();
+
         _controller = new AccountController(
             _userManagerMock.Object,
             _signInManagerMock.Object,
-            _context);
+            _context,
+            _emailServiceMock.Object);
     }
 
     [Fact]

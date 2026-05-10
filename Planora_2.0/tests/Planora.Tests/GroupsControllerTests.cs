@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Planora.Domain.Entities;
-using Planora.Domain.Enums;
+using Planora.Domain.Constants;
 using Planora.Services.DTOs;
 using Planora.Services.Services.Interfaces;
 using Planora.Web.Controllers;
@@ -26,6 +27,8 @@ public class GroupsControllerTests
             null!, null!, null!, null!, null!, null!, null!, null!);
 
         _controller = new GroupsController(_groupServiceMock.Object, _userManagerMock.Object);
+        _controller.TempData = new Mock<ITempDataDictionary>().Object;
+        _userManagerMock.Setup(u => u.GetUsersInRoleAsync(Planora.Domain.Constants.AppRoles.Student)).ReturnsAsync(new System.Collections.Generic.List<Planora.Domain.Entities.User>());
     }
 
     [Fact]
@@ -149,12 +152,13 @@ public class GroupsControllerTests
 
         var users = new List<User>
         {
-            new User { Id = "1", FullName = "A Student", Role = UserRole.Student, GroupId = 1 },
-            new User { Id = "2", FullName = "B Student", Role = UserRole.Student, GroupId = 1 },
-            new User { Id = "3", FullName = "Teacher", Role = UserRole.Teacher }
+            new User { Id = "1", FullName = "A Student", GroupId = 1 },
+            new User { Id = "2", FullName = "B Student", GroupId = 1 },
+            new User { Id = "3", FullName = "Teacher" }
         }.AsQueryable();
 
         _userManagerMock.Setup(u => u.Users).Returns(users);
+        _userManagerMock.Setup(u => u.GetUsersInRoleAsync(AppRoles.Student)).ReturnsAsync(users.ToList());
 
         var result = await _controller.Details(1);
 
@@ -182,19 +186,27 @@ public class GroupsControllerTests
             Name = "G1"
         });
 
+        _groupServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<GroupDto>
+        {
+            new GroupDto { Id = 1, Name = "G1" },
+            new GroupDto { Id = 2, Name = "G2" }
+        });
+
         var users = new List<User>
         {
-            new User { Id = "1", FullName = "Free Student", Role = UserRole.Student, GroupId = null },
-            new User { Id = "2", FullName = "Busy Student", Role = UserRole.Student, GroupId = 2 }
+            new User { Id = "1", FullName = "Free Student", GroupId = null },
+            new User { Id = "2", FullName = "Busy Student", GroupId = 2 },
+            new User { Id = "3", FullName = "In Group 1", GroupId = 1 }
         }.AsQueryable();
 
         _userManagerMock.Setup(u => u.Users).Returns(users);
+        _userManagerMock.Setup(u => u.GetUsersInRoleAsync(AppRoles.Student)).ReturnsAsync(users.ToList());
 
         var result = await _controller.AddStudents(1);
 
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsAssignableFrom<IEnumerable<User>>(viewResult.Model);
-        Assert.Single(model);
+        Assert.Equal(2, model.Count());
         Assert.Equal("G1", _controller.ViewBag.GroupName);
         Assert.Equal(1, _controller.ViewBag.GroupId);
     }

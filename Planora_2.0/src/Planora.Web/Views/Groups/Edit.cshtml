@@ -1,14 +1,14 @@
 @model Planora.Services.DTOs.UpdateGroupDto
 
 @{
-    ViewData["Title"] = "Edit Group";
-    ViewData["Breadcrumb"] = "Admin / Groups / Edit";
+    ViewData["Title"] = "Редагувати групу";
+    ViewData["Breadcrumb"] = "Адмін / Групи / Редагувати";
 }
 
 <div class="glass-card" style="max-width: 600px; margin: 0 auto; padding: 2rem;">
     <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2rem; margin-bottom: 2rem; text-align: center;">
-        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Edit Group</h2>
-        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Update details for @Model.Name.</p>
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Редагувати групу</h2>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Оновити дані для @Model.Name.</p>
     </div>
 
     <form asp-action="Edit" method="post">
@@ -16,26 +16,26 @@
         <div asp-validation-summary="ModelOnly" style="color: #ef4444; margin-bottom: 1rem; border-radius: 8px; background: rgba(239, 68, 68, 0.1); padding: 1rem;"></div>
 
         <div style="margin-bottom: 1.5rem;">
-            <label asp-for="Name" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Group Name (e.g. CS-201)</label>
+            <label asp-for="Name" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Назва групи (напр. КН-201)</label>
             <input asp-for="Name" class="modern-input" />
             <span asp-validation-for="Name" style="color: #ef4444; font-size: 0.85rem;"></span>
         </div>
 
         <div style="margin-bottom: 1.5rem;">
-            <label asp-for="Faculty" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Faculty</label>
+            <label asp-for="Faculty" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Факультет</label>
             <input asp-for="Faculty" class="modern-input" />
             <span asp-validation-for="Faculty" style="color: #ef4444; font-size: 0.85rem;"></span>
         </div>
 
         <div style="margin-bottom: 2rem;">
-            <label asp-for="StudentCount" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Capacity</label>
+            <label asp-for="StudentCount" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Місткість</label>
             <input asp-for="StudentCount" class="modern-input" type="number" min="1" max="100" />
             <span asp-validation-for="StudentCount" style="color: #ef4444; font-size: 0.85rem;"></span>
         </div>
 
         <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
-            <button type="submit" class="btn-modern" style="margin: 0; flex: 1;">Save Changes</button>
-            <a asp-action="Index" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Cancel</a>
+            <button type="submit" class="btn-modern" style="margin: 0; flex: 1;">Зберегти зміни</button>
+            <a asp-action="Index" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Скасувати</a>
         </div>
     </form>
 </div>

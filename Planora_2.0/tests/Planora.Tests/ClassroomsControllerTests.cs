@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Moq;
@@ -20,6 +21,7 @@ public class ClassroomsControllerTests
         _buildingServiceMock = new Mock<IBuildingService>();
 
         _controller = new ClassroomsController(_classroomServiceMock.Object, _buildingServiceMock.Object);
+        _controller.TempData = new Mock<ITempDataDictionary>().Object;
     }
 
     [Fact]

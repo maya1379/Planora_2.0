@@ -23,6 +23,6 @@ public class TeachingAssignmentConfiguration : IEntityTypeConfiguration<Teaching
             .HasForeignKey(ta => ta.SubjectId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(ta => new { ta.TeacherId, ta.SubjectId }).IsUnique();
+        builder.HasIndex(ta => new { ta.TeacherId, ta.SubjectId, ta.GroupId }).IsUnique();
     }
 }

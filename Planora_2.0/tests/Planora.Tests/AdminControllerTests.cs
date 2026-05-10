@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Planora.Domain.Entities;
-using Planora.Domain.Enums;
+using Planora.Domain.Constants;
 using Planora.Services.DTOs;
 using Planora.Services.Services.Interfaces;
 using Planora.Web.Controllers;
@@ -17,6 +17,7 @@ public class AdminControllerTests
     private readonly Mock<IBuildingService> _buildingServiceMock;
     private readonly Mock<IGroupService> _groupServiceMock;
     private readonly Mock<IScheduleService> _scheduleServiceMock;
+    private readonly Mock<ISubjectService> _subjectServiceMock;
     private readonly AdminController _controller;
 
     public AdminControllerTests()
@@ -29,12 +30,14 @@ public class AdminControllerTests
         _buildingServiceMock = new Mock<IBuildingService>();
         _groupServiceMock = new Mock<IGroupService>();
         _scheduleServiceMock = new Mock<IScheduleService>();
+        _subjectServiceMock = new Mock<ISubjectService>();
 
         _controller = new AdminController(
             _userManagerMock.Object,
             _buildingServiceMock.Object,
             _groupServiceMock.Object,
-            _scheduleServiceMock.Object);
+            _scheduleServiceMock.Object,
+            _subjectServiceMock.Object);
     }
 
     [Fact]
@@ -42,13 +45,19 @@ public class AdminControllerTests
     {
         var users = new List<User>
         {
-            new User { Id = "1", FullName = "Student 1", Role = UserRole.Student },
-            new User { Id = "2", FullName = "Student 2", Role = UserRole.Student },
-            new User { Id = "3", FullName = "Teacher 1", Role = UserRole.Teacher },
-            new User { Id = "4", FullName = "Admin 1", Role = UserRole.Admin }
+            new User { Id = "1", FullName = "Student 1" },
+            new User { Id = "2", FullName = "Student 2" },
+            new User { Id = "3", FullName = "Teacher 1" },
+            new User { Id = "4", FullName = "Admin 1" }
         }.AsQueryable();
 
         _userManagerMock.Setup(x => x.Users).Returns(users);
+
+        var students = new List<User> { users.ElementAt(0), users.ElementAt(1) };
+        var teachers = new List<User> { users.ElementAt(2) };
+
+        _userManagerMock.Setup(x => x.GetUsersInRoleAsync(AppRoles.Student)).ReturnsAsync(students);
+        _userManagerMock.Setup(x => x.GetUsersInRoleAsync(AppRoles.Teacher)).ReturnsAsync(teachers);
 
         _groupServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<GroupDto>
         {
@@ -71,6 +80,11 @@ public class AdminControllerTests
             new ScheduleEntryDto { Id = 4 }
         });
 
+        _subjectServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<SubjectDto>
+        {
+            new SubjectDto { Id = 1 }
+        });
+
         var result = await _controller.Index();
 
         var viewResult = Assert.IsType<ViewResult>(result);
@@ -81,6 +95,7 @@ public class AdminControllerTests
         Assert.Equal(2, model.TotalGroups);
         Assert.Equal(3, model.TotalBuildings);
         Assert.Equal(4, model.TotalScheduleEntries);
+        Assert.Equal(1, model.TotalSubjects);
         Assert.True(model.RecentUsers.Count <= 5);
     }
 }

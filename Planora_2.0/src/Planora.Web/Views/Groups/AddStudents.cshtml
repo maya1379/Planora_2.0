@@ -1,27 +1,28 @@
 @model IEnumerable<Planora.Domain.Entities.User>
 
 @{
-    ViewData["Title"] = "Add Students to Group";
-    ViewData["Breadcrumb"] = "Admin / Groups / Details / Add Students";
+    ViewData["Title"] = "Додати студентів до групи";
+    ViewData["Breadcrumb"] = "Адмін / Групи / Деталі / Додати";
     var groupName = ViewBag.GroupName as string;
     var groupId = ViewBag.GroupId;
+    var allGroups = ViewBag.AllGroups as List<Planora.Services.DTOs.GroupDto>;
 }
 
-<div class="glass-card" style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+<div class="glass-card" style="max-width: 900px; margin: 0 auto; padding: 2rem;">
     <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1.5rem; margin-bottom: 2rem;">
-        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Add Students to @groupName</h2>
-        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Select students who are currently not assigned to any group.</p>
+        <h2 style="font-size: 2rem; color: #fff; margin: 0; font-weight: 700;">Додати студентів до @groupName</h2>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Оберіть студентів для додавання. Можна додати як вільних студентів, так і перевести з інших груп.</p>
     </div>
 
     @if (Model == null || !Model.Any())
     {
         <div style="text-align: center; padding: 4rem; color: var(--text-secondary); background: rgba(15, 23, 42, 0.4); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-            <p style="font-size: 1.1rem; margin-bottom: 1rem;">No unassigned students found.</p>
-            <a asp-controller="Users" asp-action="Create" class="btn-modern" style="margin: 0; background: rgba(59, 130, 246, 0.1); color: #60a5fa;">+ Register New Student</a>
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">Немає доступних студентів.</p>
+            <a asp-controller="Users" asp-action="Create" class="btn-modern" style="margin: 0; background: rgba(59, 130, 246, 0.1); color: #60a5fa;">+ Зареєструвати нового студента</a>
         </div>
         
         <div style="margin-top: 2rem; text-align: center;">
-            <a asp-action="Details" asp-route-id="@groupId" class="btn-modern" style="margin: 0; background: rgba(255,255,255,0.05);">Back to Details</a>
+            <a asp-action="Details" asp-route-id="@groupId" class="btn-modern" style="margin: 0; background: rgba(255,255,255,0.05);">Назад до деталей</a>
         </div>
     }
     else
@@ -36,8 +37,9 @@
                             <th style="padding: 1rem; color: #fff; font-weight: 600; width: 50px;">
                                 <input type="checkbox" id="selectAll" style="width: 18px; height: 18px; cursor: pointer;" />
                             </th>
-                            <th style="padding: 1rem; color: #fff; font-weight: 600;">Full Name</th>
+                            <th style="padding: 1rem; color: #fff; font-weight: 600;">ПІБ</th>
                             <th style="padding: 1rem; color: #fff; font-weight: 600;">Email</th>
+                            <th style="padding: 1rem; color: #fff; font-weight: 600;">Поточна група</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +51,17 @@
                                 </td>
                                 <td style="padding: 1rem; color: var(--text-secondary);">@student.FullName</td>
                                 <td style="padding: 1rem; color: var(--text-secondary);">@student.Email</td>
+                                <td style="padding: 1rem;">
+                                    @if (student.GroupId == null)
+                                    {
+                                        <span style="background: rgba(52, 211, 153, 0.1); color: #34d399; padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600;">Без групи</span>
+                                    }
+                                    else
+                                    {
+                                        var currentGroup = allGroups?.FirstOrDefault(g => g.Id == student.GroupId);
+                                        <span style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600;">@(currentGroup?.Name ?? "Інша група")</span>
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -56,8 +69,8 @@
             </div>
 
             <div style="display: flex; gap: 1rem; justify-content: center;">
-                <button type="submit" class="btn-modern" id="submitBtn" style="margin: 0; flex: 1; opacity: 0.5; pointer-events: none;">Add Selected Students</button>
-                <a asp-action="Details" asp-route-id="@groupId" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Cancel</a>
+                <button type="submit" class="btn-modern" id="submitBtn" style="margin: 0; flex: 1; opacity: 0.5; pointer-events: none;">Додати обраних студентів</button>
+                <a asp-action="Details" asp-route-id="@groupId" class="btn-modern" style="margin: 0; flex: 1; background: rgba(255,255,255,0.05); text-align: center;">Скасувати</a>
             </div>
         </form>
     }
