@@ -22,14 +22,10 @@ public class ClassroomsControllerTests
         _buildingServiceMock = new Mock<IBuildingService>();
         _scheduleServiceMock = new Mock<IScheduleService>();
 
-<<<<<<< HEAD
         _controller = new ClassroomsController(
             _classroomServiceMock.Object, 
             _buildingServiceMock.Object, 
             _scheduleServiceMock.Object);
-=======
-        _controller = new ClassroomsController(_classroomServiceMock.Object, _buildingServiceMock.Object, _scheduleServiceMock.Object);
->>>>>>> Artur-17
         _controller.TempData = new Mock<ITempDataDictionary>().Object;
     }
 
