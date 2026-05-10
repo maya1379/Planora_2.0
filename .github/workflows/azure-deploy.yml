@@ -41,7 +41,7 @@ jobs:
         run: dotnet restore Planora_2.0/Planora.sln
 
       - name: Run unit tests
-        run: dotnet test Planora_2.0/Planora.sln --configuration Release --no-build
+        run: dotnet test Planora_2.0/Planora.sln --configuration Release 
 
   deploy:
     runs-on: windows-latest
