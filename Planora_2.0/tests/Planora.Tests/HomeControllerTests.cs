@@ -52,8 +52,7 @@ public class HomeControllerTests
         var result = await _controller.Index();
 
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsAssignableFrom<List<ScheduleEntryDto>>(viewResult.Model);
-        Assert.Empty(model);
+        Assert.Null(viewResult.Model);
     }
 
     [Fact]

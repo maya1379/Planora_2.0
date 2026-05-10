@@ -16,11 +16,11 @@ public class BuildingsController : Controller
         _buildingService = buildingService;
     }
 
-    public async Task<IActionResult> Index()
-    {
-        var buildings = await _buildingService.GetAllAsync();
-        return NotFound();
-    }
+public async Task<IActionResult> Index()
+{
+    var buildings = await _buildingService.GetAllAsync();
+    return View(buildings);
+}
 
     public IActionResult Create()
     {

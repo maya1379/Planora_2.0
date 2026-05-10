@@ -21,6 +21,7 @@ public class ScheduleControllerTests
     private readonly Mock<ITimeSlotService> _timeSlotServiceMock;
     private readonly Mock<UserManager<User>> _userManagerMock;
     private readonly ScheduleController _controller;
+    private readonly Mock<IScheduleNoteService> _scheduleNoteServiceMock;
 
     public ScheduleControllerTests()
     {
@@ -30,6 +31,7 @@ public class ScheduleControllerTests
         _classroomServiceMock = new Mock<IClassroomService>();
         _subjectServiceMock = new Mock<ISubjectService>();
         _timeSlotServiceMock = new Mock<ITimeSlotService>();
+        _scheduleNoteServiceMock = new Mock<IScheduleNoteService>();
 
         var userStore = new Mock<IUserStore<User>>();
         _userManagerMock = new Mock<UserManager<User>>(
@@ -37,13 +39,14 @@ public class ScheduleControllerTests
             null!, null!, null!, null!, null!, null!, null!, null!);
 
         _controller = new ScheduleController(
-            _scheduleServiceMock.Object,
-            _groupServiceMock.Object,
-            _exportServiceMock.Object,
-            _classroomServiceMock.Object,
-            _subjectServiceMock.Object,
-            _timeSlotServiceMock.Object,
-            _userManagerMock.Object);
+    _scheduleServiceMock.Object,
+    _groupServiceMock.Object,
+    _exportServiceMock.Object,
+    _classroomServiceMock.Object,
+    _subjectServiceMock.Object,
+    _timeSlotServiceMock.Object,
+    _scheduleNoteServiceMock.Object,
+    _userManagerMock.Object);
     }
 
     private void SetupGroupsAndTeachers()

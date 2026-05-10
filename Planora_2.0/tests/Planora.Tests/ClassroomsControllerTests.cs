@@ -14,14 +14,20 @@ public class ClassroomsControllerTests
     private readonly Mock<IClassroomService> _classroomServiceMock;
     private readonly Mock<IBuildingService> _buildingServiceMock;
     private readonly ClassroomsController _controller;
+    private readonly Mock<IScheduleService> _scheduleServiceMock;
 
     public ClassroomsControllerTests()
     {
         _classroomServiceMock = new Mock<IClassroomService>();
         _buildingServiceMock = new Mock<IBuildingService>();
+        _scheduleServiceMock = new Mock<IScheduleService>();
 
-        _controller = new ClassroomsController(_classroomServiceMock.Object, _buildingServiceMock.Object);
-        _controller.TempData = new Mock<ITempDataDictionary>().Object;
+        _controller = new ClassroomsController(
+    _classroomServiceMock.Object,
+    _buildingServiceMock.Object,
+    _scheduleServiceMock.Object);
+
+_controller.TempData = new Mock<ITempDataDictionary>().Object;
     }
 
     [Fact]
