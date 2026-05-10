@@ -21,6 +21,8 @@ public class ScheduleEntryDto
     public LessonType LessonType { get; set; }
     public int GroupId { get; set; }
     public string GroupName { get; set; } = string.Empty;
+    public bool IsOnline { get; set; }
+    public string? MeetingLink { get; set; }
 }
 
 public class CreateScheduleEntryDto
@@ -32,6 +34,12 @@ public class CreateScheduleEntryDto
     public string TeacherId { get; set; } = string.Empty;
     public int SubjectId { get; set; }
     public int GroupId { get; set; }
+}
+
+public class UpdateScheduleOnlineStatusDto
+{
+    public bool IsOnline { get; set; }
+    public string? MeetingLink { get; set; }
 }
 
 public class ScheduleGenerationResultDto

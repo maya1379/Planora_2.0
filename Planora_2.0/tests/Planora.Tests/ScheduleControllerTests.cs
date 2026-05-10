@@ -253,4 +253,65 @@ public class ScheduleControllerTests
         Assert.Equal("Index", redirectResult.ActionName);
         _scheduleServiceMock.Verify(s => s.DeleteAllAsync(), Times.Once);
     }
+
+    #region UpdateOnlineStatus Tests
+
+    [Fact]
+    public async Task UpdateOnlineStatus_WhenUserNotAuthenticated_ReturnsUnauthorized()
+    {
+        _userManagerMock.Setup(u => u.GetUserId(It.IsAny<System.Security.Claims.ClaimsPrincipal>())).Returns((string)null);
+        var dto = new UpdateScheduleOnlineStatusDto { IsOnline = true, MeetingLink = "https://meet.google.com/test" };
+
+        var result = await _controller.UpdateOnlineStatus(1, dto);
+
+        Assert.IsType<UnauthorizedResult>(result);
+        _scheduleServiceMock.Verify(s => s.UpdateOnlineStatusAsync(It.IsAny<int>(), It.IsAny<UpdateScheduleOnlineStatusDto>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task UpdateOnlineStatus_WhenScheduleNotFound_ReturnsNotFound()
+    {
+        var userId = "teacher1";
+        _userManagerMock.Setup(u => u.GetUserId(It.IsAny<System.Security.Claims.ClaimsPrincipal>())).Returns(userId);
+        _scheduleServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((ScheduleEntryDto)null);
+        var dto = new UpdateScheduleOnlineStatusDto { IsOnline = true, MeetingLink = "https://meet.google.com/test" };
+
+        var result = await _controller.UpdateOnlineStatus(999, dto);
+
+        Assert.IsType<NotFoundResult>(result);
+        _scheduleServiceMock.Verify(s => s.UpdateOnlineStatusAsync(It.IsAny<int>(), It.IsAny<UpdateScheduleOnlineStatusDto>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task UpdateOnlineStatus_WhenUserIsNotOwner_ReturnsForbid()
+    {
+        var userId = "teacher1";
+        var otherTeacherId = "teacher2";
+        _userManagerMock.Setup(u => u.GetUserId(It.IsAny<System.Security.Claims.ClaimsPrincipal>())).Returns(userId);
+        
+        _scheduleServiceMock.Setup(s => s.GetByIdAsync(1)).ReturnsAsync(new ScheduleEntryDto { TeacherId = otherTeacherId });
+        var dto = new UpdateScheduleOnlineStatusDto { IsOnline = true, MeetingLink = "https://meet.google.com/test" };
+
+        var result = await _controller.UpdateOnlineStatus(1, dto);
+
+        Assert.IsType<ForbidResult>(result);
+        _scheduleServiceMock.Verify(s => s.UpdateOnlineStatusAsync(It.IsAny<int>(), It.IsAny<UpdateScheduleOnlineStatusDto>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task UpdateOnlineStatus_WhenUserIsOwner_UpdatesStatusAndReturnsOk()
+    {
+        var userId = "teacher_owner";
+        _userManagerMock.Setup(u => u.GetUserId(It.IsAny<System.Security.Claims.ClaimsPrincipal>())).Returns(userId);
+        
+        _scheduleServiceMock.Setup(s => s.GetByIdAsync(1)).ReturnsAsync(new ScheduleEntryDto { TeacherId = userId });
+        var dto = new UpdateScheduleOnlineStatusDto { IsOnline = true, MeetingLink = "https://meet.google.com/test" };
+
+        var result = await _controller.UpdateOnlineStatus(1, dto);
+
+        Assert.IsType<OkResult>(result);
+        _scheduleServiceMock.Verify(s => s.UpdateOnlineStatusAsync(1, dto), Times.Once);
+    }
+
+    #endregion
 }

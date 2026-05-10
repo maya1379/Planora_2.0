@@ -183,7 +183,8 @@ public static class SeedData
             ("koval@lnu.edu.ua",      "Коваль Ірина Павлівна",         "Загальний",   "Старший викладач"),
             ("lisova@lnu.edu.ua",     "Лісова Надія Олексіївна",       "Загальний",   "Доцент"),
             ("petrenko@lnu.edu.ua",   "Петренко Ірина Михайлівна",     "Загальний",   "Старший викладач"),
-            ("bojko@lnu.edu.ua",      "Бойко Василь Петрович",         "ФПМІ",        "Доцент")
+            ("bojko@lnu.edu.ua",      "Бойко Василь Петрович",         "ФПМІ",        "Доцент"),
+            ("oleksandra@gmail.com",  "Мельник Олександра Іванівна",   "ФПМІ",        "Старший викладач")
         };
 
         foreach (var (email, fullName, faculty, position) in teacherData)
@@ -199,7 +200,8 @@ public static class SeedData
                     Position = position,
                     EmailConfirmed = true
                 };
-                var result = await userManager.CreateAsync(teacher, "Teacher123!");
+                var pwd = email == "oleksandra@gmail.com" ? "Oleksandra123!" : "Teacher123!";
+                var result = await userManager.CreateAsync(teacher, pwd);
                 if (result.Succeeded)
                     await userManager.AddToRoleAsync(teacher, AppRoles.Teacher);
             }
@@ -266,36 +268,36 @@ public static class SeedData
             // ПМІ-11
             AddAssignment("tkachenko@lnu.edu.ua",     "Програмування (C++)",          LessonType.Lecture,  "ПМІ-11", 2);
             AddAssignment("tkachenko@lnu.edu.ua",     "Програмування (C++)",          LessonType.Lab,      "ПМІ-11", 4);
-            AddAssignment("zavhorodnya@lnu.edu.ua",   "Математичний аналіз",          LessonType.Lecture,  "ПМІ-11", 2);
-            AddAssignment("zavhorodnya@lnu.edu.ua",   "Математичний аналіз",          LessonType.Practice, "ПМІ-11", 2);
+            AddAssignment("oleksandra@gmail.com",     "Математичний аналіз",          LessonType.Lecture,  "ПМІ-11", 2);
+            AddAssignment("oleksandra@gmail.com",     "Математичний аналіз",          LessonType.Practice, "ПМІ-11", 2);
             AddAssignment("koval@lnu.edu.ua",         "Англійська мова",              LessonType.Practice, "ПМІ-11", 2);
             AddAssignment("lisova@lnu.edu.ua",        "Історія України",              LessonType.Lecture,  "ПМІ-11", 2);
             AddAssignment("lisova@lnu.edu.ua",        "Історія України",              LessonType.Practice, "ПМІ-11", 2);
             AddAssignment("petrenko@lnu.edu.ua",      "Фізичне виховання",            LessonType.Practice, "ПМІ-11", 2);
-            AddAssignment("bojko@lnu.edu.ua",         "Комп'ютерні мережі",           LessonType.Lecture,  "ПМІ-11", 2);
-            AddAssignment("bojko@lnu.edu.ua",         "Комп'ютерні мережі",           LessonType.Lab,      "ПМІ-11", 4);
+            AddAssignment("zavhorodnya@lnu.edu.ua",   "Комп'ютерні мережі",           LessonType.Lecture,  "ПМІ-11", 2);
+            AddAssignment("zavhorodnya@lnu.edu.ua",   "Комп'ютерні мережі",           LessonType.Lab,      "ПМІ-11", 4);
 
             // ПМІ-12
             AddAssignment("tkachenko@lnu.edu.ua",     "Програмування (C++)",          LessonType.Lecture,  "ПМІ-12", 2);
             AddAssignment("tkachenko@lnu.edu.ua",     "Програмування (C++)",          LessonType.Lab,      "ПМІ-12", 4);
-            AddAssignment("zavhorodnya@lnu.edu.ua",   "Математичний аналіз",          LessonType.Lecture,  "ПМІ-12", 2);
-            AddAssignment("zavhorodnya@lnu.edu.ua",   "Математичний аналіз",          LessonType.Practice, "ПМІ-12", 2);
+            AddAssignment("oleksandra@gmail.com",     "Математичний аналіз",          LessonType.Lecture,  "ПМІ-12", 2);
+            AddAssignment("oleksandra@gmail.com",     "Математичний аналіз",          LessonType.Practice, "ПМІ-12", 2);
             AddAssignment("koval@lnu.edu.ua",         "Англійська мова",              LessonType.Practice, "ПМІ-12", 2);
             AddAssignment("lisova@lnu.edu.ua",        "Філософія",                    LessonType.Lecture,  "ПМІ-12", 2);
             AddAssignment("petrenko@lnu.edu.ua",      "Фізичне виховання",            LessonType.Practice, "ПМІ-12", 2);
-            AddAssignment("bojko@lnu.edu.ua",         "Комп'ютерні мережі",           LessonType.Lecture,  "ПМІ-12", 2);
-            AddAssignment("bojko@lnu.edu.ua",         "Комп'ютерні мережі",           LessonType.Lab,      "ПМІ-12", 2);
+            AddAssignment("zavhorodnya@lnu.edu.ua",   "Комп'ютерні мережі",           LessonType.Lecture,  "ПМІ-12", 2);
+            AddAssignment("zavhorodnya@lnu.edu.ua",   "Комп'ютерні мережі",           LessonType.Lab,      "ПМІ-12", 2);
 
             // ПМА-21
             AddAssignment("panchenko@lnu.edu.ua",     "Алгоритми та структури даних", LessonType.Lecture,  "ПМА-21", 2);
             AddAssignment("panchenko@lnu.edu.ua",     "Алгоритми та структури даних", LessonType.Lab,      "ПМА-21", 4);
             AddAssignment("hryhorchuk@lnu.edu.ua",    "Бази даних",                   LessonType.Lecture,  "ПМА-21", 2);
             AddAssignment("hryhorchuk@lnu.edu.ua",    "Бази даних",                   LessonType.Lab,      "ПМА-21", 4);
-            AddAssignment("melnychuk@lnu.edu.ua",     "Веб-навігація",                LessonType.Lecture,  "ПМА-21", 2);
-            AddAssignment("melnychuk@lnu.edu.ua",     "Веб-навігація",                LessonType.Lab,      "ПМА-21", 2);
+            AddAssignment("zavhorodnya@lnu.edu.ua",   "Веб-навігація",                LessonType.Lecture,  "ПМА-21", 2);
+            AddAssignment("zavhorodnya@lnu.edu.ua",   "Веб-навігація",                LessonType.Lab,      "ПМА-21", 2);
             AddAssignment("koval@lnu.edu.ua",         "Англійська мова",              LessonType.Practice, "ПМА-21", 2);
             AddAssignment("petrenko@lnu.edu.ua",      "Фізичне виховання",            LessonType.Practice, "ПМА-21", 2);
-            AddAssignment("bojko@lnu.edu.ua",         "Дискретна математика",         LessonType.Lecture,  "ПМА-21", 2);
+            AddAssignment("oleksandra@gmail.com",     "Дискретна математика",         LessonType.Lecture,  "ПМА-21", 2);
             AddAssignment("bojko@lnu.edu.ua",         "Дискретна математика",         LessonType.Practice, "ПМА-21", 2);
 
             // МТ-11
@@ -336,7 +338,7 @@ public static class SeedData
             AddAssignment("mykhaylov@lnu.edu.ua",     "Теоретична фізика",            LessonType.Lab,      "ФЗ-11", 4);
             AddAssignment("zavhorodnya@lnu.edu.ua",   "Математичний аналіз",          LessonType.Lecture,  "ФЗ-11", 2);
             AddAssignment("zavhorodnya@lnu.edu.ua",   "Математичний аналіз",          LessonType.Practice, "ФЗ-11", 2);
-            AddAssignment("melnychuk@lnu.edu.ua",     "Основи екології",              LessonType.Lecture,  "ФЗ-11", 2);
+            AddAssignment("oleksandra@gmail.com",     "Основи екології",              LessonType.Lecture,  "ФЗ-11", 2);
             AddAssignment("koval@lnu.edu.ua",         "Англійська мова",              LessonType.Practice, "ФЗ-11", 2);
             AddAssignment("petrenko@lnu.edu.ua",      "Фізичне виховання",            LessonType.Practice, "ФЗ-11", 2);
 
@@ -413,6 +415,46 @@ public static class SeedData
 
             context.GroupDisciplineLists.AddRange(gs);
             await context.SaveChangesAsync();
+        }
+
+        if (!context.Schedules.Any(s => s.TeacherId == context.Users.FirstOrDefault(u => u.Email == "oleksandra@gmail.com").Id && s.DayOfWeek == DayOfWeekEnum.Monday))
+        {
+            var user = await userManager.FindByEmailAsync("oleksandra@gmail.com");
+            var subject = context.Subjects.FirstOrDefault(s => s.Name == "Математичний аналіз" && s.Type == LessonType.Lecture);
+            var subjectLab = context.Subjects.FirstOrDefault(s => s.Name == "Математичний аналіз" && s.Type == LessonType.Practice);
+            var group = context.Groups.FirstOrDefault(g => g.Name == "ПМІ-11");
+            var classroom = context.Classrooms.FirstOrDefault();
+            var timeSlot1 = context.TimeSlots.FirstOrDefault(t => t.Number == 1);
+            var timeSlot2 = context.TimeSlots.FirstOrDefault(t => t.Number == 2);
+
+            if (user != null && subject != null && subjectLab != null && group != null && classroom != null && timeSlot1 != null && timeSlot2 != null)
+            {
+                context.Schedules.AddRange(
+                    new Schedule
+                    {
+                        DayOfWeek = DayOfWeekEnum.Monday,
+                        WeekType = WeekType.Both,
+                        TimeSlotId = timeSlot1.Id,
+                        ClassroomId = classroom.Id,
+                        TeacherId = user.Id,
+                        SubjectId = subject.Id,
+                        GroupId = group.Id,
+                        IsOnline = false
+                    },
+                    new Schedule
+                    {
+                        DayOfWeek = DayOfWeekEnum.Monday,
+                        WeekType = WeekType.Both,
+                        TimeSlotId = timeSlot2.Id,
+                        ClassroomId = classroom.Id,
+                        TeacherId = user.Id,
+                        SubjectId = subjectLab.Id,
+                        GroupId = group.Id,
+                        IsOnline = false
+                    }
+                );
+                await context.SaveChangesAsync();
+            }
         }
     }
 

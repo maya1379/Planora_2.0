@@ -178,6 +178,17 @@ public class ScheduleService : IScheduleService
         await _repository.UpdateAsync(existing);
     }
 
+    public async Task UpdateOnlineStatusAsync(int id, UpdateScheduleOnlineStatusDto dto)
+    {
+        var existing = await _repository.GetByIdAsync(id)
+            ?? throw new KeyNotFoundException($"Schedule with Id {id} not found.");
+
+        existing.IsOnline = dto.IsOnline;
+        existing.MeetingLink = dto.MeetingLink;
+
+        await _repository.UpdateAsync(existing);
+    }
+
     public async Task DeleteAsync(int id)
     {
         await _repository.DeleteAsync(id);
