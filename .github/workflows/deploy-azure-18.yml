@@ -1,4 +1,4 @@
-name: Korchynskyi-18 CI/CD Pipeline Planora
+name: CI/CD Pipeline Planora Korchynskyi-18
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 env:
   dotnet_version: '10.0.x'
-  azure_webapp_name: '18-korchynskyi-planora'
+  azure_webapp_name: 'planora-korchynskyi-18'
 
 jobs:
   build:
@@ -72,8 +72,8 @@ jobs:
     needs: publish
     runs-on: ubuntu-latest
     environment:
-      name: '18-Korchynskyi CI/CD Pipeline Planora'
-      url: https://${{ env.azure_webapp_name }}.azurewebsites.net
+      name: 'CI/CD Pipeline Planora Korchynskyi-18'
+      url: https://planora-korchynskyi-18.azurewebsites.net
     steps:
       - name: download artifact
         uses: actions/download-artifact@v4
@@ -82,9 +82,8 @@ jobs:
           path: myapp
 
       - name: deploy to azure web app
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.azure_webapp_name }}
-          
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_KORCHYSNKYI }}
+          publish-profile: ${{ secrets.KORCHYNSKYI_18_DEPLOY_AZURE }}
           package: myapp
