@@ -1,4 +1,4 @@
-name: Deploy Planora to Azure
+name: Deploy to Azure App Service
 
 on:
   push:
