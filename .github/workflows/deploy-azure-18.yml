@@ -72,7 +72,7 @@ jobs:
     needs: publish
     runs-on: ubuntu-latest
     environment:
-      name: 'CI/CD Pipeline Planora Korchynskyi-18'
+      name: '18-Korchynskyi CI/CD Pipeline Planora'
       url: https://planora-korchynskyi-18.azurewebsites.net
     steps:
       - name: download artifact
