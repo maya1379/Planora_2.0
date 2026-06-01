@@ -1,14 +1,14 @@
-name: Build, Test, and Deploy Planora-17
+name: Build, Test, and Deploy Planora
 
 on:
   push:
     branches:
-      - Artur-17
+      - production
   workflow_dispatch:
 
 env:
   dotnet_version: '10.0.x'
-  azure_webapp_name: 'Planora-17'
+  azure_webapp_name: 'planora-webx'
 
 jobs:
   build:
@@ -74,8 +74,8 @@ jobs:
     runs-on: ubuntu-latest
     
     environment:
-      name: Artur-17
-      url: https://planora-17-b0fhchh6cehxece3.austriaeast-01.azurewebsites.net
+      name: Planora2.0-Web
+      url: https://planora-webx.azurewebsites.net
     
     steps:
       - name: download artifact
@@ -88,5 +88,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.azure_webapp_name }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          publish-profile: ${{ secrets.PLANORA_PRODUCTION_KEY }}
           package: myapp
